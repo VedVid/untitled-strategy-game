@@ -2,7 +2,8 @@
 
 
 class Position:
-    """Component Position is used to place and move the owner on the screen."""
+    """Component Position is used to place and move the owner on the screen.
+    TODO: Uniform coordinates: work in pixels or cells, then only convert if necessary."""
 
     def __init__(self, x, y):
         self.x = x

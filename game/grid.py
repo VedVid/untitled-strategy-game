@@ -36,5 +36,5 @@ class Grid:
                     "image_terrain_1.png",
                 )
                 tiles.append(new_tile)
-                self.grid_sprite_list.append(new_tile.sprite)
+                self.grid_sprite_list.append(new_tile.sprite.arcade_sprite)
         return tiles
