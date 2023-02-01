@@ -21,8 +21,8 @@ class Sprite:
         path = constants.DATA_PATH + self.filename
         try:
             arcade_sprite = arcade.sprite.Sprite(path, self.scale)
-            arcade_sprite.center_x = self.position.x + constants.TILE_CENTER_OFFSET_X
-            arcade_sprite.center_y = self.position.y + constants.TILE_CENTER_OFFSET_Y
+            arcade_sprite.center_x = self.position.x
+            arcade_sprite.center_y = self.position.y
         except FileNotFoundError as e:
             print(e)
         else:

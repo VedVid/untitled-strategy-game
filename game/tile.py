@@ -21,6 +21,9 @@ class Tile:
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
-        self.position = game.components.position.Position(x, y)
+        self.position = game.components.position.Position(
+            (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
+            (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
+        )
         self.size = game.components.size.Size(width, height)
         self.sprite = game.components.sprite.Sprite(sprite, self.position, 0.125)

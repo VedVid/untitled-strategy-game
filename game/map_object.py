@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
+import game.constants
 import game.components.position
 import game.components.sprite
 
 
 class MapObject:
     """Map object is, for example, a coal mine, castle, village.
-    x, y: column and cell on map grid;
     blocks: blocks movement?
     destructible: can be removed from the map?
     target: will ai try to destroy this object?
@@ -16,15 +16,18 @@ class MapObject:
 
     def __init__(
         self,
-        x,
-        y,
+        x,  # For spawning MapObject, x and y coords refers to the cell position
+        y,  # on the grid. During initialization it is converted to pixels.
         sprite,
         blocks=True,
         destructible=False,
         target=False,
         predecessor=None,
     ):
-        self.position = game.components.position.Position(x, y)
+        self.position = game.components.position.Position(
+            (x * game.constants.TILE_SIZE_W) + game.constants.TILE_CENTER_OFFSET_X,
+            (y * game.constants.TILE_SIZE_H) + game.constants.TILE_CENTER_OFFSET_Y,
+        )
         self.sprite = game.components.sprite.Sprite(sprite, self.position, 0.125)
         self.blocks = blocks
         self.destructible = destructible

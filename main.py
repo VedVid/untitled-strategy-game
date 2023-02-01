@@ -12,8 +12,8 @@ import game.grid
 
 grid = game.grid.Grid()
 test_map_object = game.map_object.MapObject(
-    game.constants.TILE_CENTER_OFFSET_X + (2 * game.constants.TILE_SIZE_W),
-    game.constants.TILE_CENTER_OFFSET_Y + (2 * game.constants.TILE_SIZE_H),
+    2,
+    2,
     "image_map_object_city_1.png",
     destructible=True,
     target=True,

@@ -31,8 +31,8 @@ class Grid:
         for y in range(self.height):
             for x in range(self.width):
                 new_tile = tile.Tile(
-                    self.position.x + x * constants.TILE_SIZE_W,
-                    self.position.y + y * constants.TILE_SIZE_H,
+                    x,
+                    y,
                     "image_terrain_1.png",
                 )
                 tiles.append(new_tile)
