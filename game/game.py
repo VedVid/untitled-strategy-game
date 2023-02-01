@@ -22,5 +22,5 @@ class Game(arcade.Window):
 
     def on_draw(self):
         self.clear()
-        self.grid.grid_sprite_list.draw()
+        self.grid.sprite_list.draw()
         self.map_objects.sprite_list.draw()

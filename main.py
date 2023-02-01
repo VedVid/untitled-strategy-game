@@ -31,5 +31,5 @@ g = game.game.Game(
 
 
 if __name__ == "__main__":
-    print(len(g.grid.grid_sprite_list))
+    print(len(g.grid.sprite_list))
     arcade.run()

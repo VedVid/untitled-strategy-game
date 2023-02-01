@@ -22,7 +22,7 @@ class Grid:
         self.position = game.components.position.Position(x, y)
         self.width = width
         self.height = height
-        self.grid_sprite_list = arcade.SpriteList()
+        self.sprite_list = arcade.SpriteList()
         self.tiles = self._init_empty_grid()
 
     def _init_empty_grid(self):
@@ -36,5 +36,5 @@ class Grid:
                     "image_terrain_1.png",
                 )
                 tiles.append(new_tile)
-                self.grid_sprite_list.append(new_tile.sprite.arcade_sprite)
+                self.sprite_list.append(new_tile.sprite.arcade_sprite)
         return tiles

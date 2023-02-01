@@ -14,7 +14,7 @@ def test_grid_coords():
 
 
 def test_grid_sprite_list_type():
-    assert type(grid.grid_sprite_list) == arcade.SpriteList
+    assert type(grid.sprite_list) == arcade.SpriteList
 
 
 def test_grid_tiles_amount():
