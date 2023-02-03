@@ -31,6 +31,7 @@ class Grid:
         if self.map_objects is None:
             self.map_objects = MapObjects()
             self.map_objects.owner = self
+            self.map_objects.fill_map()
 
     def _init_empty_grid(self):
         """Initializes empty map, using the most basic terrain tile."""
@@ -47,6 +48,5 @@ class Grid:
         return tiles
 
     def generate_map(self):
-        self.map_objects.fill_map()
         walker = DrunkardsWalk(owner=self, start_x=0, start_y=0)
         walker.walk()
