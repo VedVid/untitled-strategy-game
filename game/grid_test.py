@@ -10,7 +10,7 @@ grid = Grid(5, 10, 15, 20)
 
 
 def test_grid_coords():
-    assert (grid.position.x == 5 and grid.position.y == 10)
+    assert grid.position.x == 5 and grid.position.y == 10
 
 
 def test_grid_sprite_list_type():
