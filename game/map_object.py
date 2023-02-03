@@ -7,12 +7,34 @@ from game.components.sprite import Sprite
 
 
 class MapObject:
-    """Map object is, for example, a coal mine, castle, village.
-    blocks: blocks movement?
-    destructible: can be removed from the map?
-    target: will ai try to destroy this object?
-    predecessor: object that will replace this object if destroyed;
-        None means object will be removed from the map and not replaced by another MapObject."""
+    """
+    MapObject is used to create every kind of inaminate object on the map, except for the background terrain.
+    For example, MapObject may be used to place a coal mine, castle or village. MapObject instances are
+    aggregated in MapObjects.
+
+    Parameters:
+    -----------
+    x, y: int
+        Coordinates of the object, passed as a position of a cell, later transformed to pixel values inside
+        Position intance.
+    sprite: str
+        Name of the graphics that will represent MapObject on the map.
+    blocks: bool
+        Does this object blocks movement?
+    destructible: bool
+        Is it possible to destroy this object?
+    target: bool
+        Will ai try to destroy this object?
+    Predecessor: MapObject
+         Object that will replace this object if destroyed; None means object will be removed from the map
+         and not replaced by another MapObject.
+
+    Methods:
+    --------
+    destroy: MapObject
+        Right now it is a placeholder method. It will remove MapObject from the MapObject, or replace
+        current MapObject with its predecessor.
+    """
 
     def __init__(
         self,

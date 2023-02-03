@@ -7,8 +7,24 @@ from .. import constants
 
 
 class Sprite:
-    """Sprite class holds all the data necessary to create an arcade.Sprite instance, ie:
-    path-to-the-graphic, sprite position, and prite scale."""
+    """
+    Sprite class holds all the data necessary to create an arcade.Sprite instance, ie:
+    path-to-the-graphic, sprite position, and sprite scale.
+
+    Parameters:
+    -----------
+    filename: str
+        Name if file, without path (that is taken from constants.py), with extension.
+    position: Position
+        Instance of Position class, contains x and y coordinates.
+    scale: int or float
+        Makes Sprite larger or smaller.
+
+    Methods:
+    --------
+    _load
+        Creates Arcade Sprite using parameters passed during the initialization.
+    """
 
     def __init__(self, filename, position, scale=1):
         self.filename = filename

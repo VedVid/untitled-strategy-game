@@ -9,9 +9,19 @@ from game.components.sprite import Sprite
 
 
 class Tile:
-    """Class Tile have three components: Position, Size, and Sprite. Sprite should be a path to the sprite, that
-    during the instancing is loaded as arcade.Sprite.
-    Tiles are used to specify map grid."""
+    """
+    Instances of Tile are mostly used to represent terrain on Grid's cells.
+
+    Parameters:
+    -----------
+    x, y: int
+        Coords of cell which will be represented by the Tile; during instancing, cell coords are transformed Position
+        instance with pixel values.
+    sprite: string
+        Name of the graphics that will represent MapObject on the map.
+    width, height: int
+        Size of the tile, converted to the instance of Size class.
+    """
 
     def __init__(
         self,

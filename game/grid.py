@@ -11,8 +11,30 @@ from game.map_objects import MapObjects
 
 
 class Grid:
-    """Grid represents the game map, and consists of Tiles. Attributes 'width' and 'height' represent
-    number of columns and rows, not the pixel-wise dimensions."""
+    """
+    Grid represents the game map, and consists of Tiles. While itself it only represents the terrain tiles,
+    it also handles MapObjects and DrunkardsWalk to generate a map.
+
+    Parameters:
+    -----------
+    x, y: int
+        Where the grid is placed on the arcade.Window. By default, it starts from the bottom-left corner. Arcade Sprites
+        coords refer to the center of sprite by default, hence TILE_CENTER_OFFSET as a default value to the parameter.
+        x and y parameters are transformed into Position instance.
+    width, height: int
+        Dimensions of map, in cells.
+    map_objects: MapObjects
+        Instance of MapObjects (aggregator of MapObject instances; every inanimate object on map is MapObject).
+        If not provided during creation of Grid, the basic MapObjects instance will be created instead, and map will
+        be filled with mountains.
+
+    Methods:
+    --------
+    _init_empty_grid: list of Tile
+        Initializes empty grid, using one basic Sprite, creating the foundations for further modifications.
+    generate_map
+        Creates new DrunkardsWalk instance and lets him walk.
+    """
 
     def __init__(
         self,
