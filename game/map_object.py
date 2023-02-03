@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
-import game.constants
-import game.components.position
-import game.components.sprite
+from . import constants
+from game.components.position import Position
+from game.components.sprite import Sprite
 
 
 class MapObject:
@@ -24,11 +24,11 @@ class MapObject:
         target=False,
         predecessor=None,
     ):
-        self.position = game.components.position.Position(
-            (x * game.constants.TILE_SIZE_W) + game.constants.TILE_CENTER_OFFSET_X,
-            (y * game.constants.TILE_SIZE_H) + game.constants.TILE_CENTER_OFFSET_Y,
+        self.position = Position(
+            (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
+            (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
-        self.sprite = game.components.sprite.Sprite(sprite, self.position, 0.125)
+        self.sprite = Sprite(sprite, self.position, 0.125)
         self.blocks = blocks
         self.destructible = destructible
         self.target = target

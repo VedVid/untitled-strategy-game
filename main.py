@@ -3,28 +3,28 @@
 
 import arcade
 
-import game.constants
-import game.map_object
-import game.map_objects
-import game.game
-import game.grid
+from game import constants
+from game.game import Game
+from game.grid import Grid
+from game.map_object import MapObject
+from game.map_objects import MapObjects
 
 
-grid = game.grid.Grid()
-test_map_object = game.map_object.MapObject(
+grid = Grid()
+map_object = MapObject(
     2,
     2,
     "image_map_object_city_1.png",
     destructible=True,
     target=True,
 )
-test_map_objects = game.map_objects.MapObjects()
-test_map_objects.add_map_object(test_map_object)
+map_objects = MapObjects()
+map_objects.add_map_object(map_object)
 
-g = game.game.Game(
-    game.constants.SCREEN_WIDTH,
-    game.constants.SCREEN_HEIGHT,
-    game.constants.SCREEN_TITLE,
+g = Game(
+    constants.SCREEN_WIDTH,
+    constants.SCREEN_HEIGHT,
+    constants.SCREEN_TITLE,
     grid,
 )
 

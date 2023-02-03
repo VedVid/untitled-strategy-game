@@ -3,9 +3,9 @@
 
 from . import constants
 
-import game.components.size
-import game.components.sprite
-import game.components.position
+from game.components.size import Size
+from game.components.position import Position
+from game.components.sprite import Sprite
 
 
 class Tile:
@@ -21,9 +21,9 @@ class Tile:
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
-        self.position = game.components.position.Position(
+        self.position = Position(
             (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
-        self.size = game.components.size.Size(width, height)
-        self.sprite = game.components.sprite.Sprite(sprite, self.position, 0.125)
+        self.size = Size(width, height)
+        self.sprite = Sprite(sprite, self.position, 0.125)
