@@ -26,10 +26,8 @@ g = game.game.Game(
     game.constants.SCREEN_HEIGHT,
     game.constants.SCREEN_TITLE,
     grid,
-    test_map_objects,
 )
 
 
 if __name__ == "__main__":
-    print(len(g.grid.sprite_list))
     arcade.run()

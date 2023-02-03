@@ -3,6 +3,9 @@
 
 import arcade
 
+import game.globals
+import game.states
+
 
 class Game(arcade.Window):
     """Main game class."""
@@ -13,14 +16,22 @@ class Game(arcade.Window):
         height,
         title,
         grid,
-        map_objects,
     ):
         super().__init__(width, height, title)
         self.background_color = arcade.color.DARK_BLUE_GRAY
         self.grid = grid
-        self.map_objects = map_objects
+        self.first_frame = True
+        self.initialized = False
 
     def on_draw(self):
         self.clear()
         self.grid.sprite_list.draw()
-        self.map_objects.sprite_list.draw()
+        self.grid.map_objects.sprite_list.draw()
+        if self.first_frame:
+            self.first_frame = False
+            self.initialized = True
+
+    def on_update(self, delta_time):
+        if game.globals.state == game.states.State.GENERATE_MAP and self.initialized:
+            self.grid.generate_map()
+            game.globals.state = game.states.State.PLAY
