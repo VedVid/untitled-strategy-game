@@ -22,7 +22,8 @@ class DrunkardsWalk:
         Starting coords of walker. If not provided, coords will be created randomly within
         grid width and height.
     steps: int
-        Number of steps that walker will take.
+        Number of steps that walker will take. If None is passed, steps take random value generated within
+        bounds specified in constants file.
 
     Methods:
     --------
@@ -30,9 +31,7 @@ class DrunkardsWalk:
         Starts the algorithm
     """
 
-    def __init__(
-        self, owner, start_x=None, start_y=None, steps=constants.DRUNKARDS_WALK_STEPS
-    ):
+    def __init__(self, owner, start_x=None, start_y=None, steps=None):
         self.owner = owner
         self.start_x = start_x
         if self.start_x is None:
@@ -41,34 +40,32 @@ class DrunkardsWalk:
         if self.start_y is None:
             self.start_y = random.randint(0, self.owner.height - 1)
         self.steps = steps
+        if self.steps is None:
+            self.steps = random.randint(
+                constants.DIG_PERCENT_MIN, constants.DIG_PERCENT_MAX
+            )
         # Adjust the value below if you wish to allow diagonal movement.
-        self.directions = [-1, 1]
+        self.directions = [
+            [0, 1],
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+        ]
 
     def walk(self):
         """
         Starts the algorithm at the given coordinates, then moves step-by-step, horizontally or vertically.
         If new coords are valid (within the owner (grid) bounds), then remove the MapObject from this map cell.
-        The walker will walk until all steps are taken. Every step counts, even if walker steps on the tile
-        that is already empty.
+        The walker will walk until all steps are taken.
         """
+        # cur_x and cur_y are coords of Tile currently occupied by walker.
         cur_x = self.start_x
         cur_y = self.start_y
-        for step in range(self.steps):
-            new_x = cur_x + random.choice(self.directions)
-            new_y = cur_y + random.choice(self.directions)
-            if (
-                new_x < 0
-                or new_x >= self.owner.width
-                or new_y < 0
-                or new_y >= self.owner.height
-            ):
-                continue
-            if random.choice(self.directions) == -1:  # horizontal
-                cur_x = new_x
-            else:  # vertical
-                cur_y = new_y
+        while self.steps > 0:
+            # Convert cell position to the pixel position of x and y.
             xx = (cur_x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X
             yy = (cur_y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y
+            # Check if there is an instance of MapObject here...
             obj = next(
                 (
                     obj
@@ -77,5 +74,20 @@ class DrunkardsWalk:
                 ),
                 None,
             )
+            # ...and if it is, then remove the object from the list and decrement steps.
             if obj:
                 self.owner.map_objects.remove_map_object(obj)
+                self.steps -= 1
+            # Continue even if the Tile has been cleared already.
+            # Choose a new direction, and update cur_x and cur_y if valid.
+            direction = random.choice(self.directions)
+            new_x = cur_x + direction[0]
+            new_y = cur_y + direction[1]
+            if (
+                new_x >= 0
+                and new_x < self.owner.width
+                and new_y >= 0
+                and new_y < self.owner.height
+            ):
+                cur_x = new_x
+                cur_y = new_y

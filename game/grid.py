@@ -32,8 +32,12 @@ class Grid:
     --------
     _init_empty_grid: list of Tile
         Initializes empty grid, using one basic Sprite, creating the foundations for further modifications.
+    _initialize_map_objects
+        Clears self.map_objects, then fills it with new instance of MapObjects.
     generate_map
         Creates new DrunkardsWalk instance and lets him walk.
+    check_map: bool
+        After the map is created by DrunkardsWalk, check_map is called to validate the map.
     """
 
     def __init__(
@@ -69,6 +73,88 @@ class Grid:
                 self.sprite_list.append(tile.sprite.arcade_sprite)
         return tiles
 
+    def _initialize_map_objects(self):
+        """
+        Start with setting the map_objects to None, then fill it with the basic MapObjects.
+        Used in generate_map method to clean up the map between recursions.
+        """
+        self.map_objects = None
+        self.map_objects = MapObjects()
+        self.map_objects.owner = self
+        self.map_objects.fill_map()
+
     def generate_map(self):
+        """
+        Runs the drunkard's walk algorithm to generate a map. If the map is not valid (e.g. Tile placement is
+        not uniform enough), then map_objects are reset and generate_map is recursively called again.
+        """
         walker = DrunkardsWalk(owner=self, start_x=0, start_y=0)
         walker.walk()
+        if not self.check_map():
+            self._initialize_map_objects()
+            self.generate_map()
+
+    def check_map(self):
+        """
+        Check of uniformity of objects removal. The map is divided into four quadrants. This method counts
+        MapObject instances remaining on each quadrant, calcs the average, then checks if every quadrant is within
+        the bounds (average - negative-tolerance, average + positive tolerance). Returns a bool.
+        TODO: Check if this is overkill for a such small maps. Perhaps could be merged with drunkard's walk?
+        """
+        # Declare the quadrants.
+        quadrant_1 = [0, self.width // 2 - 1, 0, self.height // 2 - 1]
+        quadrant_2 = [self.width // 2, self.width - 1, 0, self.height // 2 - 1]
+        quadrant_3 = [
+            self.width // 2,
+            self.width - 1,
+            self.height // 2,
+            self.height - 1,
+        ]
+        quadrant_4 = [0, self.width // 2 - 1, self.height // 2, self.height - 1]
+        # Every quadrants have its own counter, and after iterating over all the Tiles in quadrant,
+        # the counter is added to the `count` list.
+        count = []
+        total = 0
+        quadrants = [
+            quadrant_1,
+            quadrant_2,
+            quadrant_3,
+            quadrant_4,
+        ]
+        for quadrant in quadrants:
+            counter = 0
+            for x in range(quadrant[0], quadrant[1], 1):
+                for y in range(quadrant[2], quadrant[3], 1):
+                    # For every Tile in the current quadrant, transform its coords from the cell to pixels...
+                    xx = (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X
+                    yy = (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y
+                    # ...and check if there is object on this Tile.
+                    obj = next(
+                        (
+                            obj
+                            for obj in self.map_objects.objects
+                            if (obj.position.x == xx and obj.position.y == yy)
+                        ),
+                        None,
+                    )
+                    # If object is found, increment the quadrant's counter.
+                    if obj:
+                        counter += 1
+            count.append(counter)
+            total += counter
+        # After iterating over all four quadrants, calculate the average percentage of occupied terrain.
+        average = total / len(quadrants)
+        percent = average / 100
+        # Then, check if uniformity of MapObject placement is withing specified in constant.py bounds.
+        acceptable_minimum = average - (
+            percent * constants.DIG_PERCENT_QUADRANT_TOLERANCE_NEGATIVE
+        )
+        acceptable_maximum = average + (
+            percent * constants.DIG_PERCENT_QUADRANT_TOLERANCE_POSITIVE
+        )
+        for c in count:
+            if c < acceptable_minimum or c > acceptable_maximum:
+                print("not valid")
+                return False  # Invalid map
+        print("valid")
+        return True  # Valid map
