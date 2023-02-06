@@ -4,10 +4,10 @@
 import arcade
 
 from . import constants
+from .components.position import Position
 from .drunkards_walk import DrunkardsWalk
 from .tile import Tile
-from game.components.position import Position
-from game.map_objects import MapObjects
+from .map_objects import MapObjects
 
 
 class Grid:

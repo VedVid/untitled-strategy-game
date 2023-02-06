@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from . import states
+from .states import State
 
 
-state = states.State.GENERATE_MAP
+state = State.GENERATE_MAP

@@ -2,10 +2,9 @@
 
 
 from . import constants
-
-from game.components.size import Size
-from game.components.position import Position
-from game.components.sprite import Sprite
+from .components.size import Size
+from .components.position import Position
+from .components.sprite import Sprite
 
 
 class Tile:

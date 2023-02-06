@@ -3,8 +3,8 @@
 
 import arcade
 
-import game.globals
-import game.states
+from . import globals
+from .states import State
 
 
 class Game(arcade.Window):
@@ -35,6 +35,6 @@ class Game(arcade.Window):
             self.initialized = True
 
     def on_update(self, delta_time):
-        if game.globals.state == game.states.State.GENERATE_MAP and self.initialized:
+        if globals.state == State.GENERATE_MAP and self.initialized:
             self.grid.generate_map()
-            game.globals.state = game.states.State.PLAY
+            globals.state = State.PLAY

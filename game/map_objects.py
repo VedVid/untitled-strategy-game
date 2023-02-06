@@ -3,7 +3,7 @@
 
 import arcade
 
-from game.map_object import MapObject
+from .map_object import MapObject
 
 
 class MapObjects:
@@ -21,10 +21,10 @@ class MapObjects:
     fill_map
         Using Grid width and height values, creates a baseic MapObject for every cell.
 
-    add_map_object
+    add_map_object (MapObject)
         Adds new MapObject to self.objects, and its sprite to arcade SpriteList
 
-    remove_map_object
+    remove_map_object (MapObject)
         Removes a specific MapObject and its sprite from self.object and arcade SpriteList.
         Please note that the removal can not occur before window initialization (ergo, before allocation of
         GPU resources).

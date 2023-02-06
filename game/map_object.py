@@ -2,8 +2,8 @@
 
 
 from . import constants
-from game.components.position import Position
-from game.components.sprite import Sprite
+from .components.position import Position
+from .components.sprite import Sprite
 
 
 class MapObject:

@@ -83,11 +83,6 @@ class DrunkardsWalk:
             direction = random.choice(self.directions)
             new_x = cur_x + direction[0]
             new_y = cur_y + direction[1]
-            if (
-                new_x >= 0
-                and new_x < self.owner.width
-                and new_y >= 0
-                and new_y < self.owner.height
-            ):
+            if 0 <= new_x < self.owner.width and 0 <= new_y < self.owner.height:
                 cur_x = new_x
                 cur_y = new_y

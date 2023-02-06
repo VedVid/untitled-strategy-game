@@ -13,7 +13,7 @@ class Position:
 
     Methods:
     --------
-    move_towards
+    move_towards (int, int)
         Changes position into direction specified by method arguments.
     """
 
