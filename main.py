@@ -4,6 +4,7 @@
 import arcade
 
 from game import constants
+from game import being
 from game.game import Game
 from game.grid import Grid
 from game.map_object import MapObject
@@ -28,6 +29,10 @@ g = Game(
     grid,
 )
 
+being1 = being.construct_beings(being.Player, 3, 3)
+being2 = being.construct_beings(being.Enemy, 5, 5)
+print(being1.sprite.filename)
+print(being2.sprite.filename)
 
 if __name__ == "__main__":
     arcade.run()
