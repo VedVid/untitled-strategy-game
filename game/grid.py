@@ -90,6 +90,7 @@ class Grid:
         """
         walker = DrunkardsWalk(owner=self, start_x=0, start_y=0)
         walker.walk()
+        self.map_objects.add_buildings()
         if not self.check_map():
             self._initialize_map_objects()
             self.generate_map()
@@ -100,6 +101,7 @@ class Grid:
         MapObject instances remaining on each quadrant, calcs the average, then checks if every quadrant is within
         the bounds (average - negative-tolerance, average + positive tolerance). Returns a bool.
         TODO: Check if this is overkill for a such small maps. Perhaps could be merged with drunkard's walk?
+        TODO: Check the longest path from A to B, to avoid player to navigate through circles.
         """
         # Declare the quadrants.
         quadrant_1 = [0, self.width // 2 - 1, 0, self.height // 2 - 1]
@@ -133,7 +135,7 @@ class Grid:
                         (
                             obj
                             for obj in self.map_objects.objects
-                            if (obj.position.x == xx and obj.position.y == yy)
+                            if (obj.px_position.x == xx and obj.px_position.y == yy)
                         ),
                         None,
                     )

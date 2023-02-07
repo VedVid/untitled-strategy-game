@@ -46,11 +46,12 @@ class MapObject:
         target=False,
         predecessor=None,
     ):
-        self.position = Position(
+        self.cell_position = Position(x, y)
+        self.px_position = Position(
             (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
-        self.sprite = Sprite(sprite, self.position, 0.125)
+        self.sprite = Sprite(sprite, self.px_position, 0.125)
         self.blocks = blocks
         self.destructible = destructible
         self.target = target

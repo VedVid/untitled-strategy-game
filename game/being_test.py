@@ -39,9 +39,15 @@ def test_enemy_ai():
 
 def test_player_position():
     assert being_player.position.x == 160 and being_player.position.y == 224
-    assert being_player.position.x == being_player.sprite.position.x and being_player.position.y == being_player.sprite.position.y
+    assert (
+        being_player.position.x == being_player.sprite.position.x
+        and being_player.position.y == being_player.sprite.position.y
+    )
 
 
 def test_enemy_position():
     assert being_enemy.position.x == 352 and being_enemy.position.y == 288
-    assert being_enemy.position.x == being_enemy.sprite.position.x and being_enemy.position.y == being_enemy.sprite.position.y
+    assert (
+        being_enemy.position.x == being_enemy.sprite.position.x
+        and being_enemy.position.y == being_enemy.sprite.position.y
+    )

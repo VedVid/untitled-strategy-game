@@ -70,7 +70,7 @@ class DrunkardsWalk:
                 (
                     obj
                     for obj in self.owner.map_objects.objects
-                    if (obj.position.x == xx and obj.position.y == yy)
+                    if (obj.px_position.x == xx and obj.px_position.y == yy)
                 ),
                 None,
             )

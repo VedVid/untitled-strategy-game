@@ -14,6 +14,7 @@ class Being:
     """
     Abstract class. Being can represent every animated entity, like player, allied units, monsters.
     """
+
     def __init__(self):
         self.build_position(-1, -1)
         self.build_sprite()
