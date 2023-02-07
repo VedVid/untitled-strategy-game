@@ -8,7 +8,13 @@ At the current state, there is nothing to play. The game is in the very early st
 I aim to create a small scale tactical game, in the veins of the Into The Breach. Just a handful of units on a small map, short missions, no micromanagement.
 
 
+#### What is the goal of the project?
+
+The goal is to learn something new. I will try to use design patterns, tinker with both inheritance and composition, discipline myself to document the code well using the commonly used formatting. Simply, the goal is to learn, to develop new, better practices and maybe get rid of some bad habits.
+
+
 #### I don't see a license in the repository, is that an oversight?
 
 While most of my work is released under open source licenses, that's not the case here. This project is only source-available. 
+
 
