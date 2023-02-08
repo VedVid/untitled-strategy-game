@@ -156,7 +156,5 @@ class Grid:
         )
         for c in count:
             if c < acceptable_minimum or c > acceptable_maximum:
-                print("not valid")
                 return False  # Invalid map
-        print("valid")
         return True  # Valid map

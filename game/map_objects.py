@@ -96,9 +96,6 @@ class MapObjects:
             "above": (map_object.cell_position.x, map_object.cell_position.y + 1),
             "below": (map_object.cell_position.x, map_object.cell_position.y - 1),
         }
-        print()
-        print(f"x: {map_object.cell_position.x}, y: {map_object.cell_position.y}")
-        print(empty_tiles)
         # Check ends of the map, both horizontally...
         if map_object.cell_position.x == 0:
             del empty_tiles["left"]

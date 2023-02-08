@@ -31,8 +31,6 @@ g = Game(
 
 being1 = being.construct_beings(being.Player, 3, 3)
 being2 = being.construct_beings(being.Enemy, 5, 5)
-print(being1.sprite.filename)
-print(being2.sprite.filename)
 
 
 if __name__ == "__main__":
