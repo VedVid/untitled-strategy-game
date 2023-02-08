@@ -28,6 +28,13 @@ class Pathfinder:
     Uses Breadth-First Search algorithm - totally sufficient if diagonal movement is forbidden. Otherwise, A* may
     be a better choice.
 
+    Unfortunately, there are "gotchas" in the current implementation.
+        1) To rerun the algorithm, calling cleanup method is necessary. Otherwise, the results are unpredictable.
+        2) Finder needs to "step on" the last tile, so it should not be object marked as blocking.
+        3) Finder does not need to "step on" the first tile, so it could be object marked as blocking, but see 4) below.
+        4) Path returned by finder includes both ends, so starting tile is part of the path. In that case, it may be
+           necessary to use the "target" object (like building) as the start tile, and then follow the path in reverse.
+
     Parameters:
     ===========
     grid: Grid
