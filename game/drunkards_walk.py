@@ -63,6 +63,7 @@ class DrunkardsWalk:
         cur_y = self.start_y
         while self.steps > 0:
             # Convert cell position to the pixel position of x and y.
+            # TODO: Use cell position.
             xx = (cur_x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X
             yy = (cur_y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y
             # Check if there is an instance of MapObject here...

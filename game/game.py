@@ -4,6 +4,7 @@
 import arcade
 
 from . import globals
+from .pathfinding import Pathfinder
 from .states import State
 
 
@@ -20,6 +21,7 @@ class Game(arcade.Window):
         super().__init__(width, height, title)
         self.background_color = arcade.color.DARK_BLUE_GRAY
         self.grid = grid
+        self.pathfinder = None
         # first_frame and initialized are hacks to allow removing from the spritelists.
         # Will be removed when stuff like main menu will be implemented - that way, window will be spawned and
         # GPU resources allocated long time before removing sprites.
