@@ -35,5 +35,3 @@ being2 = being.construct_beings(being.Enemy, 5, 5)
 
 if __name__ == "__main__":
     arcade.run()
-
-

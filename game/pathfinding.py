@@ -65,10 +65,7 @@ class Pathfinder:
     @staticmethod
     def _make_matrix(grid):
         """Uses Grid to create matrix required by pathfinding package. '0' means empty tile, '1' indicates obstacle."""
-        matrix = [[
-            1
-            for x in range(grid.width)]
-            for y in range(grid.height)]
+        matrix = [[1 for x in range(grid.width)] for y in range(grid.height)]
         for obj in grid.map_objects.objects:
             if obj.blocks:
                 matrix[obj.cell_position.y][obj.cell_position.x] = 0
@@ -94,7 +91,13 @@ class Pathfinder:
         Hacky position.y is result of how coords of arcade and pathfinding library work: arcade starts
         from the bottom-left corner, and pathfinding starts from the top-left corner.
         """
-        start = self._path_grid.node(start_position.x, self.grid.width - 1 - start_position.y)
-        target = self._path_grid.node(target_position.x, self.grid.height - 1 - target_position.y)
-        path, runs = self.finder.find_path(start=start, end=target, grid=self._path_grid)
+        start = self._path_grid.node(
+            start_position.x, self.grid.width - 1 - start_position.y
+        )
+        target = self._path_grid.node(
+            target_position.x, self.grid.height - 1 - target_position.y
+        )
+        path, runs = self.finder.find_path(
+            start=start, end=target, grid=self._path_grid
+        )
         return path, runs

@@ -167,7 +167,10 @@ class Grid:
                 (
                     obj
                     for obj in self.map_objects.objects
-                    if (obj.cell_position.x == a.cell_position.x and obj.cell_position.y == a.cell_position.y)
+                    if (
+                        obj.cell_position.x == a.cell_position.x
+                        and obj.cell_position.y == a.cell_position.y
+                    )
                 ),
                 None,
             )
@@ -175,7 +178,10 @@ class Grid:
                 (
                     obj
                     for obj in self.map_objects.objects
-                    if (obj.cell_position.x == b.cell_position.x and obj.cell_position.y == b.cell_position.y)
+                    if (
+                        obj.cell_position.x == b.cell_position.x
+                        and obj.cell_position.y == b.cell_position.y
+                    )
                 ),
                 None,
             )

@@ -62,6 +62,6 @@ def test_enemy_px_position():
 
 def test_enemy_sprite_position():
     assert (
-            being_enemy.px_position.x == being_enemy.sprite.position.x
-            and being_enemy.px_position.y == being_enemy.sprite.position.y
+        being_enemy.px_position.x == being_enemy.sprite.position.x
+        and being_enemy.px_position.y == being_enemy.sprite.position.y
     )
