@@ -7,6 +7,8 @@
 # Maybe pathfinding is not the best use case for the Borg pattern, as it will create a lot of instances
 # and it may take a lot of memory.
 # But for the sake of learning, it fits nicely.
+# Still, it leads to the using more memory than necessary, so if I find a better candidate for Borg pattern,
+# I will rewrite pathfinding into Singleton-wanna-be (single file with global state and functions).
 
 
 from pathfinding.core.grid import Grid as PathGrid
@@ -15,7 +17,6 @@ from pathfinding.finder.breadth_first import BreadthFirstFinder
 from . import constants
 
 
-# TODO: Remember to set up finder clean-up somewhere! Please read below the fragment of library documentation.
 # While running the pathfinding algorithm it might set values on the nodes. Depending on your path finding algorithm
 # things like calculated distances or visited flags might be stored on them. So if you want to run the algorithm
 # in a loop you need to clean the grid first (see Grid.cleanup). Please note that because cleanup looks at all nodes
@@ -44,9 +45,9 @@ class Pathfinder:
     ========
     _make_matrix (Grid): 2d list
         Uses Grid to create matrix required by pathfinding package.
-    _set_up_path_grid: None or PathGrid
+    set_up_path_grid: None or PathGrid
         Creates new PathGrid instance or cleans up existing PathGrid instance.
-    clean_up_path_grid
+    _clean_up_path_grid
         Cleans up the Grid. Necessary to rerunning the pathfinding algorithm.
     find_path (Position, Position): list of sets, int
         Finds path between first Position and second Position.
@@ -58,7 +59,7 @@ class Pathfinder:
         self.__dict__ = self._shared_state
         self.grid = grid
         self._matrix = self._make_matrix(grid)
-        self._path_grid = self._set_up_path_grid()
+        self._path_grid = PathGrid(matrix=self._matrix)
         self.finder = BreadthFirstFinder()
 
     @staticmethod
@@ -75,15 +76,14 @@ class Pathfinder:
         matrix.reverse()
         return matrix
 
-    def _set_up_path_grid(self):
+    def set_up_path_grid(self):
         """Creates new PathGrid if not exists, performs cleanup otherwise."""
         try:
-            if self._path_grid:
-                self.clean_up_path_grid()
+            self._clean_up_path_grid()
         except AttributeError:
-            return PathGrid(matrix=self._matrix)
+            self._path_grid = PathGrid(matrix=self._matrix)
 
-    def clean_up_path_grid(self):
+    def _clean_up_path_grid(self):
         """Cleans up the Grid. Necessary when rerunning the algorithm."""
         self._path_grid.cleanup()
 

@@ -30,6 +30,7 @@ class Tile:
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
+        self.cell_position = Position(x, y)
         self.position = Position(
             (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,

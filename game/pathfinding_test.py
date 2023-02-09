@@ -20,7 +20,7 @@ def test_moving_around_the_obstacle():
     print(pathfinder._path_grid.grid_str(path=path_1, start=position_1, end=position_2))
     position_3 = Position(0, 2)
     position_4 = Position(4, 2)
-    pathfinder.clean_up_path_grid()
+    pathfinder.set_up_path_grid()
     path_2, _ = pathfinder.find_path(position_3, position_4)
     print(pathfinder._path_grid.grid_str(path=path_2, start=position_3, end=position_4))
     assert len(path_1) == 5 and len(path_2) == 7

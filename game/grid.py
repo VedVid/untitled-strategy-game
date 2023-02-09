@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 
+import itertools
+
 import arcade
 
 from . import constants
 from .components.position import Position
 from .drunkards_walk import DrunkardsWalk
+from .pathfinding import Pathfinder
 from .tile import Tile
 from .map_objects import MapObjects
 
@@ -157,4 +160,36 @@ class Grid:
         for c in count:
             if c < acceptable_minimum or c > acceptable_maximum:
                 return False  # Invalid map
+        # Find the longest possible path on the given map.
+        longest_path = 0
+        pathfinder = Pathfinder(self)
+        pathfinder.set_up_path_grid()
+        for a, b in itertools.combinations(self.tiles, 2):
+            # Exclude tiles that are already occupied by MapObject instances.
+            obj_on_a = next(
+                (
+                    obj
+                    for obj in self.map_objects.objects
+                    if (obj.cell_position.x == a.cell_position.x and obj.cell_position.y == a.cell_position.y)
+                ),
+                None,
+            )
+            obj_on_b = next(
+                (
+                    obj
+                    for obj in self.map_objects.objects
+                    if (obj.cell_position.x == b.cell_position.x and obj.cell_position.y == b.cell_position.y)
+                ),
+                None,
+            )
+            if obj_on_a or obj_on_b:
+                continue
+            # Then find the path.
+            path, runs = pathfinder.find_path(a.cell_position, b.cell_position)
+            pathfinder.set_up_path_grid()
+            if len(path) > longest_path:
+                longest_path = len(path)
+        # Discard the map if the longest found path is too long.
+        if longest_path > constants.LONGEST_VALID_PATH:
+            return False
         return True  # Valid map
