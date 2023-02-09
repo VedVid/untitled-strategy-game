@@ -31,9 +31,9 @@ class Tile:
         height=constants.TILE_SIZE_H,
     ):
         self.cell_position = Position(x, y)
-        self.position = Position(
+        self.px_position = Position(
             (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
         self.size = Size(width, height)
-        self.sprite = Sprite(sprite, self.position, 0.125)
+        self.sprite = Sprite(sprite, self.px_position, 0.125)

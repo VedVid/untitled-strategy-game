@@ -19,8 +19,12 @@ def test_if_constants_remains_unchanged():
     )
 
 
-def test_tile_position():
-    assert tile.position.x == 160 and tile.position.y == 288
+def test_tile_cell_position():
+    assert tile.cell_position.x == 2 and tile.cell_position.y == 4
+
+
+def test_tile_px_position():
+    assert tile.px_position.x == 160 and tile.px_position.y == 288
 
 
 def test_tile_sprite_type():

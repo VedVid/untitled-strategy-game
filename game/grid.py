@@ -130,15 +130,12 @@ class Grid:
             counter = 0
             for x in range(quadrant[0], quadrant[1], 1):
                 for y in range(quadrant[2], quadrant[3], 1):
-                    # For every Tile in the current quadrant, transform its coords from the cell to pixels...
-                    xx = (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X
-                    yy = (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y
-                    # ...and check if there is object on this Tile.
+                    # For every Tile in the current quadrant, check if there is object on this Tile.
                     obj = next(
                         (
                             obj
                             for obj in self.map_objects.objects
-                            if (obj.px_position.x == xx and obj.px_position.y == yy)
+                            if (obj.cell_position.x == x and obj.cell_position.y == y)
                         ),
                         None,
                     )

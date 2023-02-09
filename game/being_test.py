@@ -37,17 +37,31 @@ def test_enemy_ai():
     assert being_enemy.ai is None
 
 
-def test_player_position():
-    assert being_player.position.x == 160 and being_player.position.y == 224
+def test_player_cell_position():
+    assert being_player.cell_position.x == 2 and being_player.cell_position.y == 3
+
+
+def test_player_px_position():
+    assert being_player.px_position.x == 160 and being_player.px_position.y == 224
+
+
+def test_player_sprite_position():
     assert (
-        being_player.position.x == being_player.sprite.position.x
-        and being_player.position.y == being_player.sprite.position.y
+        being_player.px_position.x == being_player.sprite.position.x
+        and being_player.px_position.y == being_player.sprite.position.y
     )
 
 
-def test_enemy_position():
-    assert being_enemy.position.x == 352 and being_enemy.position.y == 288
+def test_enemy_cell_position():
+    assert being_enemy.cell_position.x == 5 and being_enemy.cell_position.y == 4
+
+
+def test_enemy_px_position():
+    assert being_enemy.px_position.x == 352 and being_enemy.px_position.y == 288
+
+
+def test_enemy_sprite_position():
     assert (
-        being_enemy.position.x == being_enemy.sprite.position.x
-        and being_enemy.position.y == being_enemy.sprite.position.y
+            being_enemy.px_position.x == being_enemy.sprite.position.x
+            and being_enemy.px_position.y == being_enemy.sprite.position.y
     )

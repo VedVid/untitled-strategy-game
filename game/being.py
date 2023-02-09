@@ -16,11 +16,15 @@ class Being:
     """
 
     def __init__(self):
-        self.build_position(-1, -1)
+        self.build_cell_position(-1, -1)
+        self.build_px_position(-1, -1)
         self.build_sprite()
         self.build_ai()
 
-    def build_position(self, x, y):
+    def build_cell_position(self, x, y):
+        raise NotImplementedError
+
+    def build_px_position(self, x, y):
         raise NotImplementedError
 
     def build_sprite(self):
@@ -32,15 +36,18 @@ class Being:
 
 # Concrete
 class Player(Being):
-    def build_position(self, x, y):
-        # Position is redudant to sprite position... Unless we keep this position in cell units instead of pixel.
-        self.position = Position(
+    def build_cell_position(self, x, y):
+        self.cell_position = Position(x, y)
+
+    def build_px_position(self, x, y):
+        # Position is redudant to sprite position...
+        self.px_position = Position(
             (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
 
     def build_sprite(self):
-        self.sprite = Sprite("image_being_player_1.png", self.position, 0.125)
+        self.sprite = Sprite("image_being_player_1.png", self.px_position, 0.125)
 
     def build_ai(self):
         # If self.ai is None, then the instance will wait for the player's commands.
@@ -49,14 +56,17 @@ class Player(Being):
 
 # Concrete
 class Enemy(Being):
-    def build_position(self, x, y):
-        self.position = Position(
+    def build_cell_position(self, x, y):
+        self.cell_position = Position(x, y)
+
+    def build_px_position(self, x, y):
+        self.px_position = Position(
             (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
 
     def build_sprite(self):
-        self.sprite = Sprite("image_being_enemy_1.png", self.position, 0.125)
+        self.sprite = Sprite("image_being_enemy_1.png", self.px_position, 0.125)
 
     def build_ai(self):
         # TODO: Replace this placeholder with proper AI.
@@ -65,7 +75,8 @@ class Enemy(Being):
 
 def construct_beings(cls, x, y):
     being = cls()
-    being.build_position(x, y)
+    being.build_cell_position(x, y)
+    being.build_px_position(x, y)
     being.build_sprite()
     being.build_ai()
     return being
