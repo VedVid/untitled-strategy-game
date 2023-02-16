@@ -134,3 +134,13 @@ class MapObjects:
     def remove_map_object(self, map_object):
         self.objects.remove(map_object)
         self.sprite_list.remove(map_object.sprite.arcade_sprite)
+
+    def find_map_object_by_cell_position(self, x, y):
+        return next(
+            (
+                obj
+                for obj in self.objects
+                if (obj.cell_position.x == x and obj.cell_position.y == y)
+            ),
+            None,
+        )

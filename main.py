@@ -4,7 +4,7 @@
 import arcade
 
 from game import constants
-from game import being
+from game.beings import Beings
 from game.game import Game
 from game.grid import Grid
 from game.map_object import MapObject
@@ -22,15 +22,17 @@ map_object = MapObject(
 map_objects = MapObjects()
 map_objects.add_map_object(map_object)
 
+beings = Beings()
+
 g = Game(
     constants.SCREEN_WIDTH,
     constants.SCREEN_HEIGHT,
     constants.SCREEN_TITLE,
     grid,
+    beings,
 )
 
-being1 = being.construct_beings(being.Player, 3, 3)
-being2 = being.construct_beings(being.Enemy, 5, 5)
+g.beings.owner = g
 
 
 if __name__ == "__main__":

@@ -19,7 +19,9 @@ class Being:
         self.build_cell_position(-1, -1)
         self.build_px_position(-1, -1)
         self.build_sprite()
+        self.build_selected_sprite()
         self.build_ai()
+        self.build_selected()
 
     def build_cell_position(self, x, y):
         raise NotImplementedError
@@ -30,8 +32,20 @@ class Being:
     def build_sprite(self):
         raise NotImplementedError
 
+    def build_selected_sprite(self):
+        raise NotImplementedError
+
     def build_ai(self):
         raise NotImplementedError
+
+    def build_selected(self):
+        self.selected = False
+
+    def toggle_selected(self):
+        if self.selected:
+            self.selected = False
+        else:
+            self.selected = True
 
 
 # Concrete
@@ -48,6 +62,11 @@ class Player(Being):
 
     def build_sprite(self):
         self.sprite = Sprite("image_being_player_1.png", self.px_position, 0.125)
+
+    def build_selected_sprite(self):
+        self.sprite_selected = Sprite(
+            "image_being_player_1_selected.png", self.px_position, 0.125
+        )
 
     def build_ai(self):
         # If self.ai is None, then the instance will wait for the player's commands.
@@ -68,6 +87,11 @@ class Enemy(Being):
     def build_sprite(self):
         self.sprite = Sprite("image_being_enemy_1.png", self.px_position, 0.125)
 
+    def build_selected_sprite(self):
+        self.sprite_selected = Sprite(
+            "image_being_enemy_1_selected.png", self.px_position, 0.125
+        )
+
     def build_ai(self):
         # TODO: Replace this placeholder with proper AI.
         self.ai = None
@@ -78,5 +102,7 @@ def construct_beings(cls, x, y):
     being.build_cell_position(x, y)
     being.build_px_position(x, y)
     being.build_sprite()
+    being.build_selected_sprite()
     being.build_ai()
+    being.build_selected()
     return being
