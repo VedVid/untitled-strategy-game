@@ -9,7 +9,11 @@ import arcade
 
 
 class SpriteTracker:
-    """An actual facade."""
+    """
+    An actual facade that is going to track and draw all selected entities. Selected entity may be a selected player,
+    targeted enemy, terrain sprite that is part of the path selected by pathfinding algorithm.
+    Currently tracks Beings only.
+    """
 
     def __init__(self, beings):
         self._beings_selected = BeingsSelected(beings)
