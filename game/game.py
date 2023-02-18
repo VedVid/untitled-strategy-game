@@ -5,6 +5,7 @@ import arcade
 
 from . import constants
 from . import globals
+from .components.position import Position
 from .pathfinding import Pathfinder
 from .sprite_tracker import SpriteTracker
 from .states import State
@@ -27,8 +28,9 @@ class Game(arcade.Window):
         self.background_color = arcade.color.DARK_BLUE_GRAY
         self.grid = grid
         self.beings = beings
-        self.pathfinder = None
-        self.sprite_tracker = SpriteTracker(self.beings)
+        self.pathfinder = Pathfinder(self.grid)
+        self.selected_player = None
+        self.sprite_tracker = SpriteTracker(self.beings, self.grid)
         # first_frame and initialized are hacks to allow removing from the spritelists.
         # Will be removed when stuff like main menu will be implemented - that way, window will be spawned and
         # GPU resources allocated long time before removing sprites.
@@ -52,15 +54,28 @@ class Game(arcade.Window):
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
         self.y = y
+        if self.selected_player:
+            target_position = Position(x, y).return_px_to_cell()
+            self.pathfinder.set_up_path_grid()
+            self.pathfinder.find_path(
+                self.selected_player.cell_position, target_position
+            )
 
     def on_mouse_press(self, x, y, button, modifiers):
-        selected_player = self.beings.find_player_by_px_position(x, y)
-        if selected_player:
+        player_under_cursor = self.beings.find_player_by_px_position(x, y)
+        if player_under_cursor:
             for player in self.beings.player_beings:
-                if player is selected_player:
+                if player is player_under_cursor:
                     player.toggle_selected()
                     continue
                 player.selected = False
+            return
+        if self.selected_player is not None and self.pathfinder.last_path:
+            self.selected_player.move_to(
+                self.pathfinder.last_path[-1][0],
+                self.pathfinder.last_path[-1][1],
+            )
+            self.pathfinder.last_path = ()
 
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
@@ -69,4 +84,7 @@ class Game(arcade.Window):
             for i in range(constants.PLAYER_BEINGS_NO):
                 self.beings.spawn_player_being()
         if self.initialized:
+            self.selected_player = self.beings.find_selected_player()
+            if self.selected_player is None:
+                self.pathfinder.last_path = ()
             self.sprite_tracker.track()

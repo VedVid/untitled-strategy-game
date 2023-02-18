@@ -37,6 +37,8 @@ class Grid:
         Initializes empty grid, using one basic Sprite, creating the foundations for further modifications.
     _initialize_map_objects
         Clears self.map_objects, then fills it with new instance of MapObjects.
+    find_tile_by_position (Position): Tile
+        Tries to find element in self.tiles with Position matching the argument.
     generate_map
         Creates new DrunkardsWalk instance and lets him walk.
     check_map: bool
@@ -71,6 +73,7 @@ class Grid:
                     x,
                     y,
                     "image_terrain_1.png",
+                    "image_terrain_1_selected.png",
                 )
                 tiles.append(tile)
                 self.sprite_list.append(tile.sprite.arcade_sprite)
@@ -85,6 +88,20 @@ class Grid:
         self.map_objects = MapObjects()
         self.map_objects.owner = self
         self.map_objects.fill_map()
+
+    def find_tile_by_position(self, position):
+        """
+        Takes an Position as an argument, then iterates over the self.tiles and returns Tile with matching Position.
+        Used by SpriteTracker / TilesSelected to find the Tiles in path returned by the Pathfinder.
+        """
+        return next(
+            (
+                t
+                for t in self.tiles
+                if (position.x == t.cell_position.x and position.y == t.cell_position.y)
+            ),
+            None,
+        )
 
     def generate_map(self):
         """
@@ -192,6 +209,7 @@ class Grid:
             pathfinder.set_up_path_grid()
             if len(path) > longest_path:
                 longest_path = len(path)
+        pathfinder.last_path = ()
         # Discard the map if the longest found path is too long.
         if longest_path > constants.LONGEST_VALID_PATH:
             return False

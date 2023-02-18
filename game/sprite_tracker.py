@@ -7,6 +7,9 @@
 
 import arcade
 
+from .components.position import Position
+from .pathfinding import Pathfinder
+
 
 class SpriteTracker:
     """
@@ -15,13 +18,16 @@ class SpriteTracker:
     Currently tracks Beings only.
     """
 
-    def __init__(self, beings):
+    def __init__(self, beings, grid):
         self._beings_selected = BeingsSelected(beings)
+        self._tiles_selected = TilesSelected(grid)
 
     def track(self):
+        self._tiles_selected.find()
         self._beings_selected.find()
 
     def draw(self):
+        self._tiles_selected.draw()
         self._beings_selected.draw()
 
 
@@ -56,5 +62,26 @@ class MapObjectSelected:
     pass
 
 
-class TileSelected:
-    pass
+class TilesSelected:
+    def __init__(self, grid):
+        self.grid = grid
+        self.pathfinder = Pathfinder(grid)
+        self.sprites_selected = arcade.SpriteList()
+
+    def _reset_sprite_list(self):
+        self.sprites_selected.clear()
+
+    def _find_tiles_selected(self):
+        try:
+            for coords in self.pathfinder.last_path:
+                tile = self.grid.find_tile_by_position(Position(coords[0], coords[1]))
+                self.sprites_selected.append(tile.sprite_selected.arcade_sprite)
+        except TypeError:  # Empty last_path
+            pass
+
+    def find(self):
+        self._reset_sprite_list()
+        self._find_tiles_selected()
+
+    def draw(self):
+        self.sprites_selected.draw()

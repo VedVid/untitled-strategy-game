@@ -24,6 +24,8 @@ class Sprite:
     --------
     _load
         Creates Arcade Sprite using parameters passed during the initialization.
+    update_position (Position)
+        Updates position of self and arcade_sprite.
     """
 
     def __init__(self, filename, position, scale=1):
@@ -43,3 +45,9 @@ class Sprite:
             print(e)
         else:
             return arcade_sprite
+
+    def update_position(self, position):
+        """Updates position of Sprite that is already set up."""
+        self.position = position
+        self.arcade_sprite.center_x = self.position.x
+        self.arcade_sprite.center_y = self.position.y

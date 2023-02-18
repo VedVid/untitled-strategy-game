@@ -49,7 +49,9 @@ class Pathfinder:
         Creates new PathGrid instance or cleans up existing PathGrid instance.
     _clean_up_path_grid
         Cleans up the Grid. Necessary to rerunning the pathfinding algorithm.
-    find_path (Position, Position): list of sets, int
+    _fix_path (list of tuples): list of tuples
+        Called once in find_path method, to fix the inverted y axis. TODO: Hacky solution; improve.
+    find_path (Position, Position): list of tuples, int
         Finds path between first Position and second Position.
     """
 
@@ -61,6 +63,7 @@ class Pathfinder:
         self._matrix = self._make_matrix(grid)
         self._path_grid = PathGrid(matrix=self._matrix)
         self.finder = BreadthFirstFinder()
+        self.last_path = ()
 
     @staticmethod
     def _make_matrix(grid):
@@ -84,6 +87,22 @@ class Pathfinder:
         """Cleans up the Grid. Necessary when rerunning the algorithm."""
         self._path_grid.cleanup()
 
+    @staticmethod
+    def _fix_path(path):
+        """Takes path returned by (path)finder and fixes the inverted y coordinates, then returns new path."""
+        pairs = [(0, 7), (1, 6), (2, 5), (3, 4), (4, 3), (5, 2), (6, 1), (7, 0)]
+        new_path = []
+        for coords in path:
+            for pair in pairs:
+                if coords[1] == pair[0]:
+                    new_path.append(
+                        (
+                            coords[0],
+                            pair[1],
+                        )
+                    )
+        return new_path
+
     def find_path(self, start_position, target_position):
         """
         Finds shortest path between two positions. Returns path (list of sets, every set is a coordinate of the step
@@ -100,4 +119,6 @@ class Pathfinder:
         path, runs = self.finder.find_path(
             start=start, end=target, grid=self._path_grid
         )
+        path = self._fix_path(path)
+        self.last_path = path
         return path, runs

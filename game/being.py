@@ -47,6 +47,9 @@ class Being:
         else:
             self.selected = True
 
+    def move_to(self, x, y):
+        raise NotImplementedError
+
 
 # Concrete
 class Player(Being):
@@ -72,6 +75,15 @@ class Player(Being):
         # If self.ai is None, then the instance will wait for the player's commands.
         self.ai = None
 
+    def move_to(self, x, y):
+        self.cell_position = Position(x, y)
+        self.px_position = Position(
+            (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
+            (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
+        )
+        self.sprite.update_position(self.px_position)
+        self.sprite_selected.update_position(self.px_position)
+
 
 # Concrete
 class Enemy(Being):
@@ -95,6 +107,15 @@ class Enemy(Being):
     def build_ai(self):
         # TODO: Replace this placeholder with proper AI.
         self.ai = None
+
+    def move_to(self, x, y):
+        self.cell_position = Position(x, y)
+        self.px_position = Position(
+            (x * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
+            (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
+        )
+        self.sprite.update_position(self.px_position)
+        self.sprite_selected.update_position(self.px_position)
 
 
 def construct_beings(cls, x, y):

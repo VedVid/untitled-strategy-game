@@ -69,6 +69,12 @@ class Beings:
             for enemy in enemy_beings:
                 self.add_enemy_being(enemy)
 
+    def find_selected_player(self):
+        return next(
+            (p for p in self.player_beings if (p.selected)),
+            None,
+        )
+
     def find_being_by_cell_position(self, x, y):
         """
         Check if there is any Being instance (no matter, friend or foe) at the specific coords.

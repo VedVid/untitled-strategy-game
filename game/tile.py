@@ -17,7 +17,9 @@ class Tile:
         Coords of cell which will be represented by the Tile; during instancing, cell coords are transformed Position
         instance with pixel values.
     sprite: string
-        Name of the graphics that will represent MapObject on the map.
+        Name of the graphics that will represent Tile on the map.
+    sprite_selected: string
+        Name of the graphics that will be drawn over the basic sprite, if Tile is part of the currently showed path.
     width, height: int
         Size of the tile, converted to the instance of Size class.
     """
@@ -27,6 +29,7 @@ class Tile:
         x,
         y,
         sprite=None,
+        sprite_selected=None,
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
@@ -37,3 +40,6 @@ class Tile:
         )
         self.size = Size(width, height)
         self.sprite = Sprite(sprite, self.px_position, 0.125)
+        if sprite_selected is None:
+            sprite_selected = sprite
+        self.sprite_selected = Sprite(sprite_selected, self.px_position, 0.125)
