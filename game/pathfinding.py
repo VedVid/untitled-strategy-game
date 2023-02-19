@@ -113,12 +113,16 @@ class Pathfinder:
         start = self._path_grid.node(
             start_position.x, self.grid.width - 1 - start_position.y
         )
-        target = self._path_grid.node(
-            target_position.x, self.grid.height - 1 - target_position.y
-        )
-        path, runs = self.finder.find_path(
-            start=start, end=target, grid=self._path_grid
-        )
-        path = self._fix_path(path)
-        self.last_path = path
-        return path, runs
+        try:
+            target = self._path_grid.node(
+                target_position.x, self.grid.height - 1 - target_position.y
+            )
+        except IndexError:
+            return [], 0
+        else:
+            path, runs = self.finder.find_path(
+                start=start, end=target, grid=self._path_grid
+            )
+            path = self._fix_path(path)
+            self.last_path = path
+            return path, runs
