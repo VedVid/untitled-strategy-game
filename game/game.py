@@ -56,7 +56,7 @@ class Game(arcade.Window):
         self.y = y
         if self.selected_player:
             target_position = Position(x, y).return_px_to_cell()
-            self.pathfinder.set_up_path_grid()
+            self.pathfinder.set_up_path_grid(self.beings)
             self.pathfinder.find_path(
                 self.selected_player.cell_position, target_position
             )

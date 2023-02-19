@@ -177,7 +177,7 @@ class Grid:
         # Find the longest possible path on the given map.
         longest_path = 0
         pathfinder = Pathfinder(self)
-        pathfinder.set_up_path_grid()
+        pathfinder.clean_up_path_grid()
         for a, b in itertools.combinations(self.tiles, 2):
             # Exclude tiles that are already occupied by MapObject instances.
             obj_on_a = next(
@@ -206,7 +206,7 @@ class Grid:
                 continue
             # Then find the path.
             path, runs = pathfinder.find_path(a.cell_position, b.cell_position)
-            pathfinder.set_up_path_grid()
+            pathfinder.clean_up_path_grid()
             if len(path) > longest_path:
                 longest_path = len(path)
         pathfinder.last_path = ()

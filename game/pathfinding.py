@@ -43,12 +43,12 @@ class Pathfinder:
 
     Methods:
     ========
-    _make_matrix (Grid): 2d list
+    make_matrix (Grid):
         Uses Grid to create matrix required by pathfinding package.
-    set_up_path_grid: None or PathGrid
+    set_up_path_grid:
+        Recalculates the matrix and creates new PathGrid.
+    clean_up_path_grid: None or PathGrid
         Creates new PathGrid instance or cleans up existing PathGrid instance.
-    _clean_up_path_grid
-        Cleans up the Grid. Necessary to rerunning the pathfinding algorithm.
     _fix_path (list of tuples): list of tuples
         Called once in find_path method, to fix the inverted y axis. TODO: Hacky solution; improve.
     find_path (Position, Position): list of tuples, int
@@ -60,32 +60,48 @@ class Pathfinder:
     def __init__(self, grid):
         self.__dict__ = self._shared_state
         self.grid = grid
-        self._matrix = self._make_matrix(grid)
+        self._matrix = []
+        self.make_matrix(None)
         self._path_grid = PathGrid(matrix=self._matrix)
         self.finder = BreadthFirstFinder()
         self.last_path = ()
 
-    @staticmethod
-    def _make_matrix(grid):
-        """Uses Grid to create matrix required by pathfinding package. '0' means empty tile, '1' indicates obstacle."""
-        matrix = [[1 for x in range(grid.width)] for y in range(grid.height)]
-        for obj in grid.map_objects.objects:
+    def make_matrix(self, beings):
+        """
+        Uses Grid to create matrix required by pathfinding package. '0' means empty tile, '1' indicates obstacle.
+        It may be called with 'None' beings (e.g. when checking for connection between map tiles only) or with
+        the actual instance of Beings (e.g. when looking for path from player to target).
+        """
+        self._matrix = [[1 for x in range(self.grid.width)] for y in range(self.grid.height)]
+        for obj in self.grid.map_objects.objects:
             if obj.blocks:
-                matrix[obj.cell_position.y][obj.cell_position.x] = 0
+                self._matrix[obj.cell_position.y][obj.cell_position.x] = 0
+        if beings:
+            for player in beings.player_beings:
+                self._matrix[player.cell_position.y][player.cell_position.x] = 0
+            for enemy in beings.enemy_beings:
+                self._matrix[enemy.cell_position.y][enemy.cell_position.x] = 0
         # Arcade grid starts at the bottom-left corner. Reversing matrix ensures compatibility.
-        matrix.reverse()
-        return matrix
+        self._matrix.reverse()
 
-    def set_up_path_grid(self):
-        """Creates new PathGrid if not exists, performs cleanup otherwise."""
+    def set_up_path_grid(self, beings):
+        """
+        Recalculates the matrix and creates new PathGrid. It is used when the data, from which matrix is created, may
+        change frequently, e.g. to take into account movable entities.
+        """
+        self.make_matrix(beings)
+        self._path_grid = PathGrid(matrix=self._matrix)
+
+    def clean_up_path_grid(self):
+        """
+        Creates new PathGrid if not exists, performs cleanup otherwise.
+        It is used if pathfinder is used in the loop, e.g. when checking for the longest possible path during the
+        map generation.
+        """
         try:
-            self._clean_up_path_grid()
+            self._path_grid.cleanup()
         except AttributeError:
             self._path_grid = PathGrid(matrix=self._matrix)
-
-    def _clean_up_path_grid(self):
-        """Cleans up the Grid. Necessary when rerunning the algorithm."""
-        self._path_grid.cleanup()
 
     @staticmethod
     def _fix_path(path):
