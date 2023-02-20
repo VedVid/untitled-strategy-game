@@ -20,6 +20,7 @@ class Being:
         self.build_px_position(-1, -1)
         self.build_sprite()
         self.build_selected_sprite()
+        self.build_hp()
         self.build_ai()
         self.build_selected()
 
@@ -33,6 +34,9 @@ class Being:
         raise NotImplementedError
 
     def build_selected_sprite(self):
+        raise NotImplementedError
+
+    def build_hp(self):
         raise NotImplementedError
 
     def build_ai(self):
@@ -71,6 +75,9 @@ class Player(Being):
             "image_being_player_1_selected.png", self.px_position, 0.125
         )
 
+    def build_hp(self):
+        self.hp = 3
+
     def build_ai(self):
         # If self.ai is None, then the instance will wait for the player's commands.
         self.ai = None
@@ -103,6 +110,9 @@ class Enemy(Being):
         self.sprite_selected = Sprite(
             "image_being_enemy_1_selected.png", self.px_position, 0.125
         )
+
+    def build_hp(self):
+        self.hp = 2
 
     def build_ai(self):
         # TODO: Replace this placeholder with proper AI.

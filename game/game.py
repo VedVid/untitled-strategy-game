@@ -49,7 +49,9 @@ class Game(arcade.Window):
             self.initialized = True
 
     def on_key_press(self, key, modifiers):
-        pass
+        # TODO: TESTING ONLY, remove later!
+        for enemy in self.beings.enemy_beings:
+            enemy.hp -= 1
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
@@ -83,8 +85,14 @@ class Game(arcade.Window):
             globals.state = State.PLAY
             for i in range(constants.PLAYER_BEINGS_NO):
                 self.beings.spawn_player_being()
+            for i in range(constants.ENEMY_BEINGS_INITIAL_NO):
+                self.beings.spawn_enemy_being()
         if self.initialized:
             self.selected_player = self.beings.find_selected_player()
             if self.selected_player is None:
                 self.pathfinder.last_path = ()
             self.sprite_tracker.track()
+            # TODO: TESTING ONLY, REMOVE LATER!
+            for enemy in self.beings.enemy_beings:
+                if enemy.hp <= 0:
+                    self.beings.remove_enemy_being(enemy)

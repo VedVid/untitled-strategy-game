@@ -46,6 +46,10 @@ class Beings:
         Please note that the removal can not occur before window initialization (ergo, before allocation of
         GPU resources).
 
+    spawn_enemy_being (int, int)
+        Works exactly the same way as spawn_player_being method, but for enemies. When the amount of Being types will
+        grow, then (TODO) these two methods should be merged; player / enemy should be passed by argument.
+
     add_enemy_being (Being)
         Adds new enemy Being to self.enemy_beings, and its sprite to arcade SpriteList.
 
@@ -132,10 +136,26 @@ class Beings:
         self.player_beings.append(player_being)
         self.player_sprite_list.append(player_being.sprite.arcade_sprite)
 
-    # TODO: Write a method to retrieve player_being (and map_object for that matter) by coords.
     def remove_player_being(self, player_being):
         self.player_beings.remove(player_being)
         self.player_sprite_list.remove(player_being.sprite.arcade_sprite)
+
+    def spawn_enemy_being(self, x=-1, y=-1):
+        """
+        Tries to spawn enemy Being. This method let you to pass specific coordinates to spawn the enemy Being, but
+        if the place is occupied by other Being or MapObject, then it tries to spawn enemy again on random coordinates.
+        """
+        if x < 0:
+            x = random.randrange(0, constants.GRID_SIZE_W)
+        if y < 0:
+            y = random.randrange(0, constants.GRID_SIZE_H)
+        o = self.owner.grid.map_objects.find_map_object_by_cell_position(x, y)
+        b = self.find_being_by_cell_position(x, y)
+        if o is not None or b is not None:
+            self.spawn_enemy_being(-1, -1)
+        else:
+            enemy_being = being.construct_beings(being.Enemy, x, y)
+            self.add_enemy_being(enemy_being)
 
     def add_enemy_being(self, enemy_being):
         self.enemy_beings.append(enemy_being)
