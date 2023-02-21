@@ -17,7 +17,7 @@ The goal is to learn something new. I will try to use design patterns, tinker wi
 
 Right now, the game looks pretty basic, please see below.
 
-![alt text](.\images\1.png)
+![alt text](https://github.com/VedVid/untitled-strategy-game/blob/development/images/1.png)
 
 
 #### How to play?
