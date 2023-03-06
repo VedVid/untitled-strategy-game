@@ -53,7 +53,12 @@ class MapObjects:
     def fill_map(self):
         for y in range(self.owner.height):
             for x in range(self.owner.width):
-                map_object = MapObject(x, y, "image_map_object_mountain_1.png")
+                map_object = MapObject(
+                    x,
+                    y,
+                    "image_map_object_mountain_1.png",
+                    "image_map_object_mountain_1_targeted.png",
+                )
                 self.add_map_object(map_object)
 
     def add_buildings(self):
@@ -77,6 +82,7 @@ class MapObjects:
                     obj.cell_position.x,
                     obj.cell_position.y,
                     "image_map_object_city_1.png",
+                    "image_map_object_city_1_targeted.png",
                     blocks=True,
                     destructible=True,
                     target=True,

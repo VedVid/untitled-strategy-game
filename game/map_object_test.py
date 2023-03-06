@@ -6,7 +6,7 @@ import game.constants as constants
 from game.map_object import MapObject
 
 
-map_object = MapObject(4, 2, "test.png")
+map_object = MapObject(4, 2, "test.png", "test_targeted.png")
 
 
 def test_if_constants_remains_unchanged():

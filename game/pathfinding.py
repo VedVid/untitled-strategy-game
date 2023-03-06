@@ -72,7 +72,9 @@ class Pathfinder:
         It may be called with 'None' beings (e.g. when checking for connection between map tiles only) or with
         the actual instance of Beings (e.g. when looking for path from player to target).
         """
-        self._matrix = [[1 for x in range(self.grid.width)] for y in range(self.grid.height)]
+        self._matrix = [
+            [1 for x in range(self.grid.width)] for y in range(self.grid.height)
+        ]
         for obj in self.grid.map_objects.objects:
             if obj.blocks:
                 self._matrix[obj.cell_position.y][obj.cell_position.x] = 0

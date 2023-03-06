@@ -16,6 +16,7 @@ map_object = MapObject(
     2,
     2,
     "image_map_object_city_1.png",
+    "image_map_object_city_1_targeted.png",
     destructible=True,
     target=True,
 )

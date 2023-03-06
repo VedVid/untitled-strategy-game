@@ -30,6 +30,7 @@ class Tile:
         y,
         sprite=None,
         sprite_selected=None,
+        sprite_targeted=None,
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
@@ -43,3 +44,6 @@ class Tile:
         if sprite_selected is None:
             sprite_selected = sprite
         self.sprite_selected = Sprite(sprite_selected, self.px_position, 0.125)
+        if sprite_targeted is None:
+            sprite_targeted = sprite
+        self.sprite_targeted = Sprite(sprite_targeted, self.px_position, 0.125)

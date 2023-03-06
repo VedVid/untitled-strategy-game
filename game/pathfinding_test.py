@@ -10,7 +10,7 @@ from game.pathfinding import Pathfinder
 
 def test_moving_around_the_obstacle():
     map_objects = MapObjects()
-    map_object = MapObject(2, 2, "test.png", blocks=True)
+    map_object = MapObject(2, 2, "test.png", "test_targeted.png", blocks=True)
     map_objects.add_map_object(map_object)
     grid = Grid(width=5, height=5, map_objects=map_objects)
     position_1 = Position(1, 2)

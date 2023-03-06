@@ -5,6 +5,7 @@
 # Source: https://github.com/faif/python-patterns/blob/master/patterns/creational/builder.py
 
 
+from . import attacks
 from . import constants
 from .components.position import Position
 from .components.sprite import Sprite
@@ -20,6 +21,7 @@ class Being:
         self.build_px_position(-1, -1)
         self.build_sprite()
         self.build_selected_sprite()
+        self.build_targeted_sprite()
         self.build_hp()
         self.build_ai()
         self.build_selected()
@@ -36,7 +38,13 @@ class Being:
     def build_selected_sprite(self):
         raise NotImplementedError
 
+    def build_targeted_sprite(self):
+        raise NotImplementedError
+
     def build_hp(self):
+        raise NotImplementedError
+
+    def build_attack(self):
         raise NotImplementedError
 
     def build_ai(self):
@@ -75,8 +83,16 @@ class Player(Being):
             "image_being_player_1_selected.png", self.px_position, 0.125
         )
 
+    def build_targeted_sprite(self):
+        self.sprite_targeted = Sprite(
+            "image_being_player_1_targeted.png", self.px_position, 0.125
+        )
+
     def build_hp(self):
         self.hp = 3
+
+    def build_attack(self):
+        self.attack = attacks.attack_punch
 
     def build_ai(self):
         # If self.ai is None, then the instance will wait for the player's commands.
@@ -90,6 +106,7 @@ class Player(Being):
         )
         self.sprite.update_position(self.px_position)
         self.sprite_selected.update_position(self.px_position)
+        self.sprite_targeted.update_position(self.px_position)
 
 
 # Concrete
@@ -111,8 +128,16 @@ class Enemy(Being):
             "image_being_enemy_1_selected.png", self.px_position, 0.125
         )
 
+    def build_targeted_sprite(self):
+        self.sprite_targeted = Sprite(
+            "image_being_enemy_1_targeted.png", self.px_position, 0.125
+        )
+
     def build_hp(self):
         self.hp = 2
+
+    def build_attack(self):
+        self.attack = attacks.attack_punch
 
     def build_ai(self):
         # TODO: Replace this placeholder with proper AI.
@@ -126,6 +151,7 @@ class Enemy(Being):
         )
         self.sprite.update_position(self.px_position)
         self.sprite_selected.update_position(self.px_position)
+        self.sprite_targeted.update_position(self.px_position)
 
 
 def construct_beings(cls, x, y):
@@ -134,6 +160,8 @@ def construct_beings(cls, x, y):
     being.build_px_position(x, y)
     being.build_sprite()
     being.build_selected_sprite()
+    being.build_targeted_sprite()
+    being.build_attack()
     being.build_ai()
     being.build_selected()
     return being

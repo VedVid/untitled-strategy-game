@@ -46,6 +46,10 @@ class Beings:
         Please note that the removal can not occur before window initialization (ergo, before allocation of
         GPU resources).
 
+    find_enemy_by_px_position (int, int): Being
+        Finds and returns any Being instance found on the specific coordinates. Arguments indicate the center position
+        of the sprite on the screen, using pixels.
+
     spawn_enemy_being (int, int)
         Works exactly the same way as spawn_player_being method, but for enemies. When the amount of Being types will
         grow, then (TODO) these two methods should be merged; player / enemy should be passed by argument.
@@ -94,9 +98,15 @@ class Beings:
             None,
         )
 
+    def find_being_by_px_position(self, x, y):
+        being_ = self.find_player_by_px_position(x, y)
+        if being_ is None:
+            being_ = self.find_enemy_by_px_position(x, y)
+        return being_
+
     def find_player_by_px_position(self, x, y):
         """
-        Check if there is any Being instance (no matter, friend or foe) at the specific coords.
+        Check if there is any friendly Being instance at the specific coords.
         Uses px_position attribute. Returns Being instance or None.
         """
         min_x = x - (constants.TILE_SIZE_W / 2)
@@ -136,9 +146,31 @@ class Beings:
         self.player_beings.append(player_being)
         self.player_sprite_list.append(player_being.sprite.arcade_sprite)
 
+    # TODO: Write a method to retrieve player_being (and map_object for that matter) by coords.
     def remove_player_being(self, player_being):
         self.player_beings.remove(player_being)
         self.player_sprite_list.remove(player_being.sprite.arcade_sprite)
+
+    def find_enemy_by_px_position(self, x, y):
+        """
+        Check if there is any enemy Being instance at the specific coords.
+        Uses px_position attribute. Returns Being instance or None.
+        """
+        min_x = x - (constants.TILE_SIZE_W / 2)
+        max_x = x + (constants.TILE_SIZE_W / 2)
+        min_y = y - (constants.TILE_SIZE_H / 2)
+        max_y = y + (constants.TILE_SIZE_H / 2)
+        return next(
+            (
+                b
+                for b in self.enemy_beings
+                if (
+                    min_x <= b.px_position.x <= max_x
+                    and min_y <= b.px_position.y <= max_y
+                )
+            ),
+            None,
+        )
 
     def spawn_enemy_being(self, x=-1, y=-1):
         """

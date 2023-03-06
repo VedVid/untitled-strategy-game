@@ -41,6 +41,7 @@ class MapObject:
         x,  # For spawning MapObject, x and y coords refers to the cell position
         y,  # on the grid. During initialization it is converted to pixels.
         sprite,
+        sprite_selected,
         blocks=True,
         destructible=False,
         target=False,
@@ -52,6 +53,7 @@ class MapObject:
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
         self.sprite = Sprite(sprite, self.px_position, 0.125)
+        self.sprite_selected = Sprite(sprite_selected, self.px_position, 0.125)
         self.blocks = blocks
         self.destructible = destructible
         self.target = target

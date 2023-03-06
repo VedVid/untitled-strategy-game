@@ -50,8 +50,11 @@ class Game(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         # TODO: TESTING ONLY, remove later!
-        for enemy in self.beings.enemy_beings:
-            enemy.hp -= 1
+        if key == arcade.key.ENTER:
+            if globals.state == State.MOVE:
+                globals.state = State.TARGET
+            else:
+                globals.state = State.MOVE
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
@@ -68,16 +71,23 @@ class Game(arcade.Window):
         if player_under_cursor:
             for player in self.beings.player_beings:
                 if player is player_under_cursor:
+                    globals.state = State.MOVE
                     player.toggle_selected()
                     continue
                 player.selected = False
             return
-        if self.selected_player is not None and self.pathfinder.last_path:
-            self.selected_player.move_to(
-                self.pathfinder.last_path[-1][0],
-                self.pathfinder.last_path[-1][1],
-            )
-            self.pathfinder.last_path = ()
+        if self.selected_player is not None:
+            if self.pathfinder.last_path and globals.state == State.MOVE:
+                self.selected_player.move_to(
+                    self.pathfinder.last_path[-1][0],
+                    self.pathfinder.last_path[-1][1],
+                )
+                self.pathfinder.last_path = ()
+            elif globals.state == State.TARGET:
+                try:
+                    self.selected_player.attack.perform(self.beings, x, y)
+                except TypeError:
+                    pass  # Catch-all exception for attacks.
 
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
@@ -90,8 +100,11 @@ class Game(arcade.Window):
         if self.initialized:
             self.selected_player = self.beings.find_selected_player()
             if self.selected_player is None:
+                globals.state = State.PLAY
                 self.pathfinder.last_path = ()
-            self.sprite_tracker.track()
+            elif globals.state == State.PLAY:
+                globals.state = State.MOVE
+            self.sprite_tracker.track(self.selected_player)
             # TODO: TESTING ONLY, REMOVE LATER!
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
