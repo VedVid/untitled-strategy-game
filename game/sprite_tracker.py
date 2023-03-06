@@ -159,7 +159,6 @@ class TilesSelected:
                 pass
         elif globals.state == State.TARGET:
             for effect in player.attack.effects:
-                print("\n")
                 for coords in effect.target_positions:
                     # TODO: Currently only first set of coords is used. Need to apply to all sets.
                     try:
@@ -168,9 +167,6 @@ class TilesSelected:
                             player.cell_position.y + coords[1],
                         )
                         tile = self.grid.find_tile_by_position(tile_pos)
-                        print("-----")
-                        print(tile_pos.x, tile_pos.y)
-                        print(tile.cell_position.x, tile.cell_position.y)
                         self.sprites_selected.append(tile.sprite_targeted.arcade_sprite)
                     except AttributeError:
                         pass  # No valid Tile found.
