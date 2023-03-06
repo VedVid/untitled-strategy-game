@@ -68,26 +68,34 @@ class Game(arcade.Window):
 
     def on_mouse_press(self, x, y, button, modifiers):
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
-        if player_under_cursor:
-            for player in self.beings.player_beings:
-                if player is player_under_cursor:
-                    globals.state = State.MOVE
-                    player.toggle_selected()
-                    continue
-                player.selected = False
-            return
-        if self.selected_player is not None:
-            if self.pathfinder.last_path and globals.state == State.MOVE:
-                self.selected_player.move_to(
-                    self.pathfinder.last_path[-1][0],
-                    self.pathfinder.last_path[-1][1],
-                )
-                self.pathfinder.last_path = ()
-            elif globals.state == State.TARGET:
-                try:
-                    self.selected_player.attack.perform(self.beings, x, y)
-                except TypeError:
-                    pass  # Catch-all exception for attacks.
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            if player_under_cursor:
+                for player in self.beings.player_beings:
+                    if player is player_under_cursor:
+                        globals.state = State.MOVE
+                        player.toggle_selected()
+                        continue
+                    player.selected = False
+                return
+            if self.selected_player is not None:
+                if self.pathfinder.last_path and globals.state == State.MOVE:
+                    self.selected_player.move_to(
+                        self.pathfinder.last_path[-1][0],
+                        self.pathfinder.last_path[-1][1],
+                    )
+                    self.pathfinder.last_path = ()
+                elif globals.state == State.TARGET:
+                    try:
+                        self.selected_player.attack.perform(self.beings, x, y)
+                    except TypeError:
+                        pass  # Catch-all exception for attacks.
+        elif button == arcade.MOUSE_BUTTON_RIGHT:
+            if globals.state == State.TARGET:
+                globals.state = State.MOVE
+            elif globals.state == State.MOVE:
+                globals.state = State.PLAY
+                self.selected_player.selected = False
+                self.selected_player = None
 
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
