@@ -73,7 +73,7 @@ class PunchAttackEffect(AttackEffect):
                     x + (cell[0] * constants.TILE_SIZE_W),
                     y + (cell[1] * constants.TILE_SIZE_H),
                 ).hp -= 1
-            except TypeError:
+            except AttributeError:
                 pass  # Do not act if being is not found.
 
 

@@ -65,7 +65,9 @@ class BeingsSelected:
                                     player_.sprite_targeted.arcade_sprite
                                 )
                                 break
-            except Exception:  # TODO: Replace general Exception with something more specific.
+            except AttributeError:
+                pass  # Catch-all
+            except TypeError:
                 pass  # Catch-all
 
     def _find_enemy_beings_selected(self, player=None):
@@ -89,7 +91,9 @@ class BeingsSelected:
                                     enemy.sprite_targeted.arcade_sprite
                                 )
                                 break
-            except Exception:  # TODO: Replace general Exception with something more specific.
+            except AttributeError:
+                pass  # Catch-all
+            except TypeError:
                 pass  # Catch-all
 
     def find(self, player=None):
@@ -127,7 +131,9 @@ class MapObjectSelected:
                                     map_object.sprite_selected.arcade_sprite
                                 )
                                 break
-            except Exception:  # TODO: Replace general Exception with something more specific.
+            except AttributeError:
+                pass  # Catch-all
+            except TypeError:
                 pass  # Catch-all
 
     def find(self, player=None):
@@ -167,7 +173,9 @@ class TilesSelected:
                         )
                         tile = self.grid.find_tile_by_position(tile_pos)
                         self.sprites_selected.append(tile.sprite_targeted.arcade_sprite)
-            except Exception:  # TODO: Replace general Exception with something more specific.
+            except AttributeError:
+                pass  # Catch-all
+            except TypeError:
                 pass  # Catch-all
 
     def find(self, player=None):
