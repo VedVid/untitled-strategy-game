@@ -49,9 +49,9 @@ class BeingsSelected:
             if player_.selected:
                 self.sprites_selected.append(player_.sprite_selected.arcade_sprite)
         if globals.state == State.TARGET:
-            try:
-                for effect in player.attack.effects:
-                    for coords in effect.target_positions:
+            for effect in player.attack.effects:
+                for coords in effect.target_positions:
+                    try:
                         pos = Position(
                             player.cell_position.x + coords[0],
                             player.cell_position.y + coords[1],
@@ -65,19 +65,17 @@ class BeingsSelected:
                                     player_.sprite_targeted.arcade_sprite
                                 )
                                 break
-            except AttributeError:
-                pass  # Catch-all
-            except TypeError:
-                pass  # Catch-all
+                    except AttributeError:
+                        pass  # No valid player_being found.
 
     def _find_enemy_beings_selected(self, player=None):
         for enemy in self.owner.enemy_beings:
             if enemy.selected:
                 self.sprites_selected.append(enemy.sprite_selected.arcade_sprite)
         if globals.state == State.TARGET:
-            try:
-                for effect in player.attack.effects:
-                    for coords in effect.target_positions:
+            for effect in player.attack.effects:
+                for coords in effect.target_positions:
+                    try:
                         pos = Position(
                             player.cell_position.x + coords[0],
                             player.cell_position.y + coords[1],
@@ -91,10 +89,8 @@ class BeingsSelected:
                                     enemy.sprite_targeted.arcade_sprite
                                 )
                                 break
-            except AttributeError:
-                pass  # Catch-all
-            except TypeError:
-                pass  # Catch-all
+                    except AttributeError:
+                        pass  # No valid enemy_being found.
 
     def find(self, player=None):
         self._reset_sprite_list()
@@ -115,9 +111,9 @@ class MapObjectSelected:
 
     def _find_map_objects_selected(self, player=None):
         if globals.state == State.TARGET:
-            try:
-                for effect in player.attack.effects:
-                    for coords in effect.target_positions:
+            for effect in player.attack.effects:
+                for coords in effect.target_positions:
+                    try:
                         pos = Position(
                             player.cell_position.x + coords[0],
                             player.cell_position.y + coords[1],
@@ -131,10 +127,8 @@ class MapObjectSelected:
                                     map_object.sprite_selected.arcade_sprite
                                 )
                                 break
-            except AttributeError:
-                pass  # Catch-all
-            except TypeError:
-                pass  # Catch-all
+                    except AttributeError:
+                        pass  # No valid MapObject found.
 
     def find(self, player=None):
         self._reset_sprite_list()
@@ -164,19 +158,22 @@ class TilesSelected:
             except TypeError:  # Empty last_path
                 pass
         elif globals.state == State.TARGET:
-            try:
-                for effect in player.attack.effects:
-                    for coords in effect.target_positions:
+            for effect in player.attack.effects:
+                print("\n")
+                for coords in effect.target_positions:
+                    # TODO: Currently only first set of coords is used. Need to apply to all sets.
+                    try:
                         tile_pos = Position(
                             player.cell_position.x + coords[0],
                             player.cell_position.y + coords[1],
                         )
                         tile = self.grid.find_tile_by_position(tile_pos)
+                        print("-----")
+                        print(tile_pos.x, tile_pos.y)
+                        print(tile.cell_position.x, tile.cell_position.y)
                         self.sprites_selected.append(tile.sprite_targeted.arcade_sprite)
-            except AttributeError:
-                pass  # Catch-all
-            except TypeError:
-                pass  # Catch-all
+                    except AttributeError:
+                        pass  # No valid Tile found.
 
     def find(self, player=None):
         self._reset_sprite_list()
