@@ -45,6 +45,7 @@ class AttackEffect:
 
 
 class PunchAttackEffect(AttackEffect):
+    #TODO: Change "A" (Attacker) to "B" (Being).
     def build_target_positions(self):
         """
          T
@@ -78,12 +79,21 @@ class PunchAttackEffect(AttackEffect):
 
 
 class SidePunchHorAttackEffect(PunchAttackEffect):
-    """
-    A
-    T
-    A
-    """
+    def build_target_positions(self):
+        """
+        TBT
+        """
+        self.target_positions = [
+            (-1, 0),
+            (1, 0),
+        ]
+
     def build_attack_pattern(self):
+        """
+        A
+        T
+        A
+        """
         self.attack_pattern = [
             (0, -1),
             (0, 1),
@@ -91,10 +101,19 @@ class SidePunchHorAttackEffect(PunchAttackEffect):
 
 
 class SidePunchVerAttackEffect(PunchAttackEffect):
-    """
-    ATA
-    """
+    def build_target_positions(self):
+        """
+        TBT
+        """
+        self.target_positions = [
+            (0, -1),
+            (0, 1),
+        ]
+
     def build_attack_pattern(self):
+        """
+        ATA
+        """
         self.attack_pattern = [
             (-1, 0),
             (1, 0),

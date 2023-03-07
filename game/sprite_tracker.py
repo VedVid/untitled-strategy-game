@@ -164,9 +164,11 @@ class TilesSelected:
             except TypeError:  # Empty last_path
                 pass
         elif globals.state == State.TARGET:
+            print()
             for effect in player.attack.effects:
                 for coords in effect.target_positions:
                     # TODO: Currently only first set of coords is used. Need to apply to all sets.
+                    print(coords)
                     try:
                         tile_pos = Position(
                             player.cell_position.x + coords[0],
