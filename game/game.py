@@ -113,7 +113,9 @@ class Game(arcade.Window):
             elif globals.state == State.PLAY:
                 globals.state = State.MOVE
             mouse_position = Position(self.x, self.y).return_px_to_cell()
-            self.sprite_tracker.track(mouse_position, self.active_player)
+            self.sprite_tracker.mouse_position = mouse_position
+            self.sprite_tracker.player = self.active_player
+            self.sprite_tracker.track()
             # TODO: TESTING ONLY, REMOVE LATER!
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:

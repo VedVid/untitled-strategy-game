@@ -125,7 +125,7 @@ class SpriteTracker:
         self._map_objects_sprites_selected.clear()
         self._tiles_sprites_selected.clear()
 
-    def track(self, mouse_position, player=None):
+    def track(self):
         self._reset_sprite_lists()
         self._find_tiles()
         self._find_map_objects()
