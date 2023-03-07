@@ -57,6 +57,8 @@ class SpriteTracker:
     def _find(self, what):
         if what == "player_beings":
             what = self._beings.player_beings
+        elif what == "enemy_beings":
+            what = self._beings.enemy_beings
         for effect in self.player.attack.effects:
             for coords in effect.target_positions:
                 try:
@@ -88,15 +90,21 @@ class SpriteTracker:
                 except ValueError as e:
                     print(f"{e} in sprite_tracker.BeingsSelected._find_player_beings_selected")
 
-    def _find_beings(self):
-        for player_ in self._beings.player_beings:
-            if player_.active:
-                self._beings_sprites_selected.append(player_.sprite_active.arcade_sprite)
+    def _find_player_beings(self):
+        for player in self._beings.player_beings:
+            if player.active:
+                self._beings_sprites_selected.append(player.sprite_active.arcade_sprite)
         if globals.state == State.TARGET:
             self._find("player_beings")
 
+    def _find_enemy_beings(self):
+        if globals.state == State.TARGET:
+            self._find("enemy_beings")
+
     def _find_map_objects(self):
 
+        if globals.state == State.TARGET:
+            self._find("player_beings")
 
     def track(self, mouse_position, player=None):
         self._tiles_selected.find(mouse_position, player)
