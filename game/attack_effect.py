@@ -77,6 +77,30 @@ class PunchAttackEffect(AttackEffect):
                 pass  # Do not act if being is not found.
 
 
+class SidePunchHorAttackEffect(PunchAttackEffect):
+    """
+    A
+    T
+    A
+    """
+    def build_attack_pattern(self):
+        self.attack_pattern = [
+            (0, -1),
+            (0, 1),
+        ]
+
+
+class SidePunchVerAttackEffect(PunchAttackEffect):
+    """
+    ATA
+    """
+    def build_attack_pattern(self):
+        self.attack_pattern = [
+            (-1, 0),
+            (1, 0),
+        ]
+
+
 def construct_attack_effects(cls):
     attack_effect = cls()
     attack_effect.build_target_positions()
