@@ -45,6 +45,29 @@ class SpriteTracker:
     player: Being
         Currently active player; this value is used to determine a wide range of behaviours, from showing path to
         showing sprite_targeted.
+
+    Methods:
+    --------
+    _add_to_sprite_list (Tile | MapObject | Player | Enemy, bool=False)
+        Takes entity as first argument and bool for a second argument. Based on the entity type, the game adds sprites
+        to the correct arcarde.SpriteList. Boolean value is used to decide if sprite_selected (default)
+        or sprite_targeted should be used.
+    _find (string)
+        Generic-as-possible method to find all sprite_selected and sprite_targeted to show. String passed as argument
+        is used to determine what list (from: tiles, map_objects, beings) will be iterated over to find the sprites.
+        Uses string as argument because passing lists as arguments in Python results in unpredictable behaviour.
+    _find_player_beings
+    _find_enemy_beings
+    _find_map_objects
+    _find_tiles
+        All these methods at the beginning handle additional cases that depend on the entity type, then call _find.
+    _reset_sprite_lists
+        Clears _tiles_sprites_selected, _map_objects_sprites_selected, and _beings_sprites_selected.
+    track
+        One of two public methods of SpriteTracker. 'track' clears all SpriteLists then fills them again by calling
+        _find_... methods.
+    draw
+        Draws every Sprites that should be highlighted.
     """
 
     def __init__(self, beings, grid):
