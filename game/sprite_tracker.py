@@ -62,7 +62,7 @@ class BeingsSelected:
                                 and player_.cell_position.y == pos.y
                             ):
                                 self.sprites_selected.append(
-                                    player_.sprite_targeted.arcade_sprite
+                                    player_.sprite_selected.arcade_sprite
                                 )
                                 break
                     except AttributeError:
@@ -88,7 +88,7 @@ class BeingsSelected:
                                 and enemy.cell_position.y == pos.y
                             ):
                                 self.sprites_selected.append(
-                                    enemy.sprite_targeted.arcade_sprite
+                                    enemy.sprite_selected.arcade_sprite
                                 )
                                 break
                     except AttributeError:
