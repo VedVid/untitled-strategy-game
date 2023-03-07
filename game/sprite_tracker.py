@@ -173,7 +173,7 @@ class TilesSelected:
                             player.cell_position.y + coords[1],
                         )
                         tile = self.grid.find_tile_by_position(tile_pos)
-                        self.sprites_selected.append(tile.sprite_targeted.arcade_sprite)
+                        self.sprites_selected.append(tile.sprite_selected.arcade_sprite)
                     except AttributeError:
                         pass  # No valid Tile found.
                     except ValueError as e:

@@ -42,6 +42,7 @@ class MapObject:
         y,  # on the grid. During initialization it is converted to pixels.
         sprite,
         sprite_selected,
+        sprite_targeted,
         blocks=True,
         destructible=False,
         target=False,
@@ -54,6 +55,7 @@ class MapObject:
         )
         self.sprite = Sprite(sprite, self.px_position, 0.125)
         self.sprite_selected = Sprite(sprite_selected, self.px_position, 0.125)
+        self.sprite_targeted = Sprite(sprite_targeted, self.px_position, 0.125)
         self.blocks = blocks
         self.destructible = destructible
         self.target = target
