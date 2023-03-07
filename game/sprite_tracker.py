@@ -3,7 +3,7 @@
 
 # At first, it was using facade pattern.
 # Source: https://github.com/faif/python-patterns/blob/master/patterns/structural/facade.py
-# but it lead to major code duplication.
+# but it lead to major code duplication, hence refactoring SpriteTracker to single class.
 
 
 import arcade
@@ -19,9 +19,32 @@ from .tile import Tile
 
 class SpriteTracker:
     """
-    An actual facade that is going to track and draw all selected entities. Selected entity may be a selected player,
-    targeted enemy, terrain sprite that is part of the path selected by pathfinding algorithm.
-    Currently tracks Beings only.
+    SpriteTracker tracks all sprites that should be highlighted: active player, path from player to cursor,
+    targets, etc. Before every use of SpriteTracker, 'player' and 'mouse_position' should be updated.
+    sprite_active is currently selected player, sprite_selected (should be renamed maybe?) are sprites that player
+    can click on (like when choosing a tile to attack from 4 available), sprite_targeted are sprites that will be
+    affected by attack (shown only when cursor is over sprite_selected).
+
+    Attributes:
+    -----------
+    _beings: Beings
+        Takes instance of Beings; used to highlight active player, and players and enemies in the area of attack.
+    _grid: Grid
+        Takes instance of Grid; used to highlight targeted MapObject and Tile instances.
+    _pathfinder: Pathfinder
+        New instance of monostate-like Pathfinder class; used to hightlight path from active player to cursor.
+    _tiles_sprites_selected: arcade.SpriteList()
+    _map_objects_sprites_selected: arcade.SpriteList()
+    _beings_sprites_selected: arcade.SpriteList()
+        Every _..._sprites_selected are SpriteLists that aggregate highlighted sprites: sprite_active, sprite_selected,
+        sprite_targeted.
+    mouse_position: Position
+        Current Position of mouse, used to determine if cursor is over one of the currently shown sprite_selected, ergo
+        to determine if sprite_targeted should be visible. mouse_position should be updated before every SpriteTracker
+        usage.
+    player: Being
+        Currently active player; this value is used to determine a wide range of behaviours, from showing path to
+        showing sprite_targeted.
     """
 
     def __init__(self, beings, grid):
