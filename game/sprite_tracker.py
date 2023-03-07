@@ -27,7 +27,7 @@ class SpriteTracker:
 
     def track(self, mouse_position, player=None):
         self._tiles_selected.find(mouse_position, player)
-        self._map_objects_selected.find(player)
+        self._map_objects_selected.find(mouse_position, player)
         self._beings_selected.find(mouse_position, player)
 
     def draw(self):
@@ -141,7 +141,7 @@ class MapObjectSelected:
     def _reset_sprite_list(self):
         self.sprites_selected.clear()
 
-    def _find_map_objects_selected(self, player=None):
+    def _find_map_objects_selected(self, mouse_position, player=None):
         if globals.state == State.TARGET:
             for effect in player.attack.effects:
                 for coords in effect.target_positions:
@@ -151,6 +151,7 @@ class MapObjectSelected:
                             player.cell_position.y + coords[1],
                         )
                         for map_object in self.owner.map_objects.objects:
+                            # Find "yellow" object - ie tile that player can click on.
                             if (
                                 map_object.cell_position.x == pos.x
                                 and map_object.cell_position.y == pos.y
@@ -158,15 +159,28 @@ class MapObjectSelected:
                                 self.sprites_selected.append(
                                     map_object.sprite_selected.arcade_sprite
                                 )
-                                break
+                            # Find "red" object - ie tile that will be attacked when player clicks on yellow tile.
+                            if pos.x == mouse_position.x and pos.y == mouse_position.y:
+                                for coords2 in effect.attack_pattern:
+                                    pos2 = Position(
+                                        pos.x + coords2[0],
+                                        pos.y + coords2[1],
+                                    )
+                                    if (
+                                            map_object.cell_position.x == pos2.x
+                                            and map_object.cell_position.y == pos2.y
+                                    ):
+                                        self.sprites_selected.append(
+                                            map_object.sprite_targeted.arcade_sprite
+                                        )
                     except AttributeError:
                         pass  # No valid MapObject found.
                     except ValueError as e:
                         print(f"{e} in sprite_tracker.MapObjectSelected._find_map_objects_selected")
 
-    def find(self, player=None):
+    def find(self, mouse_position, player=None):
         self._reset_sprite_list()
-        self._find_map_objects_selected(player)
+        self._find_map_objects_selected(mouse_position, player)
 
     def draw(self):
         self.sprites_selected.draw()
