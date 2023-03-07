@@ -3,6 +3,8 @@
 
 # Using facade pattern.
 # Source: https://github.com/faif/python-patterns/blob/master/patterns/structural/facade.py
+# TODO: Using facade pattern leads to major code duplication here. Should be replaced by a single class.
+# TODO: Find another place to use facade.
 
 
 import arcade
