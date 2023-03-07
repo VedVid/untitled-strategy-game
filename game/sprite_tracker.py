@@ -46,7 +46,7 @@ class BeingsSelected:
 
     def _find_player_beings_selected(self, player=None):
         for player_ in self.owner.player_beings:
-            if player_.selected:
+            if player_.active:
                 self.sprites_selected.append(player_.sprite_active.arcade_sprite)
         if globals.state == State.TARGET:
             for effect in player.attack.effects:
@@ -72,7 +72,7 @@ class BeingsSelected:
 
     def _find_enemy_beings_selected(self, player=None):
         for enemy in self.owner.enemy_beings:
-            if enemy.selected:
+            if enemy.active:
                 self.sprites_selected.append(enemy.sprite_selected.arcade_sprite)
         if globals.state == State.TARGET:
             for effect in player.attack.effects:

@@ -25,7 +25,7 @@ class Being:
         self.build_targeted_sprite()
         self.build_hp()
         self.build_ai()
-        self.build_selected()
+        self.build_active()
 
     def build_cell_position(self, x, y):
         raise NotImplementedError
@@ -54,14 +54,14 @@ class Being:
     def build_ai(self):
         raise NotImplementedError
 
-    def build_selected(self):
-        self.selected = False
+    def build_active(self):
+        self.active = False
 
-    def toggle_selected(self):
-        if self.selected:
-            self.selected = False
+    def toggle_active(self):
+        if self.active:
+            self.active = False
         else:
-            self.selected = True
+            self.active = True
 
     def move_to(self, x, y):
         raise NotImplementedError
@@ -177,5 +177,5 @@ def construct_beings(cls, x, y):
     being.build_targeted_sprite()
     being.build_attack()
     being.build_ai()
-    being.build_selected()
+    being.build_active()
     return being
