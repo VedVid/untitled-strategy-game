@@ -59,6 +59,8 @@ class SpriteTracker:
             what = self._beings.player_beings
         elif what == "enemy_beings":
             what = self._beings.enemy_beings
+        elif what == "map_objects":
+            what = self._grid.map_objects.objects
         for effect in self.player.attack.effects:
             for coords in effect.target_positions:
                 try:
@@ -102,9 +104,8 @@ class SpriteTracker:
             self._find("enemy_beings")
 
     def _find_map_objects(self):
-
         if globals.state == State.TARGET:
-            self._find("player_beings")
+            self._find("map_objects")
 
     def track(self, mouse_position, player=None):
         self._tiles_selected.find(mouse_position, player)
@@ -121,89 +122,6 @@ class BeingsSelected:
     def __init__(self, owner):
         self.owner = owner
         self.sprites_selected = arcade.SpriteList()
-
-    def _reset_sprite_list(self):
-        self.sprites_selected.clear()
-
-    def _find_player_beings_selected(self, mouse_position, player=None):
-        for player_ in self.owner.player_beings:
-            if player_.active:
-                self.sprites_selected.append(player_.sprite_active.arcade_sprite)
-        if globals.state == State.TARGET:
-            for effect in player.attack.effects:
-                for coords in effect.target_positions:
-                    try:
-                        pos = Position(
-                            player.cell_position.x + coords[0],
-                            player.cell_position.y + coords[1],
-                        )
-                        for player_ in self.owner.player_beings:
-                            # Find "yellow" player - ie tile that player can click on.
-                            if (
-                                player_.cell_position.x == pos.x
-                                and player_.cell_position.y == pos.y
-                            ):
-                                self.sprites_selected.append(
-                                    player_.sprite_selected.arcade_sprite
-                                )
-                            # Find "red" player - ie tile that will be attacked when player clicks on yellow tile.
-                            if pos.x == mouse_position.x and pos.y == mouse_position.y:
-                                for coords2 in effect.attack_pattern:
-                                    pos2 = Position(
-                                        pos.x + coords2[0],
-                                        pos.y + coords2[1],
-                                    )
-                                    if (
-                                            player_.cell_position.x == pos2.x
-                                            and player_.cell_position.y == pos2.y
-                                    ):
-                                        self.sprites_selected.append(
-                                            player_.sprite_targeted.arcade_sprite
-                                        )
-                    except AttributeError:
-                        pass  # No valid player_being found.
-                    except ValueError as e:
-                        print(f"{e} in sprite_tracker.BeingsSelected._find_player_beings_selected")
-
-    def _find_enemy_beings_selected(self, mouse_position, player=None):
-        for enemy in self.owner.enemy_beings:
-            if enemy.active:
-                self.sprites_selected.append(enemy.sprite_selected.arcade_sprite)
-        if globals.state == State.TARGET:
-            for effect in player.attack.effects:
-                for coords in effect.target_positions:
-                    try:
-                        pos = Position(
-                            player.cell_position.x + coords[0],
-                            player.cell_position.y + coords[1],
-                        )
-                        for enemy in self.owner.enemy_beings:
-                            # Find "yellow" enemy - ie tile that player can click on.
-                            if (
-                                enemy.cell_position.x == pos.x
-                                and enemy.cell_position.y == pos.y
-                            ):
-                                self.sprites_selected.append(
-                                    enemy.sprite_selected.arcade_sprite
-                                )
-                            # Find "red" enemy - ie tile that will be attacked when player clicks on yellow tile.
-                            if pos.x == mouse_position.x and pos.y == mouse_position.y:
-                                for coords2 in effect.attack_pattern:
-                                    pos2 = Position(
-                                        pos.x + coords2[0],
-                                        pos.y + coords2[1],
-                                    )
-                                    if (
-                                            enemy.cell_position.x == pos2.x
-                                            and enemy.cell_position.y == pos2.y
-                                    ):
-                                        self.sprites_selected.append(
-                                            enemy.sprite_targeted.arcade_sprite
-                                        )
-                    except AttributeError:
-                        pass  # No valid enemy_being found.
-                    except ValueError as e:
-                        print(f"{e} in sprite_tracker.BeingsSelected._find_enemy_beings_selected")
 
     def find(self, mouse_position, player=None):
         self._reset_sprite_list()
