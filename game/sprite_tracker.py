@@ -89,17 +89,11 @@ class SpriteTracker:
         if targeted:
             sprite = entity.sprite_targeted.arcade_sprite
         if isinstance(entity, Player) or isinstance(entity, Enemy):
-            self._beings_sprites_selected.append(
-                sprite
-            )
+            self._beings_sprites_selected.append(sprite)
         elif isinstance(entity, MapObject):
-            self._map_objects_sprites_selected.append(
-                sprite
-            )
+            self._map_objects_sprites_selected.append(sprite)
         elif isinstance(entity, Tile):
-            self._tiles_sprites_selected.append(
-                sprite
-            )
+            self._tiles_sprites_selected.append(sprite)
 
     def _find(self, what):
         """
@@ -128,20 +122,23 @@ class SpriteTracker:
                     for entity in l:
                         # Find "yellow" entity - ie tile that player can click on.
                         if (
-                                entity.cell_position.x == pos.x
-                                and entity.cell_position.y == pos.y
+                            entity.cell_position.x == pos.x
+                            and entity.cell_position.y == pos.y
                         ):
                             self._add_to_sprite_list(entity)
                         # Find "red" entity - ie tile that will be attacked when player clicks on yellow tile.
-                        if pos.x == self.mouse_position.x and pos.y == self.mouse_position.y:
+                        if (
+                            pos.x == self.mouse_position.x
+                            and pos.y == self.mouse_position.y
+                        ):
                             for coords2 in effect.attack_pattern:
                                 pos2 = Position(
                                     pos.x + coords2[0],
                                     pos.y + coords2[1],
                                 )
                                 if (
-                                        entity.cell_position.x == pos2.x
-                                        and entity.cell_position.y == pos2.y
+                                    entity.cell_position.x == pos2.x
+                                    and entity.cell_position.y == pos2.y
                                 ):
                                     self._add_to_sprite_list(entity, True)
                 except AttributeError:

@@ -45,7 +45,7 @@ class AttackEffect:
 
 
 class PunchAttackEffect(AttackEffect):
-    #TODO: Change "A" (Attacker) to "B" (Being).
+    # TODO: Change "A" (Attacker) to "B" (Being).
     def build_target_positions(self):
         """
          T

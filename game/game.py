@@ -62,9 +62,7 @@ class Game(arcade.Window):
         if self.active_player:
             target_position = Position(x, y).return_px_to_cell()
             self.pathfinder.set_up_path_grid(self.beings)
-            self.pathfinder.find_path(
-                self.active_player.cell_position, target_position
-            )
+            self.pathfinder.find_path(self.active_player.cell_position, target_position)
 
     def on_mouse_press(self, x, y, button, modifiers):
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
