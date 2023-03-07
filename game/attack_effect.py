@@ -120,6 +120,32 @@ class SidePunchVerAttackEffect(PunchAttackEffect):
         ]
 
 
+class WallPunchHorAttackEffect(SidePunchHorAttackEffect):
+    def build_attack_pattern(self):
+        """
+        A
+        A
+        A
+        """
+        self.attack_pattern = [
+            (0, -1),
+            (0, 0),
+            (0, 1),
+        ]
+
+
+class WallPunchVerAttackEffect(SidePunchVerAttackEffect):
+    def build_attack_pattern(self):
+        """
+        AAA
+        """
+        self.attack_pattern = [
+            (-1, 0),
+            (0, 0),
+            (1, 0),
+        ]
+
+
 def construct_attack_effects(cls):
     attack_effect = cls()
     attack_effect.build_target_positions()

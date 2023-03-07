@@ -101,7 +101,7 @@ class Player(Being):
         self.hp = 3
 
     def build_attack(self):
-        self.attack = attacks.attack_punch
+        self.attack = attacks.attack_wall_punch
 
     def build_ai(self):
         # If self.ai is None, then the instance will wait for the player's commands.
