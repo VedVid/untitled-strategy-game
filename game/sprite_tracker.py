@@ -177,8 +177,8 @@ class TilesSelected:
                         if tile_pos.x == mouse_position.x and tile_pos.y == mouse_position.y:
                             for coords2 in effect.attack_pattern:
                                 tile_pos2 = Position(
-                                    tile_pos.x + coords[0],
-                                    tile_pos.y + coords[1],
+                                    tile_pos.x + coords2[0],
+                                    tile_pos.y + coords2[1],
                                 )
                                 tile2 = self.grid.find_tile_by_position(tile_pos2)
                                 self.sprites_selected.append(tile2.sprite_targeted.arcade_sprite)
