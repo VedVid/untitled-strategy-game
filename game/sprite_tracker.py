@@ -81,6 +81,10 @@ class SpriteTracker:
         self.player = None
 
     def _add_to_sprite_list(self, entity, targeted=False):
+        """
+        Adds entity sprite to corresponding sprite_list.
+        Defaults to sprite_selected, but may add sprite_targeted too.
+        """
         sprite = entity.sprite_selected.arcade_sprite
         if targeted:
             sprite = entity.sprite_targeted.arcade_sprite
@@ -98,6 +102,13 @@ class SpriteTracker:
             )
 
     def _find(self, what):
+        """
+        Generic method used to find and add Sprites to _..._sprites_selected. Finds both "yellow" Sprites
+        (sprite_selected, so sprites that are highlighted when player enters targeting mode) and "red" Sprites
+        (sprite_targeted, when player hovers mouse over sprite_selected).
+        Assigns lists using string passed as argument, because directly passing lists as argument may result in
+        unpredicatble behaviour.
+        """
         l = None
         if what == "player_beings":
             l = self._beings.player_beings
@@ -172,6 +183,7 @@ class SpriteTracker:
         self._tiles_sprites_selected.clear()
 
     def track(self):
+        """Clears all arcade.SpriteList instances in SpriteTracker and fills them again with updated data."""
         self._reset_sprite_lists()
         self._find_tiles()
         self._find_map_objects()
