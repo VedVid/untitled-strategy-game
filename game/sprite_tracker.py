@@ -57,7 +57,7 @@ class SpriteTracker:
         self.mouse_position = None
         self.player = None
 
-    def _add_to_spritelist(self, entity, targeted=False):
+    def _add_to_sprite_list(self, entity, targeted=False):
         sprite = entity.sprite_selected.arcade_sprite
         if targeted:
             sprite = entity.sprite_targeted.arcade_sprite
@@ -97,7 +97,7 @@ class SpriteTracker:
                                 entity.cell_position.x == pos.x
                                 and entity.cell_position.y == pos.y
                         ):
-                            self._add_to_spritelist(entity)
+                            self._add_to_sprite_list(entity)
                         # Find "red" entity - ie tile that will be attacked when player clicks on yellow tile.
                         if pos.x == self.mouse_position.x and pos.y == self.mouse_position.y:
                             for coords2 in effect.attack_pattern:
@@ -109,7 +109,7 @@ class SpriteTracker:
                                         entity.cell_position.x == pos2.x
                                         and entity.cell_position.y == pos2.y
                                 ):
-                                    self._add_to_spritelist(entity, True)
+                                    self._add_to_sprite_list(entity, True)
                 except AttributeError:
                     pass  # No valid player_being found.
                 except ValueError as e:
