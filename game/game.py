@@ -62,9 +62,7 @@ class Game(arcade.Window):
         if self.active_player:
             target_position = Position(x, y).return_px_to_cell()
             self.pathfinder.set_up_path_grid(self.beings)
-            self.pathfinder.find_path(
-                self.active_player.cell_position, target_position
-            )
+            self.pathfinder.find_path(self.active_player.cell_position, target_position)
 
     def on_mouse_press(self, x, y, button, modifiers):
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
@@ -113,7 +111,9 @@ class Game(arcade.Window):
             elif globals.state == State.PLAY:
                 globals.state = State.MOVE
             mouse_position = Position(self.x, self.y).return_px_to_cell()
-            self.sprite_tracker.track(mouse_position, self.active_player)
+            self.sprite_tracker.mouse_position = mouse_position
+            self.sprite_tracker.player = self.active_player
+            self.sprite_tracker.track()
             # TODO: TESTING ONLY, REMOVE LATER!
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
