@@ -25,8 +25,8 @@ class SpriteTracker:
         self._beings_selected = BeingsSelected(beings)
         self._tiles_selected = TilesSelected(grid)
 
-    def track(self, player=None):
-        self._tiles_selected.find(player)
+    def track(self, mouse_position, player=None):
+        self._tiles_selected.find(mouse_position, player)
         self._map_objects_selected.find(player)
         self._beings_selected.find(player)
 
@@ -153,7 +153,7 @@ class TilesSelected:
     def _reset_sprite_list(self):
         self.sprites_selected.clear()
 
-    def _find_tiles_selected(self, player=None):
+    def _find_tiles_selected(self, mouse_position, player=None):
         if globals.state == State.MOVE:
             try:
                 for coords in self.pathfinder.last_path:
@@ -174,14 +174,22 @@ class TilesSelected:
                         )
                         tile = self.grid.find_tile_by_position(tile_pos)
                         self.sprites_selected.append(tile.sprite_selected.arcade_sprite)
+                        if tile_pos.x == mouse_position.x and tile_pos.y == mouse_position.y:
+                            for coords2 in effect.attack_pattern:
+                                tile_pos2 = Position(
+                                    tile_pos.x + coords[0],
+                                    tile_pos.y + coords[1],
+                                )
+                                tile2 = self.grid.find_tile_by_position(tile_pos2)
+                                self.sprites_selected.append(tile2.sprite_targeted.arcade_sprite)
                     except AttributeError:
                         pass  # No valid Tile found.
                     except ValueError as e:
                         print(f"{e} in sprite_tracker.TilesSelected._find_tiles_selected")
 
-    def find(self, player=None):
+    def find(self, mouse_position, player=None):
         self._reset_sprite_list()
-        self._find_tiles_selected(player)
+        self._find_tiles_selected(mouse_position, player)
 
     def draw(self):
         self.sprites_selected.draw()

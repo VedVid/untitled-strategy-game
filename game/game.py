@@ -112,7 +112,8 @@ class Game(arcade.Window):
                 self.pathfinder.last_path = ()
             elif globals.state == State.PLAY:
                 globals.state = State.MOVE
-            self.sprite_tracker.track(self.active_player)
+            mouse_position = Position(self.x, self.y).return_px_to_cell()
+            self.sprite_tracker.track(mouse_position, self.active_player)
             # TODO: TESTING ONLY, REMOVE LATER!
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
