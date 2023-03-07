@@ -67,6 +67,8 @@ class BeingsSelected:
                                 break
                     except AttributeError:
                         pass  # No valid player_being found.
+                    except ValueError as e:
+                        print(f"{e} in sprite_tracker.BeingsSelected._find_player_beings_selected")
 
     def _find_enemy_beings_selected(self, player=None):
         for enemy in self.owner.enemy_beings:
@@ -91,6 +93,8 @@ class BeingsSelected:
                                 break
                     except AttributeError:
                         pass  # No valid enemy_being found.
+                    except ValueError as e:
+                        print(f"{e} in sprite_tracker.BeingsSelected._find_enemy_beings_selected")
 
     def find(self, player=None):
         self._reset_sprite_list()
@@ -129,6 +133,8 @@ class MapObjectSelected:
                                 break
                     except AttributeError:
                         pass  # No valid MapObject found.
+                    except ValueError as e:
+                        print(f"{e} in sprite_tracker.MapObjectSelected._find_map_objects_selected")
 
     def find(self, player=None):
         self._reset_sprite_list()
@@ -170,6 +176,8 @@ class TilesSelected:
                         self.sprites_selected.append(tile.sprite_targeted.arcade_sprite)
                     except AttributeError:
                         pass  # No valid Tile found.
+                    except ValueError as e:
+                        print(f"{e} in sprite_tracker.TilesSelected._find_tiles_selected")
 
     def find(self, player=None):
         self._reset_sprite_list()
