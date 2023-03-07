@@ -47,7 +47,7 @@ class BeingsSelected:
     def _find_player_beings_selected(self, player=None):
         for player_ in self.owner.player_beings:
             if player_.selected:
-                self.sprites_selected.append(player_.sprite_selected.arcade_sprite)
+                self.sprites_selected.append(player_.sprite_active.arcade_sprite)
         if globals.state == State.TARGET:
             for effect in player.attack.effects:
                 for coords in effect.target_positions:

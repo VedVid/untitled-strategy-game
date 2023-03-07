@@ -66,12 +66,14 @@ def test_being_move_to():
     assert (
         being_player.px_position.x
         == being_player.sprite.position.x
+        == being_player.sprite_active.position.x
         == being_player.sprite_selected.position.x
         == being_player.sprite_targeted.position.x
     )
     assert (
         being_player.px_position.y
         == being_player.sprite.position.y
+        == being_player.sprite_active.position.y
         == being_player.sprite_selected.position.y
         == being_player.sprite_targeted.position.y
     )

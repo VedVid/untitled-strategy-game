@@ -20,6 +20,7 @@ class Being:
         self.build_cell_position(-1, -1)
         self.build_px_position(-1, -1)
         self.build_sprite()
+        self.build_active_sprite()
         self.build_selected_sprite()
         self.build_targeted_sprite()
         self.build_hp()
@@ -33,6 +34,9 @@ class Being:
         raise NotImplementedError
 
     def build_sprite(self):
+        raise NotImplementedError
+
+    def build_active_sprite(self):
         raise NotImplementedError
 
     def build_selected_sprite(self):
@@ -78,6 +82,11 @@ class Player(Being):
     def build_sprite(self):
         self.sprite = Sprite("image_being_player_1.png", self.px_position, 0.125)
 
+    def build_active_sprite(self):
+        self.sprite_active = Sprite(
+            "image_being_player_1_active.png", self.px_position, 0.125
+        )
+
     def build_selected_sprite(self):
         self.sprite_selected = Sprite(
             "image_being_player_1_selected.png", self.px_position, 0.125
@@ -105,6 +114,7 @@ class Player(Being):
             (y * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
         )
         self.sprite.update_position(self.px_position)
+        self.sprite_active.update_position(self.px_position)
         self.sprite_selected.update_position(self.px_position)
         self.sprite_targeted.update_position(self.px_position)
 
@@ -122,6 +132,9 @@ class Enemy(Being):
 
     def build_sprite(self):
         self.sprite = Sprite("image_being_enemy_1.png", self.px_position, 0.125)
+
+    def build_active_sprite(self):
+        pass  # Does not have active_sprite
 
     def build_selected_sprite(self):
         self.sprite_selected = Sprite(
@@ -159,6 +172,7 @@ def construct_beings(cls, x, y):
     being.build_cell_position(x, y)
     being.build_px_position(x, y)
     being.build_sprite()
+    being.build_active_sprite()
     being.build_selected_sprite()
     being.build_targeted_sprite()
     being.build_attack()
