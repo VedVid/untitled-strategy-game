@@ -29,7 +29,7 @@ class Game(arcade.Window):
         self.grid = grid
         self.beings = beings
         self.pathfinder = Pathfinder(self.grid)
-        self.selected_player = None
+        self.active_player = None
         self.sprite_tracker = SpriteTracker(self.beings, self.grid)
         # first_frame and initialized are hacks to allow removing from the spritelists.
         # Will be removed when stuff like main menu will be implemented - that way, window will be spawned and
@@ -59,11 +59,11 @@ class Game(arcade.Window):
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
         self.y = y
-        if self.selected_player:
+        if self.active_player:
             target_position = Position(x, y).return_px_to_cell()
             self.pathfinder.set_up_path_grid(self.beings)
             self.pathfinder.find_path(
-                self.selected_player.cell_position, target_position
+                self.active_player.cell_position, target_position
             )
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -73,20 +73,20 @@ class Game(arcade.Window):
                 for player in self.beings.player_beings:
                     if player is player_under_cursor:
                         globals.state = State.MOVE
-                        player.toggle_selected()
+                        player.toggle_active()
                         continue
-                    player.selected = False
+                    player.active = False
                 return
-            if self.selected_player is not None:
+            if self.active_player is not None:
                 if self.pathfinder.last_path and globals.state == State.MOVE:
-                    self.selected_player.move_to(
+                    self.active_player.move_to(
                         self.pathfinder.last_path[-1][0],
                         self.pathfinder.last_path[-1][1],
                     )
                     self.pathfinder.last_path = ()
                 elif globals.state == State.TARGET:
                     try:
-                        self.selected_player.attack.perform(self.beings, x, y)
+                        self.active_player.attack.perform(self.beings, x, y)
                     except TypeError:
                         pass  # Catch-all exception for attacks.
         elif button == arcade.MOUSE_BUTTON_RIGHT:
@@ -94,8 +94,8 @@ class Game(arcade.Window):
                 globals.state = State.MOVE
             elif globals.state == State.MOVE:
                 globals.state = State.PLAY
-                self.selected_player.selected = False
-                self.selected_player = None
+                self.active_player.active = False
+                self.active_player = None
 
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
@@ -106,13 +106,14 @@ class Game(arcade.Window):
             for i in range(constants.ENEMY_BEINGS_INITIAL_NO):
                 self.beings.spawn_enemy_being()
         if self.initialized:
-            self.selected_player = self.beings.find_selected_player()
-            if self.selected_player is None:
+            self.active_player = self.beings.find_active_player()
+            if self.active_player is None:
                 globals.state = State.PLAY
                 self.pathfinder.last_path = ()
             elif globals.state == State.PLAY:
                 globals.state = State.MOVE
-            self.sprite_tracker.track(self.selected_player)
+            mouse_position = Position(self.x, self.y).return_px_to_cell()
+            self.sprite_tracker.track(mouse_position, self.active_player)
             # TODO: TESTING ONLY, REMOVE LATER!
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:

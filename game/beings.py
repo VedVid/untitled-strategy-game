@@ -77,9 +77,9 @@ class Beings:
             for enemy in enemy_beings:
                 self.add_enemy_being(enemy)
 
-    def find_selected_player(self):
+    def find_active_player(self):
         return next(
-            (p for p in self.player_beings if (p.selected)),
+            (p for p in self.player_beings if (p.active)),
             None,
         )
 

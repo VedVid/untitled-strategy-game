@@ -5,7 +5,7 @@ from game.map_object import MapObject
 from game.map_objects import MapObjects
 
 
-fake_map_object = MapObject(1, 1, "test.png", "test_targeted.png")
+fake_map_object = MapObject(1, 1, "test.png", "test_selected.png", "test_targeted.png")
 map_objects_filled = MapObjects([fake_map_object])
 map_objects_empty = MapObjects(None)
 
@@ -33,12 +33,12 @@ def test_map_objects_empty_add():
 
 
 map_object_center = MapObject(
-    0, 0, "test.png", "test_targeted.png"
+    0, 0, "test.png", "test_selected.png", "test_targeted.png"
 )  # 4, 4 at the end of the test.
-map_object_left = MapObject(3, 4, "test.png", "test_targeted.png")
-map_object_right = MapObject(5, 4, "test.png", "test_targeted.png")
-map_object_above = MapObject(4, 5, "test.png", "test_targeted.png")
-map_object_below = MapObject(4, 3, "test.png", "test_targeted.png")
+map_object_left = MapObject(3, 4, "test.png", "test_selected.png", "test_targeted.png")
+map_object_right = MapObject(5, 4, "test.png", "test_selected.png", "test_targeted.png")
+map_object_above = MapObject(4, 5, "test.png", "test_selected.png", "test_targeted.png")
+map_object_below = MapObject(4, 3, "test.png", "test_selected.png", "test_targeted.png")
 
 
 def test_for_empty_tiles_1():
