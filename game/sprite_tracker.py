@@ -160,7 +160,7 @@ class TilesSelected:
                     tile = self.grid.find_tile_by_position(
                         Position(coords[0], coords[1])
                     )
-                    self.sprites_selected.append(tile.sprite_selected.arcade_sprite)
+                    self.sprites_selected.append(tile.sprite_path.arcade_sprite)
             except TypeError:  # Empty last_path
                 pass
         elif globals.state == State.TARGET:

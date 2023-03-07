@@ -75,6 +75,7 @@ class Grid:
                     "image_terrain_1.png",
                     "image_terrain_1_selected.png",
                     "image_terrain_1_targeted.png",
+                    "image_terrain_1_path.png",
                 )
                 tiles.append(tile)
                 self.sprite_list.append(tile.sprite.arcade_sprite)
