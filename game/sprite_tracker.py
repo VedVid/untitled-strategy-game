@@ -28,14 +28,11 @@ class SpriteTracker:
         self._beings = beings
         self._grid = grid
         self._pathfinder = Pathfinder(grid)
-        self._beings_sprites_selected = arcade.SpriteList()
-        self._map_objects_sprites_selected = arcade.SpriteList()
         self._tiles_sprites_selected = arcade.SpriteList()
+        self._map_objects_sprites_selected = arcade.SpriteList()
+        self._beings_sprites_selected = arcade.SpriteList()
         self.mouse_position = None
         self.player = None
-
-    def _reset_sprite_list_tiles(self):
-        self._tiles_sprites_selected.clear()
 
     def _add_to_spritelist(self, entity, targeted=False):
         sprite = entity.sprite_selected.arcade_sprite
@@ -55,6 +52,7 @@ class SpriteTracker:
             )
 
     def _find(self, what):
+        l = None
         if what == "player_beings":
             l = self._beings.player_beings
         elif what == "enemy_beings":
@@ -70,13 +68,13 @@ class SpriteTracker:
                         self.player.cell_position.x + coords[0],
                         self.player.cell_position.y + coords[1],
                     )
-                    for e in l:
+                    for entity in l:
                         # Find "yellow" entity - ie tile that player can click on.
                         if (
-                                e.cell_position.x == pos.x
-                                and e.cell_position.y == pos.y
+                                entity.cell_position.x == pos.x
+                                and entity.cell_position.y == pos.y
                         ):
-                            self._add_to_spritelist(e)
+                            self._add_to_spritelist(entity)
                         # Find "red" entity - ie tile that will be attacked when player clicks on yellow tile.
                         if pos.x == self.mouse_position.x and pos.y == self.mouse_position.y:
                             for coords2 in effect.attack_pattern:
@@ -85,10 +83,10 @@ class SpriteTracker:
                                     pos.y + coords2[1],
                                 )
                                 if (
-                                        e.cell_position.x == pos2.x
-                                        and e.cell_position.y == pos2.y
+                                        entity.cell_position.x == pos2.x
+                                        and entity.cell_position.y == pos2.y
                                 ):
-                                    self._add_to_spritelist(e, True)
+                                    self._add_to_spritelist(entity, True)
                 except AttributeError:
                     pass  # No valid player_being found.
                 except ValueError as e:
@@ -122,58 +120,19 @@ class SpriteTracker:
         elif globals.state == State.TARGET:
             self._find("tiles")
 
+    def _reset_sprite_lists(self):
+        self._beings_sprites_selected.clear()
+        self._map_objects_sprites_selected.clear()
+        self._tiles_sprites_selected.clear()
+
     def track(self, mouse_position, player=None):
-        self._tiles_selected.find(mouse_position, player)
-        self._map_objects_selected.find(mouse_position, player)
-        self._beings_selected.find(mouse_position, player)
+        self._reset_sprite_lists()
+        self._find_tiles()
+        self._find_map_objects()
+        self._find_enemy_beings()
+        self._find_player_beings()
 
     def draw(self):
-        self._tiles_selected.draw()
-        self._map_objects_selected.draw()
-        self._beings_selected.draw()
-
-
-class BeingsSelected:
-    def __init__(self, owner):
-        self.owner = owner
-        self.sprites_selected = arcade.SpriteList()
-
-    def find(self, mouse_position, player=None):
-        self._reset_sprite_list()
-        self._find_player_beings_selected(mouse_position, player)
-        self._find_enemy_beings_selected(mouse_position, player)
-
-    def draw(self):
-        self.sprites_selected.draw()
-
-
-class MapObjectSelected:
-    def __init__(self, owner):
-        self.owner = owner
-        self.sprites_selected = arcade.SpriteList()
-
-    def _reset_sprite_list(self):
-        self.sprites_selected.clear()
-
-
-    def find(self, mouse_position, player=None):
-        self._reset_sprite_list()
-        self._find_map_objects_selected(mouse_position, player)
-
-    def draw(self):
-        self.sprites_selected.draw()
-
-
-class TilesSelected:
-    def __init__(self, grid):
-        self.grid = grid
-        self.pathfinder = Pathfinder(grid)
-        self.sprites_selected = arcade.SpriteList()
-
-
-    def find(self, mouse_position, player=None):
-        self._reset_sprite_list()
-        self._find_tiles_selected(mouse_position, player)
-
-    def draw(self):
-        self.sprites_selected.draw()
+        self._tiles_sprites_selected.draw()
+        self._map_objects_sprites_selected.draw()
+        self._beings_sprites_selected.draw()
