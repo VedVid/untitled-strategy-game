@@ -11,7 +11,29 @@ class Attack:
 
     def __init__(self, *args):
         self.effects = args
+        self.owner = None
 
     def perform(self, beings, x, y):
+        print("\n---")
         for effect in self.effects:
+            print()
+            from .components.position import Position
+            cursor_position = Position(x, y).return_px_to_cell()
+            cursor_tuple = (cursor_position.x, cursor_position.y)
+            owner_position = self.owner.cell_position
+            valid_target_positions = []
+            print("cursor_position:", cursor_position.x, cursor_position.y)
+            print("owner_position :", owner_position.x, owner_position.y)
+            print("valid target positions:")
+            for target in effect.target_positions:
+                valid_target_position = (
+                    owner_position.x + target[0],
+                    owner_position.y + target[1],
+                )
+                valid_target_positions.append(valid_target_position)
+                print("   ", valid_target_position)
+            if cursor_tuple in valid_target_positions:
+                print(True)
+            else:
+                print(False)
             effect.perform(beings, x, y)

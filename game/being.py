@@ -5,6 +5,8 @@
 # Source: https://github.com/faif/python-patterns/blob/master/patterns/creational/builder.py
 
 
+import copy
+
 from . import attacks
 from . import constants
 from .components.position import Position
@@ -101,7 +103,8 @@ class Player(Being):
         self.hp = 3
 
     def build_attack(self):
-        self.attack = attacks.attack_wall_punch
+        self.attack = copy.copy(attacks.attack_wall_punch)
+        self.attack.owner = self
 
     def build_ai(self):
         # If self.ai is None, then the instance will wait for the player's commands.
@@ -150,7 +153,8 @@ class Enemy(Being):
         self.hp = 2
 
     def build_attack(self):
-        self.attack = attacks.attack_punch
+        self.attack = copy.copy(attacks.attack_punch)
+        self.attack.owner = self
 
     def build_ai(self):
         # TODO: Replace this placeholder with proper AI.
