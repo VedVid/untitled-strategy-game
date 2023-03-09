@@ -33,7 +33,7 @@ class Attack:
                 valid_target_positions.append(valid_target_position)
                 print("   ", valid_target_position)
             if cursor_tuple in valid_target_positions:
-                print(True)
+                print(1)
+                effect.perform(beings, x, y)
             else:
-                print(False)
-            effect.perform(beings, x, y)
+                print(0)
