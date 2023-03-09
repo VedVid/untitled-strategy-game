@@ -68,8 +68,12 @@ class PunchAttackEffect(AttackEffect):
         ]
 
     def perform(self, beings, x, y):
+        print()
         for cell in self.attack_pattern:
             try:
+                from .components.position import Position
+                p = Position(x + (cell[0] * constants.TILE_SIZE_W), y + (cell[1] * constants.TILE_SIZE_H)).return_px_to_cell()
+                print(p.x, p.y)
                 beings.find_being_by_px_position(
                     x + (cell[0] * constants.TILE_SIZE_W),
                     y + (cell[1] * constants.TILE_SIZE_H),
