@@ -164,11 +164,16 @@ class SpriteTracker:
     def _find_tiles(self):
         if globals.state == State.MOVE:
             try:
-                for coords in self._pathfinder.last_path:
+                for i, coords in enumerate(self._pathfinder.last_path):
                     tile = self._grid.find_tile_by_position(
                         Position(coords[0], coords[1])
                     )
-                    self._tiles_sprites_selected.append(tile.sprite_path.arcade_sprite)
+                    # Use green "sprite_path" if tile is in range of active player.
+                    spr = tile.sprite_path
+                    if i > self.player.range:
+                        # Otherwise, use red "sprite_targeted".
+                        spr = tile.sprite_targeted
+                    self._tiles_sprites_selected.append(spr.arcade_sprite)
             except TypeError:  # Empty last_path
                 pass
         elif globals.state == State.TARGET:

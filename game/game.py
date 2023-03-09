@@ -77,11 +77,18 @@ class Game(arcade.Window):
                 return
             if self.active_player is not None:
                 if self.pathfinder.last_path and globals.state == State.MOVE:
-                    self.active_player.move_to(
-                        self.pathfinder.last_path[-1][0],
-                        self.pathfinder.last_path[-1][1],
-                    )
-                    self.pathfinder.last_path = ()
+                    try:
+                        self.active_player.move_to(
+                            self.pathfinder.last_path[self.active_player.range][0],
+                            self.pathfinder.last_path[self.active_player.range][1],
+                        )
+                        self.pathfinder.last_path = ()
+                    except IndexError:
+                        self.active_player.move_to(
+                            self.pathfinder.last_path[-1][0],
+                            self.pathfinder.last_path[-1][1],
+                        )
+                        self.pathfinder.last_path = ()
                 elif globals.state == State.TARGET:
                     try:
                         self.active_player.attack.perform(self.beings, x, y)
