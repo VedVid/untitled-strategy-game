@@ -107,7 +107,7 @@ class Player(Being):
         self.hp = 3
 
     def build_range(self):
-        self.range = 6
+        self.range = 5
 
     def build_attack(self):
         self.attack = copy.copy(attacks.attack_wall_punch)
