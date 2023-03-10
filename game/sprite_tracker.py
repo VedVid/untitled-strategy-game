@@ -167,8 +167,29 @@ class SpriteTracker:
 
     def _find_tiles(self):
         if globals.state == State.MOVE:
+            # Draw all tiles that are in player range.
+            for tile in self._grid.tiles:
+                self._pathfinder.set_up_path_grid(self._beings)
+                self._pathfinder.find_path(
+                    self.player.cell_position,
+                    tile.cell_position,
+                )
+                for i, coords in enumerate(self._pathfinder.last_path):
+                    tile = self._grid.find_tile_by_position(
+                        Position(coords[0], coords[1])
+                    )
+                    try:
+                        if i <= self.player.range:
+                            self._tiles_sprites_in_range.append(tile.sprite_in_range.arcade_sprite)
+                    except ValueError as e:  # Sprite already in SpriteList. .clear() not called?
+                        pass
             try:
                 # Then show path from player to cursor.
+                self._pathfinder.set_up_path_grid(self._beings)
+                self._pathfinder.find_path(
+                    self.player.cell_position,
+                    self.mouse_position,
+                )
                 for i, coords in enumerate(self._pathfinder.last_path):
                     tile = self._grid.find_tile_by_position(
                         Position(coords[0], coords[1])
@@ -181,17 +202,6 @@ class SpriteTracker:
                     self._tiles_sprites_selected.append(spr.arcade_sprite)
             except TypeError:  # Empty last_path
                 pass
-            try:
-                # Draw all tiles that are in player range.
-                for tile in self._grid.tiles:
-                    if math.dist(
-                            (tile.cell_position.x, tile.cell_position.y),
-                            (self.player.cell_position.x, self.player.cell_position.y),
-                    ) < self.player.range:
-                        self._tiles_sprites_in_range.append(tile.sprite_in_range.arcade_sprite)
-                        pass
-            except ValueError as e:  # Sprite already in SpriteList. .clear() not called?
-                print(e)
         elif globals.state == State.TARGET:
             self._find("tiles")
 
