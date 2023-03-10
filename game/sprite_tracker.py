@@ -6,6 +6,8 @@
 # but it lead to major code duplication, hence refactoring SpriteTracker to single class.
 
 
+import math
+
 import arcade
 
 from . import globals
@@ -33,11 +35,12 @@ class SpriteTracker:
         Takes instance of Grid; used to highlight targeted MapObject and Tile instances.
     _pathfinder: Pathfinder
         New instance of monostate-like Pathfinder class; used to hightlight path from active player to cursor.
+    _tiles_sprites_in_range: arcade.SpriteList()
     _tiles_sprites_selected: arcade.SpriteList()
     _map_objects_sprites_selected: arcade.SpriteList()
     _beings_sprites_selected: arcade.SpriteList()
-        Every _..._sprites_selected are SpriteLists that aggregate highlighted sprites: sprite_active, sprite_selected,
-        sprite_targeted.
+        Every _..._sprites_selected are SpriteLists that aggregate highlighted sprites: sprite_in_range, sprite_active,
+        sprite_selected, sprite_targeted.
     mouse_position: Position
         Current Position of mouse, used to determine if cursor is over one of the currently shown sprite_selected, ergo
         to determine if sprite_targeted should be visible. mouse_position should be updated before every SpriteTracker
@@ -74,6 +77,7 @@ class SpriteTracker:
         self._beings = beings
         self._grid = grid
         self._pathfinder = Pathfinder(grid)
+        self._tiles_sprites_in_range = arcade.SpriteList()
         self._tiles_sprites_selected = arcade.SpriteList()
         self._map_objects_sprites_selected = arcade.SpriteList()
         self._beings_sprites_selected = arcade.SpriteList()
@@ -164,6 +168,7 @@ class SpriteTracker:
     def _find_tiles(self):
         if globals.state == State.MOVE:
             try:
+                # Then show path from player to cursor.
                 for i, coords in enumerate(self._pathfinder.last_path):
                     tile = self._grid.find_tile_by_position(
                         Position(coords[0], coords[1])
@@ -176,12 +181,24 @@ class SpriteTracker:
                     self._tiles_sprites_selected.append(spr.arcade_sprite)
             except TypeError:  # Empty last_path
                 pass
+            try:
+                # Draw all tiles that are in player range.
+                for tile in self._grid.tiles:
+                    if math.dist(
+                            (tile.cell_position.x, tile.cell_position.y),
+                            (self.player.cell_position.x, self.player.cell_position.y),
+                    ) < self.player.range:
+                        self._tiles_sprites_in_range.append(tile.sprite_in_range.arcade_sprite)
+                        pass
+            except ValueError as e:  # Sprite already in SpriteList. .clear() not called?
+                print(e)
         elif globals.state == State.TARGET:
             self._find("tiles")
 
     def _reset_sprite_lists(self):
         self._beings_sprites_selected.clear()
         self._map_objects_sprites_selected.clear()
+        self._tiles_sprites_in_range.clear()
         self._tiles_sprites_selected.clear()
 
     def track(self):
@@ -193,6 +210,7 @@ class SpriteTracker:
         self._find_player_beings()
 
     def draw(self):
+        self._tiles_sprites_in_range.draw()
         self._tiles_sprites_selected.draw()
         self._map_objects_sprites_selected.draw()
         self._beings_sprites_selected.draw()
