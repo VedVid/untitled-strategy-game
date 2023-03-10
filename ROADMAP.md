@@ -1,6 +1,8 @@
 #### Roadmap to the first pre-alpha:
 
-- [ ] applying multiple attack_effects at once
-- [ ] movement range
+* [x] applying multiple attack_effects at once
+* [x] movement range
 - [ ] destroyable city tiles
 - [ ] ai
+- [ ] victory conditions
+
