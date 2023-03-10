@@ -20,6 +20,10 @@ class Tile:
         Name of the graphics that will represent Tile on the map.
     sprite_selected: string
         Name of the graphics that will be drawn over the basic sprite, if Tile is part of the currently showed path.
+    sprite_path: string
+        Name of the graphics that will be drawn from player to cursor to show path.
+    sprite_in_range: string
+        Name of the graphics that will be used to show what tiles are in range of active player.
     width, height: int
         Size of the tile, converted to the instance of Size class.
     """
@@ -32,6 +36,7 @@ class Tile:
         sprite_selected=None,
         sprite_targeted=None,
         sprite_path=None,
+        sprite_in_range=None,
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
@@ -51,3 +56,6 @@ class Tile:
         if sprite_path is None:
             sprite_path = sprite
         self.sprite_path = Sprite(sprite_path, self.px_position, 0.125)
+        if sprite_in_range is None:
+            sprite_in_range = sprite
+        self.sprite_in_range = Sprite(sprite_in_range, self.px_position, 0.125)
