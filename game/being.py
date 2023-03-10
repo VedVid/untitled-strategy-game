@@ -26,6 +26,7 @@ class Being:
         self.build_selected_sprite()
         self.build_targeted_sprite()
         self.build_hp()
+        self.build_range()
         self.build_ai()
         self.build_active()
 
@@ -48,6 +49,9 @@ class Being:
         raise NotImplementedError
 
     def build_hp(self):
+        raise NotImplementedError
+
+    def build_range(self):
         raise NotImplementedError
 
     def build_attack(self):
@@ -102,6 +106,9 @@ class Player(Being):
     def build_hp(self):
         self.hp = 3
 
+    def build_range(self):
+        self.range = 5
+
     def build_attack(self):
         self.attack = copy.copy(attacks.attack_wall_punch)
         self.attack.owner = self
@@ -152,6 +159,9 @@ class Enemy(Being):
     def build_hp(self):
         self.hp = 2
 
+    def build_range(self):
+        self.range = 5
+
     def build_attack(self):
         self.attack = copy.copy(attacks.attack_punch)
         self.attack.owner = self
@@ -180,6 +190,7 @@ def construct_beings(cls, x, y):
     being.build_selected_sprite()
     being.build_targeted_sprite()
     being.build_attack()
+    being.build_range()
     being.build_ai()
     being.build_active()
     return being

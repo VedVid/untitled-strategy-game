@@ -59,10 +59,11 @@ class Game(arcade.Window):
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
         self.y = y
-        if self.active_player:
-            target_position = Position(x, y).return_px_to_cell()
-            self.pathfinder.set_up_path_grid(self.beings)
-            self.pathfinder.find_path(self.active_player.cell_position, target_position)
+        # TODO: Probably safe for removal, but more testing is necessary.
+#        if self.active_player:
+#            target_position = Position(x, y).return_px_to_cell()
+#            self.pathfinder.set_up_path_grid(self.beings)
+#            self.pathfinder.find_path(self.active_player.cell_position, target_position)
 
     def on_mouse_press(self, x, y, button, modifiers):
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
@@ -77,11 +78,18 @@ class Game(arcade.Window):
                 return
             if self.active_player is not None:
                 if self.pathfinder.last_path and globals.state == State.MOVE:
-                    self.active_player.move_to(
-                        self.pathfinder.last_path[-1][0],
-                        self.pathfinder.last_path[-1][1],
-                    )
-                    self.pathfinder.last_path = ()
+                    try:
+                        self.active_player.move_to(
+                            self.pathfinder.last_path[self.active_player.range][0],
+                            self.pathfinder.last_path[self.active_player.range][1],
+                        )
+                        self.pathfinder.last_path = ()
+                    except IndexError:
+                        self.active_player.move_to(
+                            self.pathfinder.last_path[-1][0],
+                            self.pathfinder.last_path[-1][1],
+                        )
+                        self.pathfinder.last_path = ()
                 elif globals.state == State.TARGET:
                     try:
                         self.active_player.attack.perform(self.beings, x, y)
