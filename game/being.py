@@ -63,6 +63,12 @@ class Being:
     def build_active(self):
         self.active = False
 
+    def build_moved(self):
+        self.moved = False
+
+    def build_attacked(self):
+        self.attacked = False
+
     def toggle_active(self):
         if self.active:
             self.active = False
@@ -127,6 +133,7 @@ class Player(Being):
         self.sprite_active.update_position(self.px_position)
         self.sprite_selected.update_position(self.px_position)
         self.sprite_targeted.update_position(self.px_position)
+        self.moved = True
 
 
 # Concrete
@@ -179,6 +186,7 @@ class Enemy(Being):
         self.sprite.update_position(self.px_position)
         self.sprite_selected.update_position(self.px_position)
         self.sprite_targeted.update_position(self.px_position)
+        self.moved = True
 
 
 def construct_beings(cls, x, y):
@@ -193,4 +201,6 @@ def construct_beings(cls, x, y):
     being.build_range()
     being.build_ai()
     being.build_active()
+    being.build_moved()
+    being.build_attacked()
     return being

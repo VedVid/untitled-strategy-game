@@ -50,11 +50,16 @@ class Game(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         # TODO: TESTING ONLY, remove later!
+        if globals.state == State.ENEMY_TURN:
+            return
         if key == arcade.key.ENTER:
             if globals.state == State.MOVE:
                 globals.state = State.TARGET
             else:
                 globals.state = State.MOVE
+        elif key == arcade.key.SPACE and globals.state == State.PLAY:
+            globals.state = State.ENEMY_TURN
+            print(globals.state)
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
@@ -66,6 +71,8 @@ class Game(arcade.Window):
 #            self.pathfinder.find_path(self.active_player.cell_position, target_position)
 
     def on_mouse_press(self, x, y, button, modifiers):
+        if globals.state == State.ENEMY_TURN:
+            return
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
         if button == arcade.MOUSE_BUTTON_LEFT:
             if player_under_cursor:
@@ -77,7 +84,7 @@ class Game(arcade.Window):
                     player.active = False
                 return
             if self.active_player is not None:
-                if self.pathfinder.last_path and globals.state == State.MOVE:
+                if self.pathfinder.last_path and globals.state == State.MOVE and not self.active_player.moved:
                     try:
                         self.active_player.move_to(
                             self.pathfinder.last_path[self.active_player.range][0],
@@ -90,7 +97,7 @@ class Game(arcade.Window):
                             self.pathfinder.last_path[-1][1],
                         )
                         self.pathfinder.last_path = ()
-                elif globals.state == State.TARGET:
+                elif globals.state == State.TARGET and not self.active_player.attacked:
                     try:
                         self.active_player.attack.perform(self.beings, x, y)
                     except TypeError:
@@ -114,15 +121,20 @@ class Game(arcade.Window):
         if self.initialized:
             self.active_player = self.beings.find_active_player()
             if self.active_player is None:
-                globals.state = State.PLAY
                 self.pathfinder.last_path = ()
-            elif globals.state == State.PLAY:
-                globals.state = State.MOVE
+                if globals.state != State.ENEMY_TURN:
+                    globals.state = State.PLAY
             mouse_position = Position(self.x, self.y).return_px_to_cell()
             self.sprite_tracker.mouse_position = mouse_position
             self.sprite_tracker.player = self.active_player
             self.sprite_tracker.track()
-            # TODO: TESTING ONLY, REMOVE LATER!
+            # Remove dead enemies on_update before checking for enemy turn
+            # allows to apply environmental effect before the enemy can act.
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)
+            if globals.state == State.ENEMY_TURN:
+                for enemy in self.beings.enemy_beings:
+                    print(enemy, "takes turn...")
+                globals.state = State.PLAY
+                print("player's turn")

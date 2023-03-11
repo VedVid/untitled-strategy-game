@@ -18,6 +18,9 @@ class Attack:
         self.owner = None
 
     def perform(self, beings, x, y):
+        if self.owner.attacked:
+            return
+        performed = False
         for effect in self.effects:
             cursor_position = Position(x, y).return_px_to_cell()
             valid_target_positions = []
@@ -29,3 +32,5 @@ class Attack:
                 valid_target_positions.append(valid_target_position)
             if (cursor_position.x, cursor_position.y) in valid_target_positions:
                 effect.perform(beings, x, y)
+                performed = True
+        self.owner.attacked = performed
