@@ -134,13 +134,7 @@ class Game(arcade.Window):
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)
             if globals.state == State.ENEMY_TURN:
-                print("enemy turn")
-                print("...doing something...")
-                import time
-                time.sleep(1)
-                print("...doing something...")
-                time.sleep(1)
-                print("...doing something...")
-                time.sleep(1)
+                for enemy in self.beings.enemy_beings:
+                    print(enemy, "takes turn...")
                 globals.state = State.PLAY
                 print("player's turn")
