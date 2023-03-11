@@ -74,6 +74,7 @@ class Game(arcade.Window):
         if globals.state == State.ENEMY_TURN:
             return
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
+        # Select player by clicking in Sprite.
         if button == arcade.MOUSE_BUTTON_LEFT:
             if player_under_cursor:
                 for player in self.beings.player_beings:
@@ -84,6 +85,7 @@ class Game(arcade.Window):
                     player.active = False
                 return
             if self.active_player is not None:
+                # Move player if possible.
                 if self.pathfinder.last_path and globals.state == State.MOVE and not self.active_player.moved:
                     try:
                         self.active_player.move_to(
@@ -97,11 +99,21 @@ class Game(arcade.Window):
                             self.pathfinder.last_path[-1][1],
                         )
                         self.pathfinder.last_path = ()
+                # Perform attack if possible.
                 elif globals.state == State.TARGET and not self.active_player.attacked:
                     try:
                         self.active_player.attack.perform(self.beings, x, y)
                     except TypeError:
                         pass  # Catch-all exception for attacks.
+                    finally:
+                        # After attack, switch to move mode if player did not move this turn yet.
+                        if not self.active_player.moved:
+                            globals.state = State.MOVE
+                        # Otherwise, deselect the player.
+                        else:
+                            globals.state = State.PLAY
+                            self.active_player.active = False
+                            self.active_player = None
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.TARGET:
                 globals.state = State.MOVE
