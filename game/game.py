@@ -149,4 +149,7 @@ class Game(arcade.Window):
                 for enemy in self.beings.enemy_beings:
                     print(enemy, "takes turn...")
                 globals.state = State.PLAY
+                for player in self.beings.player_beings:
+                    player.moved = False
+                    player.attacked = False
                 print("player's turn")
