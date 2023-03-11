@@ -119,10 +119,9 @@ class Game(arcade.Window):
         if self.initialized:
             self.active_player = self.beings.find_active_player()
             if self.active_player is None:
-                globals.state = State.PLAY
                 self.pathfinder.last_path = ()
-            elif globals.state == State.PLAY:
-                globals.state = State.MOVE
+                if globals.state != State.ENEMY_TURN:
+                    globals.state = State.PLAY
             mouse_position = Position(self.x, self.y).return_px_to_cell()
             self.sprite_tracker.mouse_position = mouse_position
             self.sprite_tracker.player = self.active_player
