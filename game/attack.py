@@ -33,4 +33,6 @@ class Attack:
             if (cursor_position.x, cursor_position.y) in valid_target_positions:
                 effect.perform(beings, x, y)
                 performed = True
-        self.owner.attacked = performed
+        if performed:
+            self.owner.attacked = True
+            self.owner.moved = True

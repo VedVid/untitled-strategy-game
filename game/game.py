@@ -106,14 +106,10 @@ class Game(arcade.Window):
                     except TypeError:
                         pass  # Catch-all exception for attacks.
                     finally:
-                        # After attack, switch to move mode if player did not move this turn yet.
-                        if not self.active_player.moved:
-                            globals.state = State.MOVE
-                        # Otherwise, deselect the player.
-                        else:
-                            globals.state = State.PLAY
-                            self.active_player.active = False
-                            self.active_player = None
+                        # After attack, deselect the player since moving unit is not forbidden after attack.
+                        globals.state = State.PLAY
+                        self.active_player.active = False
+                        self.active_player = None
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.TARGET:
                 globals.state = State.MOVE
