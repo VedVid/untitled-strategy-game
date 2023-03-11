@@ -19,16 +19,9 @@ class Being:
     """
 
     def __init__(self):
-        self.build_cell_position(-1, -1)
-        self.build_px_position(-1, -1)
-        self.build_sprite()
-        self.build_active_sprite()
-        self.build_selected_sprite()
-        self.build_targeted_sprite()
-        self.build_hp()
-        self.build_range()
-        self.build_ai()
         self.build_active()
+        self.build_moved()
+        self.build_attacked()
 
     def build_cell_position(self, x, y):
         raise NotImplementedError
@@ -197,10 +190,8 @@ def construct_beings(cls, x, y):
     being.build_active_sprite()
     being.build_selected_sprite()
     being.build_targeted_sprite()
-    being.build_attack()
+    being.build_hp()
     being.build_range()
+    being.build_attack()
     being.build_ai()
-    being.build_active()
-    being.build_moved()
-    being.build_attacked()
     return being
