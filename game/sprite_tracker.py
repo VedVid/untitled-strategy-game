@@ -166,7 +166,7 @@ class SpriteTracker:
             self._find("map_objects")
 
     def _find_tiles(self):
-        if globals.state == State.MOVE:
+        if globals.state == State.MOVE and not self.player.moved:
             # Draw all tiles that are in player range.
             for tile in self._grid.tiles:
                 self._pathfinder.set_up_path_grid(self._beings)
