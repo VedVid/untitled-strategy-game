@@ -50,6 +50,8 @@ class Game(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         # TODO: TESTING ONLY, remove later!
+        if globals.state == State.ENEMY_TURN:
+            return
         if key == arcade.key.ENTER:
             if globals.state == State.MOVE:
                 globals.state = State.TARGET
