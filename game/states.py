@@ -9,3 +9,4 @@ class State(enum.Enum):
     PLAY = enum.auto()
     MOVE = enum.auto()
     TARGET = enum.auto()
+    ENEMY_TURN = enum.auto()
