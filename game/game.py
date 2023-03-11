@@ -77,7 +77,7 @@ class Game(arcade.Window):
                     player.active = False
                 return
             if self.active_player is not None:
-                if self.pathfinder.last_path and globals.state == State.MOVE:
+                if self.pathfinder.last_path and globals.state == State.MOVE and not self.active_player.moved:
                     try:
                         self.active_player.move_to(
                             self.pathfinder.last_path[self.active_player.range][0],
