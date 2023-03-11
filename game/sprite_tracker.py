@@ -154,15 +154,15 @@ class SpriteTracker:
         for player in self._beings.player_beings:
             if player.active:
                 self._beings_sprites_selected.append(player.sprite_active.arcade_sprite)
-        if globals.state == State.TARGET:
+        if globals.state == State.TARGET and not self.player.attacked:
             self._find("player_beings")
 
     def _find_enemy_beings(self):
-        if globals.state == State.TARGET:
+        if globals.state == State.TARGET and not self.player.attacked:
             self._find("enemy_beings")
 
     def _find_map_objects(self):
-        if globals.state == State.TARGET:
+        if globals.state == State.TARGET and not self.player.attacked:
             self._find("map_objects")
 
     def _find_tiles(self):
@@ -202,7 +202,7 @@ class SpriteTracker:
                     self._tiles_sprites_selected.append(spr.arcade_sprite)
             except TypeError:  # Empty last_path
                 pass
-        elif globals.state == State.TARGET:
+        elif globals.state == State.TARGET and not self.player.attacked:
             self._find("tiles")
 
     def _reset_sprite_lists(self):

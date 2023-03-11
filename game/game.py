@@ -90,7 +90,7 @@ class Game(arcade.Window):
                             self.pathfinder.last_path[-1][1],
                         )
                         self.pathfinder.last_path = ()
-                elif globals.state == State.TARGET:
+                elif globals.state == State.TARGET and not self.active_player.attacked:
                     try:
                         self.active_player.attack.perform(self.beings, x, y)
                     except TypeError:

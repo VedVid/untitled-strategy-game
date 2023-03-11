@@ -66,6 +66,9 @@ class Being:
     def build_moved(self):
         self.moved = False
 
+    def build_attacked(self):
+        self.attacked = False
+
     def toggle_active(self):
         if self.active:
             self.active = False
@@ -199,4 +202,5 @@ def construct_beings(cls, x, y):
     being.build_ai()
     being.build_active()
     being.build_moved()
+    being.build_attacked()
     return being
