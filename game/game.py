@@ -76,7 +76,7 @@ class Game(arcade.Window):
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
         # Possible clicks: MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT
         # Possible states: State.PLAY, State.MOVE, State.TARGET
-        # Possible modifiers:
+        # Possible modifiers (not these passed as argument to this method, mind!):
         #     - not / player is active
         #     - not / player_under_cursor
         #     - active player is (not) player_under_cursor
