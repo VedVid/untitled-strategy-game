@@ -154,6 +154,10 @@ class Game(arcade.Window):
                                     )
                                 finally:
                                     self.pathfinder.last_path = ()
+                                    # TODO: Currently it makes sense to set player into TARGET mode after every move,
+                                    #       but in future I want to equip every player being in multiple attacks.
+                                    #       Will this fit?
+                                    globals.state = State.TARGET
                         elif self.active_player.moved:
                             # Do not allow to move player that already moved during this turn.
                             pass
