@@ -132,7 +132,7 @@ class Game(arcade.Window):
                             # Do not allow to move player that already moved during this turn.
                             pass
                 else:
-                    # Should not be possible. If game is in MOVE mode (or TARGET, for that matter), some player unit
+                    # Should not be possible. If game is in MOVE mode (or TARGET, for that matter), a player being
                     # must be active.
                     pass
             elif globals.state == State.TARGET:
@@ -141,9 +141,26 @@ class Game(arcade.Window):
             if globals.state == State.PLAY:
                 pass
             elif globals.state == State.MOVE:
-                pass
+                if self.active_player and self.active_player.active:
+                    self.active_player.active = False
+                    self.active_player = None
+                    globals.state = State.PLAY
+                else:
+                    # Should not be possible. If game is in MOVE state, then a player being must be active.
+                    pass
             elif globals.state == State.TARGET:
-                pass
+                if self.active_player and self.active_player.active:
+                    if self.active_player.moved:
+                        # Deselect player and return game to the PLAY state if active_player already moved.
+                        self.active_player.active = False
+                        self.active_player = None
+                        globals.state = State.PLAY
+                    else:
+                        # Switch game state to MOVE
+                        globals.state = State.MOVE
+                else:
+                    # Should not be possible. If game is in MOVE state, then a player being must be active.
+                    pass
 
 #        # Select player by clicking in Sprite.
 #        if button == arcade.MOUSE_BUTTON_LEFT:
