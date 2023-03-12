@@ -80,6 +80,7 @@ class Game(arcade.Window):
         #     - not / player is active
         #     - not / player_under_cursor
         #     - active player is (not) player_under_cursor
+        #     - active player moved or attacked already
         if button == arcade.MOUSE_BUTTON_LEFT:
             if globals.state == State.PLAY:
                 if not self.active_player:
@@ -97,8 +98,11 @@ class Game(arcade.Window):
                 if self.active_player:
                     if player_under_cursor:
                         if self.active_player is player_under_cursor:
-                            # Do nothing if active player being is being clicked on.
-                            pass
+                            if not self.active_player.attacked:
+                                globals.state = State.TARGET
+                            elif self.active_player.attacked:
+                                # Should not be possible. If active_player already attacked, it can not be in MOVE mode.
+                                pass
                         elif self.active_player is not player_under_cursor:
                             # Switch active player if another player being is being clicked on.
                             self.active_player.active = False
