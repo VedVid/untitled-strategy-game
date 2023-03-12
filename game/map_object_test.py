@@ -6,12 +6,9 @@ from game.map_object import MapObject
 
 
 map_object = MapObject(4, 2, "test.png", "test_selected.png", "test_targeted.png")
-successor = MapObject(6,
-                      6,
-                      "test.png",
-                      "test_selected.png",
-                      "test_targeted.png",
-                      successor=None)
+successor = MapObject(
+    6, 6, "test.png", "test_selected.png", "test_targeted.png", successor=None
+)
 map_object.successor = successor
 
 

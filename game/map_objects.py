@@ -51,6 +51,7 @@ class MapObjects:
             self.objects = []
 
     def fill_map(self):
+        """Called at the beginning of map generation, fills the map with mountains."""
         for y in range(self.owner.height):
             for x in range(self.owner.width):
                 map_object = MapObject(
@@ -155,6 +156,7 @@ class MapObjects:
         self.sprite_list.remove(map_object.sprite.arcade_sprite)
 
     def find_map_object_by_cell_position(self, x, y):
+        """Tries to find MapObject instance based on cell position. Returns MapObject or None."""
         return next(
             (
                 obj
@@ -165,6 +167,10 @@ class MapObjects:
         )
 
     def find_map_object_by_px_position(self, x, y):
+        """
+        Tries to find MapObject instance based on range of px_position, where px_position is the center of sprite.
+        Returns MapObject or None.
+        """
         min_x = x - (constants.TILE_SIZE_W / 2)
         max_x = x + (constants.TILE_SIZE_W / 2)
         min_y = y - (constants.TILE_SIZE_H / 2)
@@ -175,7 +181,8 @@ class MapObjects:
                 for obj in self.objects
                 if (
                     min_x <= obj.px_position.x <= max_x
-                    and min_y <= obj.px_position.y <= max_y)
+                    and min_y <= obj.px_position.y <= max_y
+                )
             ),
             None,
         )
