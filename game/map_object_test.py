@@ -2,21 +2,14 @@
 
 
 from game.components.sprite import Sprite
-import game.constants as constants
 from game.map_object import MapObject
 
 
 map_object = MapObject(4, 2, "test.png", "test_selected.png", "test_targeted.png")
-
-
-def test_if_constants_remains_unchanged():
-    """Change the values to match the current data."""
-    assert (
-        constants.TILE_SIZE_W == 64
-        and constants.TILE_SIZE_H == 64
-        and constants.TILE_CENTER_OFFSET_X == 32
-        and constants.TILE_CENTER_OFFSET_Y == 32
-    )
+successor = MapObject(
+    6, 6, "test.png", "test_selected.png", "test_targeted.png", successor=None
+)
+map_object.successor = successor
 
 
 def test_map_object_cell_position():
@@ -29,3 +22,12 @@ def test_map_object_px_position():
 
 def test_map_object_sprite_type():
     assert type(map_object.sprite) is Sprite
+
+
+def test_map_object_successor_binding():
+    assert map_object.successor is successor
+
+
+def test_map_object_destroy():
+    new_map_object = map_object.destroy()
+    assert new_map_object is successor

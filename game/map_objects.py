@@ -51,6 +51,7 @@ class MapObjects:
             self.objects = []
 
     def fill_map(self):
+        """Called at the beginning of map generation, fills the map with mountains."""
         for y in range(self.owner.height):
             for x in range(self.owner.width):
                 map_object = MapObject(
@@ -59,6 +60,7 @@ class MapObjects:
                     "image_map_object_mountain_1.png",
                     "image_map_object_mountain_1_selected.png",
                     "image_map_object_mountain_1_targeted.png",
+                    successor=None,
                 )
                 self.add_map_object(map_object)
 
@@ -79,17 +81,27 @@ class MapObjects:
             except IndexError:
                 break
             if self._has_access_to_empty_tile(obj):
-                new_map_object = MapObject(
+                ruins = MapObject(
                     obj.cell_position.x,
                     obj.cell_position.y,
+                    "image_map_object_ruins_1.png",
+                    "image_map_object_ruins_1_selected.png",
+                    "image_map_object_ruins_1_targeted.png",
+                    blocks=True,
+                    target=False,
+                    successor=None,
+                )
+                city = MapObject(
+                    ruins.cell_position.x,
+                    ruins.cell_position.y,
                     "image_map_object_city_1.png",
                     "image_map_object_city_1_selected.png",
                     "image_map_object_city_1_targeted.png",
                     blocks=True,
-                    destructible=True,
                     target=True,
+                    successor=ruins,
                 )
-                self.replace_map_object(obj, new_map_object)
+                self.replace_map_object(obj, city)
                 buildings_num -= 1
 
     def _has_access_to_empty_tile(self, map_object):
@@ -144,11 +156,33 @@ class MapObjects:
         self.sprite_list.remove(map_object.sprite.arcade_sprite)
 
     def find_map_object_by_cell_position(self, x, y):
+        """Tries to find MapObject instance based on cell position. Returns MapObject or None."""
         return next(
             (
                 obj
                 for obj in self.objects
                 if (obj.cell_position.x == x and obj.cell_position.y == y)
+            ),
+            None,
+        )
+
+    def find_map_object_by_px_position(self, x, y):
+        """
+        Tries to find MapObject instance based on range of px_position, where px_position is the center of sprite.
+        Returns MapObject or None.
+        """
+        min_x = x - (constants.TILE_SIZE_W / 2)
+        max_x = x + (constants.TILE_SIZE_W / 2)
+        min_y = y - (constants.TILE_SIZE_H / 2)
+        max_y = y + (constants.TILE_SIZE_H / 2)
+        return next(
+            (
+                obj
+                for obj in self.objects
+                if (
+                    min_x <= obj.px_position.x <= max_x
+                    and min_y <= obj.px_position.y <= max_y
+                )
             ),
             None,
         )

@@ -64,10 +64,11 @@ class Game(arcade.Window):
         self.x = x
         self.y = y
         # TODO: Probably safe for removal, but more testing is necessary.
-#        if self.active_player:
-#            target_position = Position(x, y).return_px_to_cell()
-#            self.pathfinder.set_up_path_grid(self.beings)
-#            self.pathfinder.find_path(self.active_player.cell_position, target_position)
+
+    #        if self.active_player:
+    #            target_position = Position(x, y).return_px_to_cell()
+    #            self.pathfinder.set_up_path_grid(self.beings)
+    #            self.pathfinder.find_path(self.active_player.cell_position, target_position)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if globals.state == State.ENEMY_TURN:
@@ -85,7 +86,11 @@ class Game(arcade.Window):
                 return
             if self.active_player is not None:
                 # Move player if possible.
-                if self.pathfinder.last_path and globals.state == State.MOVE and not self.active_player.moved:
+                if (
+                    self.pathfinder.last_path
+                    and globals.state == State.MOVE
+                    and not self.active_player.moved
+                ):
                     try:
                         self.active_player.move_to(
                             self.pathfinder.last_path[self.active_player.range][0],
@@ -101,7 +106,9 @@ class Game(arcade.Window):
                 # Perform attack if possible.
                 elif globals.state == State.TARGET and not self.active_player.attacked:
                     try:
-                        self.active_player.attack.perform(self.beings, x, y)
+                        self.active_player.attack.perform(
+                            self.beings, self.grid.map_objects, x, y
+                        )
                     except TypeError:
                         pass  # Catch-all exception for attacks.
                     finally:

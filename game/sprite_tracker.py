@@ -180,7 +180,9 @@ class SpriteTracker:
                     )
                     try:
                         if i <= self.player.range:
-                            self._tiles_sprites_in_range.append(tile.sprite_in_range.arcade_sprite)
+                            self._tiles_sprites_in_range.append(
+                                tile.sprite_in_range.arcade_sprite
+                            )
                     except ValueError as e:  # Sprite already in SpriteList. .clear() not called?
                         pass
             try:

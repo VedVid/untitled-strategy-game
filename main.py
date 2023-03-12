@@ -7,22 +7,9 @@ from game import constants
 from game.beings import Beings
 from game.game import Game
 from game.grid import Grid
-from game.map_object import MapObject
-from game.map_objects import MapObjects
 
 
 grid = Grid()
-map_object = MapObject(
-    2,
-    2,
-    "image_map_object_city_1.png",
-    "image_map_object_city_1_selected.png",
-    "image_map_object_city_1_targeted.png",
-    destructible=True,
-    target=True,
-)
-map_objects = MapObjects()
-map_objects.add_map_object(map_object)
 
 beings = Beings()
 

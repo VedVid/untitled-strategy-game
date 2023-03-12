@@ -21,19 +21,16 @@ class MapObject:
         Name of the graphics that will represent MapObject on the map.
     blocks: bool
         Does this object blocks movement?
-    destructible: bool
-        Is it possible to destroy this object?
     target: bool
         Will ai try to destroy this object?
-    Predecessor: MapObject
-         Object that will replace this object if destroyed; None means object will be removed from the map
-         and not replaced by another MapObject.
+    successor: MapObject
+         Object that will replace this object if destroyed; None means that object is indestructible.
 
     Methods:
     --------
     destroy: MapObject
         Right now it is a placeholder method. It will remove MapObject from the MapObject, or replace
-        current MapObject with its predecessor.
+        current MapObject with its successor.
     """
 
     def __init__(
@@ -44,9 +41,8 @@ class MapObject:
         sprite_selected,
         sprite_targeted,
         blocks=True,
-        destructible=False,
         target=False,
-        predecessor=None,
+        successor=None,
     ):
         self.cell_position = Position(x, y)
         self.px_position = Position(
@@ -57,14 +53,13 @@ class MapObject:
         self.sprite_selected = Sprite(sprite_selected, self.px_position, 0.125)
         self.sprite_targeted = Sprite(sprite_targeted, self.px_position, 0.125)
         self.blocks = blocks
-        self.destructible = destructible
         self.target = target
-        self.predecessor = predecessor
+        self.successor = successor
 
     def destroy(self):
-        """Returns predecessor after the original MapObject is destroyed (e.g. village is replaced by
+        """Returns successor after the original MapObject is destroyed (e.g. village is replaced by
         burned village). The replacement part is going to be handled in a different place
         (TODO: update loop, most likely).
         This method only returns the MapObject that will take place of this object."""
-        if self.destructible:
-            return self.predecessor
+        if self.successor is not None:
+            return self.successor
