@@ -86,7 +86,7 @@ class MapObjects:
                     "image_map_object_ruins_1.png",
                     "image_map_object_ruins_1_selected.png",
                     "image_map_object_ruins_1_targeted.png",
-                    blocks=False,
+                    blocks=True,
                     target=False,
                     successor=None,
                 )
