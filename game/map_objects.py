@@ -59,6 +59,7 @@ class MapObjects:
                     "image_map_object_mountain_1.png",
                     "image_map_object_mountain_1_selected.png",
                     "image_map_object_mountain_1_targeted.png",
+                    predecessor=None,
                 )
                 self.add_map_object(map_object)
 
@@ -79,14 +80,25 @@ class MapObjects:
             except IndexError:
                 break
             if self._has_access_to_empty_tile(obj):
-                city = MapObject(
+                ruins = MapObject(
                     obj.cell_position.x,
                     obj.cell_position.y,
+                    "image_map_object_ruins_1.png",
+                    "image_map_object_ruins_1_selected.png",
+                    "image_map_object_ruins_1_targeted.png",
+                    blocks=False,
+                    target=False,
+                    predecessor=None,
+                )
+                city = MapObject(
+                    ruins.cell_position.x,
+                    ruins.cell_position.y,
                     "image_map_object_city_1.png",
                     "image_map_object_city_1_selected.png",
                     "image_map_object_city_1_targeted.png",
                     blocks=True,
                     target=True,
+                    predecessor=ruins,
                 )
                 self.replace_map_object(obj, city)
                 buildings_num -= 1
