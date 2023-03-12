@@ -6,6 +6,7 @@ import arcade
 from . import constants
 from . import globals
 from .components.position import Position
+from .exceptions import InvalidGameState
 from .pathfinding import Pathfinder
 from .sprite_tracker import SpriteTracker
 from .states import State
@@ -105,7 +106,9 @@ class Game(arcade.Window):
                     # Should not be possible. When there is active player, game needs to be in MOVE or TARGET state.
                     # ...maybe unless player just attacked, and still is selected but has no actions left?
                     # Need to think this over.
-                    pass
+                    raise InvalidGameState(
+                        "When there is active player game needs to be in MOVE or TARGET state, but it is in PLAY state."
+                    )
             elif globals.state == State.MOVE:
                 if self.active_player:
                     if player_under_cursor:
@@ -114,7 +117,9 @@ class Game(arcade.Window):
                                 globals.state = State.TARGET
                             elif self.active_player.attacked:
                                 # Should not be possible. If active_player already attacked, it can not be in MOVE mode.
-                                pass
+                                raise InvalidGameState(
+                                    "If active player already attacked, it can not be in MOVE mode."
+                                )
                         elif self.active_player is not player_under_cursor:
                             # Deselect currently selected player being if another player being is being clicked on.
                             self.active_player.active = False
@@ -164,24 +169,33 @@ class Game(arcade.Window):
                 else:
                     # Should not be possible. If game is in MOVE mode (or TARGET, for that matter), a player being
                     # must be active.
-                    pass
+                    raise InvalidGameState(
+                        "If game is in MOVE mode, a player being must be active."
+                    )
             elif globals.state == State.TARGET:
-                if self.active_player.attacked:
-                    # Should not be possible. After attack player should be deselected and game mode set to PLAY.
-                    pass
-                elif not self.active_player.attacked:
-                    # Perform attack if possible.
-                    try:
-                        self.active_player.attack.perform(
-                            self.beings, self.grid.map_objects, x, y
+                if self.active_player:
+                    if self.active_player.attacked:
+                        # Should not be possible. After attack player should be deselected and game mode set to PLAY.
+                        raise InvalidGameState(
+                            "Player that already attacked can not be active."
                         )
-                    except TypeError:
-                        pass  # Catch-all exception for attacks.
-                    finally:
-                        # After attack, deselect the player since moving unit is not forbidden after attack.
-                        globals.state = State.PLAY
-                        self.active_player.active = False
-                        self.active_player = None
+                    elif not self.active_player.attacked:
+                        # Perform attack if possible.
+                        try:
+                            self.active_player.attack.perform(
+                                self.beings, self.grid.map_objects, x, y
+                            )
+                        except TypeError:
+                            pass  # Catch-all exception for attacks.
+                        finally:
+                            # After attack, deselect the player since moving unit is not forbidden after attack.
+                            globals.state = State.PLAY
+                            self.active_player.active = False
+                            self.active_player = None
+                else:
+                    raise InvalidGameState(
+                        "If game is in TARGET mode, a player being must be active."
+                    )
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.PLAY:
                 pass
@@ -192,7 +206,9 @@ class Game(arcade.Window):
                     globals.state = State.PLAY
                 else:
                     # Should not be possible. If game is in MOVE state, then a player being must be active.
-                    pass
+                    raise InvalidGameState(
+                        "If game is in MOVE state, a player being must be active."
+                    )
             elif globals.state == State.TARGET:
                 if self.active_player and self.active_player.active:
                     if self.active_player.moved:
@@ -205,7 +221,9 @@ class Game(arcade.Window):
                         globals.state = State.MOVE
                 else:
                     # Should not be possible. If game is in MOVE state, then a player being must be active.
-                    pass
+                    raise InvalidGameState(
+                        "If game is in TARGET state, a player being must be active."
+                    )
 
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
