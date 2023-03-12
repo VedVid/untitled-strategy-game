@@ -91,7 +91,11 @@ class Game(arcade.Window):
                         self.active_player = player_under_cursor
                         self.active_player.active = True
                         globals.state = State.MOVE
-                    elif player_under_cursor and player_under_cursor.moved and not player_under_cursor.attacked:
+                    elif (
+                        player_under_cursor
+                        and player_under_cursor.moved
+                        and not player_under_cursor.attacked
+                    ):
                         # Select player under the cursor if not currently active
                         # and set mode to TARGET if active player already moved, but did not attack yet
                         self.active_player = player_under_cursor
@@ -149,8 +153,12 @@ class Game(arcade.Window):
                                 # over the available tile.
                                 try:
                                     self.active_player.move_to(
-                                        self.pathfinder.last_path[self.active_player.range][0],
-                                        self.pathfinder.last_path[self.active_player.range][1],
+                                        self.pathfinder.last_path[
+                                            self.active_player.range
+                                        ][0],
+                                        self.pathfinder.last_path[
+                                            self.active_player.range
+                                        ][1],
                                     )
                                 except IndexError:
                                     self.active_player.move_to(
