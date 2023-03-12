@@ -207,63 +207,6 @@ class Game(arcade.Window):
                     # Should not be possible. If game is in MOVE state, then a player being must be active.
                     pass
 
-#        # Select player by clicking in Sprite.
-#        if button == arcade.MOUSE_BUTTON_LEFT:
-#            # Allow switching players by clicking on their Sprite, unless currently active player is targeting.
-#            if player_under_cursor and player_under_cursor is not self.active_player and globals.state != State.TARGET:
-#                for player in self.beings.player_beings:
-#                    if player is player_under_cursor:
-#                        globals.state = State.MOVE
-#                        player.toggle_active()
-#                        continue
-#                    player.active = False
-#                return
-#            else:  # If there is a player being active.
-#                # Click on the other tile than this under the active player.
-#                if self.beings.find_being_by_px_position(self.x, self.y) is not self.active_player:
-#                    # Move player if possible.
-#                    if (
-#                        self.pathfinder.last_path
-#                        and globals.state == State.MOVE
-#                        and not self.active_player.moved
-#                    ):
-#                        try:
-#                            self.active_player.move_to(
-#                                self.pathfinder.last_path[self.active_player.range][0],
-#                                self.pathfinder.last_path[self.active_player.range][1],
-#                            )
-#                            self.pathfinder.last_path = ()
-#                        except IndexError:
-#                            self.active_player.move_to(
-#                                self.pathfinder.last_path[-1][0],
-#                                self.pathfinder.last_path[-1][1],
-#                            )
-#                            self.pathfinder.last_path = ()
-#                    # Perform attack if possible.
-#                    elif globals.state == State.TARGET and not self.active_player.attacked:
-#                        try:
-#                            self.active_player.attack.perform(
-#                                self.beings, self.grid.map_objects, x, y
-#                            )
-#                        except TypeError:
-#                            pass  # Catch-all exception for attacks.
-#                        finally:
-#                            # After attack, deselect the player since moving unit is not forbidden after attack.
-#                            globals.state = State.PLAY
-#                            self.active_player.active = False
-#                            self.active_player = None
-#                else:  # Click on tile with currently active player.
-#                    if globals.state == State.MOVE:
-#                        globals.state = State.TARGET
-#        elif button == arcade.MOUSE_BUTTON_RIGHT:
-#            if globals.state == State.TARGET:
-#                globals.state = State.MOVE
-#            elif globals.state == State.MOVE:
-#                globals.state = State.PLAY
-#                self.active_player.active = False
-#                self.active_player = None
-
-
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
             self.grid.generate_map()
