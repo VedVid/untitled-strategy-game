@@ -108,6 +108,29 @@ class Game(arcade.Window):
                             self.active_player.active = False
                             self.active_player = player_under_cursor
                             self.active_player.active = True
+                    elif not player_under_cursor:
+                        if not self.active_player.moved:
+                            if self.pathfinder.last_path:
+                                # Move active player that not moved yet to desired cell.
+                                # Use the pathfinder coords at the position equal to player range.
+                                # If not possible (because path is shorter), use the last coords in path.
+                                # Last coords in path are equal to mouse position in cell_position, if hovered
+                                # over the available tile.
+                                try:
+                                    self.active_player.move_to(
+                                        self.pathfinder.last_path[self.active_player.range][0],
+                                        self.pathfinder.last_path[self.active_player.range][1],
+                                    )
+                                except IndexError:
+                                    self.active_player.move_to(
+                                        self.pathfinder.last_path[-1][0],
+                                        self.pathfinder.last_path[-1][1],
+                                    )
+                                finally:
+                                    self.pathfinder.last_path = ()
+                        elif self.active_player.moved:
+                            # Do not allow to move player that already moved during this turn.
+                            pass
                 else:
                     # Should not be possible. If game is in MOVE mode (or TARGET, for that matter), some player unit
                     # must be active.
