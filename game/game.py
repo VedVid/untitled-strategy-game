@@ -74,37 +74,103 @@ class Game(arcade.Window):
         if globals.state == State.ENEMY_TURN:
             return
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
-        # Select player by clicking in Sprite.
+        # Possible clicks: MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT
+        # Possible states: State.PLAY, State.MOVE, State.TARGET
+        # Possible modifiers (not these passed as argument to this method, mind!):
+        #     - not / player is active
+        #     - not / player_under_cursor
+        #     - active player is (not) player_under_cursor
+        #     - active player moved or attacked already
         if button == arcade.MOUSE_BUTTON_LEFT:
-            if player_under_cursor:
-                for player in self.beings.player_beings:
-                    if player is player_under_cursor:
+            if globals.state == State.PLAY:
+                if not self.active_player:
+                    if player_under_cursor and not player_under_cursor.moved:
+                        # Select player under the cursor if not currently active
+                        # and set mode to MOVE if active_player did not move yet this turn.
+                        self.active_player = player_under_cursor
+                        self.active_player.active = True
                         globals.state = State.MOVE
-                        player.toggle_active()
-                        continue
-                    player.active = False
-                return
-            if self.active_player is not None:
-                # Move player if possible.
-                if (
-                    self.pathfinder.last_path
-                    and globals.state == State.MOVE
-                    and not self.active_player.moved
-                ):
-                    try:
-                        self.active_player.move_to(
-                            self.pathfinder.last_path[self.active_player.range][0],
-                            self.pathfinder.last_path[self.active_player.range][1],
-                        )
-                        self.pathfinder.last_path = ()
-                    except IndexError:
-                        self.active_player.move_to(
-                            self.pathfinder.last_path[-1][0],
-                            self.pathfinder.last_path[-1][1],
-                        )
-                        self.pathfinder.last_path = ()
-                # Perform attack if possible.
-                elif globals.state == State.TARGET and not self.active_player.attacked:
+                    elif player_under_cursor and player_under_cursor.moved and not player_under_cursor.attacked:
+                        # Select player under the cursor if not currently active
+                        # and set mode to TARGET if active player already moved, but did not attack yet
+                        self.active_player = player_under_cursor
+                        self.active_player.active = True
+                        globals.state = State.TARGET
+                    else:
+                        # Do nothing if player being that is being clicked on already moved and attacked this turn.
+                        # TODO: Add some kind of "info screen" so one still could see some info about player being
+                        #       being selected.
+                        pass
+                else:
+                    # Should not be possible. When there is active player, game needs to be in MOVE or TARGET state.
+                    # ...maybe unless player just attacked, and still is selected but has no actions left?
+                    # Need to think this over.
+                    pass
+            elif globals.state == State.MOVE:
+                if self.active_player:
+                    if player_under_cursor:
+                        if self.active_player is player_under_cursor:
+                            if not self.active_player.attacked:
+                                globals.state = State.TARGET
+                            elif self.active_player.attacked:
+                                # Should not be possible. If active_player already attacked, it can not be in MOVE mode.
+                                pass
+                        elif self.active_player is not player_under_cursor:
+                            # Deselect currently selected player being if another player being is being clicked on.
+                            self.active_player.active = False
+                            self.active_player = None
+                            if not player_under_cursor.moved:
+                                # Activate newly selected player being and set it in MOVE mode
+                                # if not moved yet this turn.
+                                self.active_player = player_under_cursor
+                                self.active_player.active = True
+                                globals.state = State.MOVE
+                            elif not player_under_cursor.attacked:
+                                # Activate newly selected player being and set it in TARGET MODE
+                                # if already moved but did not attack this turn yet.
+                                self.active_player = player_under_cursor
+                                self.active_player.active = True
+                                globals.state = State.TARGET
+                            else:
+                                # Do nothing if clicked player being already attacked and moved this turn.
+                                pass
+                    elif not player_under_cursor:
+                        if not self.active_player.moved:
+                            if self.pathfinder.last_path:
+                                # Move active player that not moved yet to desired cell.
+                                # Use the pathfinder coords at the position equal to player range.
+                                # If not possible (because path is shorter), use the last coords in path.
+                                # Last coords in path are equal to mouse position in cell_position, if hovered
+                                # over the available tile.
+                                try:
+                                    self.active_player.move_to(
+                                        self.pathfinder.last_path[self.active_player.range][0],
+                                        self.pathfinder.last_path[self.active_player.range][1],
+                                    )
+                                except IndexError:
+                                    self.active_player.move_to(
+                                        self.pathfinder.last_path[-1][0],
+                                        self.pathfinder.last_path[-1][1],
+                                    )
+                                finally:
+                                    self.pathfinder.last_path = ()
+                                    # TODO: Currently it makes sense to set player into TARGET mode after every move,
+                                    #       but in future I want to equip every player being in multiple attacks.
+                                    #       Will this fit?
+                                    globals.state = State.TARGET
+                        elif self.active_player.moved:
+                            # Do not allow to move player that already moved during this turn.
+                            pass
+                else:
+                    # Should not be possible. If game is in MOVE mode (or TARGET, for that matter), a player being
+                    # must be active.
+                    pass
+            elif globals.state == State.TARGET:
+                if self.active_player.attacked:
+                    # Should not be possible. After attack player should be deselected and game mode set to PLAY.
+                    pass
+                elif not self.active_player.attacked:
+                    # Perform attack if possible.
                     try:
                         self.active_player.attack.perform(
                             self.beings, self.grid.map_objects, x, y
@@ -117,12 +183,29 @@ class Game(arcade.Window):
                         self.active_player.active = False
                         self.active_player = None
         elif button == arcade.MOUSE_BUTTON_RIGHT:
-            if globals.state == State.TARGET:
-                globals.state = State.MOVE
+            if globals.state == State.PLAY:
+                pass
             elif globals.state == State.MOVE:
-                globals.state = State.PLAY
-                self.active_player.active = False
-                self.active_player = None
+                if self.active_player and self.active_player.active:
+                    self.active_player.active = False
+                    self.active_player = None
+                    globals.state = State.PLAY
+                else:
+                    # Should not be possible. If game is in MOVE state, then a player being must be active.
+                    pass
+            elif globals.state == State.TARGET:
+                if self.active_player and self.active_player.active:
+                    if self.active_player.moved:
+                        # Deselect player and return game to the PLAY state if active_player already moved.
+                        self.active_player.active = False
+                        self.active_player = None
+                        globals.state = State.PLAY
+                    else:
+                        # Switch game state to MOVE
+                        globals.state = State.MOVE
+                else:
+                    # Should not be possible. If game is in MOVE state, then a player being must be active.
+                    pass
 
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
