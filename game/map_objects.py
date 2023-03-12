@@ -79,17 +79,16 @@ class MapObjects:
             except IndexError:
                 break
             if self._has_access_to_empty_tile(obj):
-                new_map_object = MapObject(
+                city = MapObject(
                     obj.cell_position.x,
                     obj.cell_position.y,
                     "image_map_object_city_1.png",
                     "image_map_object_city_1_selected.png",
                     "image_map_object_city_1_targeted.png",
                     blocks=True,
-                    destructible=True,
                     target=True,
                 )
-                self.replace_map_object(obj, new_map_object)
+                self.replace_map_object(obj, city)
                 buildings_num -= 1
 
     def _has_access_to_empty_tile(self, map_object):

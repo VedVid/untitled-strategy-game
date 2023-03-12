@@ -21,13 +21,10 @@ class MapObject:
         Name of the graphics that will represent MapObject on the map.
     blocks: bool
         Does this object blocks movement?
-    destructible: bool
-        Is it possible to destroy this object?
     target: bool
         Will ai try to destroy this object?
     Predecessor: MapObject
-         Object that will replace this object if destroyed; None means object will be removed from the map
-         and not replaced by another MapObject.
+         Object that will replace this object if destroyed; None means that object is indestructible.
 
     Methods:
     --------
@@ -44,7 +41,6 @@ class MapObject:
         sprite_selected,
         sprite_targeted,
         blocks=True,
-        destructible=False,
         target=False,
         predecessor=None,
     ):
@@ -57,7 +53,6 @@ class MapObject:
         self.sprite_selected = Sprite(sprite_selected, self.px_position, 0.125)
         self.sprite_targeted = Sprite(sprite_targeted, self.px_position, 0.125)
         self.blocks = blocks
-        self.destructible = destructible
         self.target = target
         self.predecessor = predecessor
 
@@ -66,5 +61,5 @@ class MapObject:
         burned village). The replacement part is going to be handled in a different place
         (TODO: update loop, most likely).
         This method only returns the MapObject that will take place of this object."""
-        if self.destructible:
+        if self.predecessor is not None:
             return self.predecessor
