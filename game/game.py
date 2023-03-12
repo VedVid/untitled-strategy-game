@@ -77,7 +77,7 @@ class Game(arcade.Window):
         # Select player by clicking in Sprite.
         if button == arcade.MOUSE_BUTTON_LEFT:
             # Allow switching players by clicking on their Sprite, unless currently active player is targeting.
-            if player_under_cursor and globals.state != State.TARGET:
+            if player_under_cursor and player_under_cursor is not self.active_player and globals.state != State.TARGET:
                 for player in self.beings.player_beings:
                     if player is player_under_cursor:
                         globals.state = State.MOVE
@@ -119,6 +119,9 @@ class Game(arcade.Window):
                             globals.state = State.PLAY
                             self.active_player.active = False
                             self.active_player = None
+                else:  # Click on tile with currently active player.
+                    if globals.state == State.MOVE:
+                        globals.state = State.TARGET
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.TARGET:
                 globals.state = State.MOVE
