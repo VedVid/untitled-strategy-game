@@ -17,7 +17,7 @@ class Attack:
         self.effects = args
         self.owner = None
 
-    def perform(self, beings, x, y):
+    def perform(self, beings, map_objects, x, y):
         if self.owner.attacked:
             return
         performed = False
@@ -31,7 +31,7 @@ class Attack:
                 )
                 valid_target_positions.append(valid_target_position)
             if (cursor_position.x, cursor_position.y) in valid_target_positions:
-                effect.perform(beings, x, y)
+                effect.perform(beings, map_objects, x, y)
                 performed = True
         if performed:
             self.owner.attacked = True

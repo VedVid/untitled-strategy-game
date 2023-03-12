@@ -67,15 +67,24 @@ class PunchAttackEffect(AttackEffect):
             (0, 0),
         ]
 
-    def perform(self, beings, x, y):
+    def perform(self, beings, map_objects, x, y):
         for cell in self.attack_pattern:
+            px_x = x + (cell[0] * constants.TILE_SIZE_W)
+            px_y = y + (cell[1] * constants.TILE_SIZE_H)
             try:
                 beings.find_being_by_px_position(
-                    x + (cell[0] * constants.TILE_SIZE_W),
-                    y + (cell[1] * constants.TILE_SIZE_H),
+                    px_x,
+                    px_y,
                 ).hp -= 1
             except AttributeError:
                 pass  # Do not act if being is not found.
+            try:
+                predecessor = map_objects.find_map_object_by_px_position(px_x, px_y)
+                successor = predecessor.destroy()
+                if successor:
+                    map_objects.replace_map_object(predecessor, successor)
+            except AttributeError:
+                pass
 
 
 class SidePunchHorAttackEffect(PunchAttackEffect):

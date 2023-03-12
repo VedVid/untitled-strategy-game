@@ -101,7 +101,7 @@ class Game(arcade.Window):
                 # Perform attack if possible.
                 elif globals.state == State.TARGET and not self.active_player.attacked:
                     try:
-                        self.active_player.attack.perform(self.beings, x, y)
+                        self.active_player.attack.perform(self.beings, self.grid.map_objects, x, y)
                     except TypeError:
                         pass  # Catch-all exception for attacks.
                     finally:

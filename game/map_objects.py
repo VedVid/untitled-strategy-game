@@ -163,3 +163,19 @@ class MapObjects:
             ),
             None,
         )
+
+    def find_map_object_by_px_position(self, x, y):
+        min_x = x - (constants.TILE_SIZE_W / 2)
+        max_x = x + (constants.TILE_SIZE_W / 2)
+        min_y = y - (constants.TILE_SIZE_H / 2)
+        max_y = y + (constants.TILE_SIZE_H / 2)
+        return next(
+            (
+                obj
+                for obj in self.objects
+                if (
+                    min_x <= obj.px_position.x <= max_x
+                    and min_y <= obj.px_position.y <= max_y)
+            ),
+            None,
+        )
