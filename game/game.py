@@ -116,10 +116,24 @@ class Game(arcade.Window):
                                 # Should not be possible. If active_player already attacked, it can not be in MOVE mode.
                                 pass
                         elif self.active_player is not player_under_cursor:
-                            # Switch active player if another player being is being clicked on.
+                            # Deselect currently selected player being if another player being is being clicked on.
                             self.active_player.active = False
-                            self.active_player = player_under_cursor
-                            self.active_player.active = True
+                            self.active_player = None
+                            if not player_under_cursor.moved:
+                                # Activate newly selected player being and set it in MOVE mode
+                                # if not moved yet this turn.
+                                self.active_player = player_under_cursor
+                                self.active_player.active = True
+                                globals.state = State.MOVE
+                            elif not player_under_cursor.attacked:
+                                # Activate newly selected player being and set it in TARGET MODE
+                                # if already moved but did not attack this turn yet.
+                                self.active_player = player_under_cursor
+                                self.active_player.active = True
+                                globals.state = State.TARGET
+                            else:
+                                # Do nothing if clicked player being already attacked and moved this turn.
+                                pass
                     elif not player_under_cursor:
                         if not self.active_player.moved:
                             if self.pathfinder.last_path:
