@@ -162,7 +162,22 @@ class Game(arcade.Window):
                     # must be active.
                     pass
             elif globals.state == State.TARGET:
-                pass
+                if self.active_player.attacked:
+                    # Should not be possible. After attack player should be deselected and game mode set to PLAY.
+                    pass
+                elif not self.active_player.attacked:
+                    # Perform attack if possible.
+                    try:
+                        self.active_player.attack.perform(
+                            self.beings, self.grid.map_objects, x, y
+                        )
+                    except TypeError:
+                        pass  # Catch-all exception for attacks.
+                    finally:
+                        # After attack, deselect the player since moving unit is not forbidden after attack.
+                        globals.state = State.PLAY
+                        self.active_player.active = False
+                        self.active_player = None
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.PLAY:
                 pass
