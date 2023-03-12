@@ -84,11 +84,23 @@ class Game(arcade.Window):
         if button == arcade.MOUSE_BUTTON_LEFT:
             if globals.state == State.PLAY:
                 if not self.active_player:
-                    if player_under_cursor:
-                        # Select player under the cursor, if not currently active.
+                    if player_under_cursor and not player_under_cursor.moved:
+                        # Select player under the cursor if not currently active
+                        # and set mode to MOVE if active_player did not move yet this turn.
                         self.active_player = player_under_cursor
                         self.active_player.active = True
                         globals.state = State.MOVE
+                    elif player_under_cursor and player_under_cursor.moved and not player_under_cursor.attacked:
+                        # Select player under the cursor if not currently active
+                        # and set mode to TARGET if active player already moved, but did not attack yet
+                        self.active_player = player_under_cursor
+                        self.active_player.active = True
+                        globals.state = State.TARGET
+                    else:
+                        # Do nothing if player being that is being clicked on already moved and attacked this turn.
+                        # TODO: Add some kind of "info screen" so one still could see some info about player being
+                        #       being selected.
+                        pass
                 else:
                     # Should not be possible. When there is active player, game needs to be in MOVE or TARGET state.
                     # ...maybe unless player just attacked, and still is selected but has no actions left?
