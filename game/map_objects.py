@@ -59,7 +59,7 @@ class MapObjects:
                     "image_map_object_mountain_1.png",
                     "image_map_object_mountain_1_selected.png",
                     "image_map_object_mountain_1_targeted.png",
-                    predecessor=None,
+                    successor=None,
                 )
                 self.add_map_object(map_object)
 
@@ -88,7 +88,7 @@ class MapObjects:
                     "image_map_object_ruins_1_targeted.png",
                     blocks=False,
                     target=False,
-                    predecessor=None,
+                    successor=None,
                 )
                 city = MapObject(
                     ruins.cell_position.x,
@@ -98,7 +98,7 @@ class MapObjects:
                     "image_map_object_city_1_targeted.png",
                     blocks=True,
                     target=True,
-                    predecessor=ruins,
+                    successor=ruins,
                 )
                 self.replace_map_object(obj, city)
                 buildings_num -= 1

@@ -23,14 +23,14 @@ class MapObject:
         Does this object blocks movement?
     target: bool
         Will ai try to destroy this object?
-    Predecessor: MapObject
+    successor: MapObject
          Object that will replace this object if destroyed; None means that object is indestructible.
 
     Methods:
     --------
     destroy: MapObject
         Right now it is a placeholder method. It will remove MapObject from the MapObject, or replace
-        current MapObject with its predecessor.
+        current MapObject with its successor.
     """
 
     def __init__(
@@ -42,7 +42,7 @@ class MapObject:
         sprite_targeted,
         blocks=True,
         target=False,
-        predecessor=None,
+        successor=None,
     ):
         self.cell_position = Position(x, y)
         self.px_position = Position(
@@ -54,12 +54,12 @@ class MapObject:
         self.sprite_targeted = Sprite(sprite_targeted, self.px_position, 0.125)
         self.blocks = blocks
         self.target = target
-        self.predecessor = predecessor
+        self.successor = successor
 
     def destroy(self):
-        """Returns predecessor after the original MapObject is destroyed (e.g. village is replaced by
+        """Returns successor after the original MapObject is destroyed (e.g. village is replaced by
         burned village). The replacement part is going to be handled in a different place
         (TODO: update loop, most likely).
         This method only returns the MapObject that will take place of this object."""
-        if self.predecessor is not None:
-            return self.predecessor
+        if self.successor is not None:
+            return self.successor
