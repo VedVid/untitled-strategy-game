@@ -74,6 +74,8 @@ class Game(arcade.Window):
         if globals.state == State.ENEMY_TURN:
             return
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
+        
+"""
         # Select player by clicking in Sprite.
         if button == arcade.MOUSE_BUTTON_LEFT:
             # Allow switching players by clicking on their Sprite, unless currently active player is targeting.
@@ -129,6 +131,7 @@ class Game(arcade.Window):
                 globals.state = State.PLAY
                 self.active_player.active = False
                 self.active_player = None
+"""
 
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
