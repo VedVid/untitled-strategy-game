@@ -74,7 +74,22 @@ class Game(arcade.Window):
         if globals.state == State.ENEMY_TURN:
             return
         player_under_cursor = self.beings.find_player_by_px_position(x, y)
-        
+        # Possible clicks: MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT
+        # Possible states: State.PLAY, State.MOVE, State.TARGET
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            if globals.state == State.PLAY:
+                pass
+            elif globals.state == State.MOVE:
+                pass
+            elif globals.state == State.TARGET:
+                pass
+        elif button == arcade.MOUSE_BUTTON_RIGHT:
+            if globals.state == State.PLAY:
+                pass
+            elif globals.state == State.MOVE:
+                pass
+            elif globals.state == State.TARGET:
+                pass
 """
         # Select player by clicking in Sprite.
         if button == arcade.MOUSE_BUTTON_LEFT:
