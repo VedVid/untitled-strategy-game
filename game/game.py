@@ -59,7 +59,6 @@ class Game(arcade.Window):
                 globals.state = State.MOVE
         elif key == arcade.key.SPACE and globals.state == State.PLAY:
             globals.state = State.ENEMY_TURN
-            print(globals.state)
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
