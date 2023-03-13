@@ -43,6 +43,12 @@ def test_amount_of_attack_effects_bound_to_being():
     assert len(player_2.attack.effects) == 2
 
 
+def test_type_of_effects_bound_to_being():
+    assert type(player_1.attack.effects[0]) is ae.PunchAttackEffect
+    assert type(player_2.attack.effects[0]) is ae.WallPunchVerAttackEffect
+    assert type(player_2.attack.effects[1]) is ae.SidePunchHorAttackEffect
+
+
 def test_tiles_targeted_bound_to_being():
     targeted_tiles_1 = []
     for coords in player_1.attack.effects[0].target_positions:
