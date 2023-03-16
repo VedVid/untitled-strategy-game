@@ -9,6 +9,7 @@ import copy
 
 from . import attacks
 from . import constants
+from .ai import BaseAI
 from .components.position import Position
 from .components.sprite import Sprite
 
@@ -167,8 +168,7 @@ class Enemy(Being):
         self.attack.owner = self
 
     def build_ai(self):
-        # TODO: Replace this placeholder with proper AI.
-        self.ai = None
+        self.ai = BaseAI(self)
 
     def move_to(self, x, y):
         self.cell_position = Position(x, y)

@@ -34,3 +34,9 @@ LONGEST_VALID_PATH = 20
 # Beings
 PLAYER_BEINGS_NO = 3
 ENEMY_BEINGS_INITIAL_NO = 4
+
+# AI
+AI_BUILDING_PRIORITY = 8       # AI search _around_ building, and
+AI_KILL_PLAYER_PRIORITY = 7    # _under_ player beings, so
+AI_ATTACK_PLAYER_PRIORITY = 5  # the values must be set accordingly.
+AI_RANGE_FALLOFF = 1

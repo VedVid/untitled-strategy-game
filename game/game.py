@@ -258,7 +258,11 @@ class Game(arcade.Window):
                     self.beings.remove_enemy_being(enemy)
             if globals.state == State.ENEMY_TURN:
                 for enemy in self.beings.enemy_beings:
-                    print(enemy, "takes turn...")
+                    print(
+                        f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} acts..."
+                    )
+                    enemy.ai.gather_map_info(self.grid, self.beings)
+                    # TODO: Act, using enemy.ai.info data as weighted average.
                 globals.state = State.PLAY
                 for player in self.beings.player_beings:
                     player.moved = False

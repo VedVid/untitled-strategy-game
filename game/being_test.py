@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+from .ai import BaseAI
 from game import being
 
 
@@ -19,7 +20,7 @@ class TestBeing:
 
     def test_enemy_ai(self):
         # TODO: Remember to update this test when the proper ai will be added.
-        assert self.being_enemy.ai is None
+        assert isinstance(self.being_enemy.ai, BaseAI)
 
     def test_player_cell_position(self):
         assert (
