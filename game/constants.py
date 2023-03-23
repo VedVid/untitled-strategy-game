@@ -36,7 +36,11 @@ PLAYER_BEINGS_NO = 3
 ENEMY_BEINGS_INITIAL_NO = 4
 
 # AI
-AI_BUILDING_PRIORITY = 8       # AI search _around_ building, and
-AI_KILL_PLAYER_PRIORITY = 7    # _under_ player beings, so
+AI_BUILDING_PRIORITY = 8  # AI search _around_ building, and
+AI_KILL_PLAYER_PRIORITY = 7  # _under_ player beings, so
 AI_ATTACK_PLAYER_PRIORITY = 5  # the values must be set accordingly.
+AI_WALK_PRIORITY = 1
 AI_RANGE_FALLOFF = 1
+AI_INFO_ORDER_PRIORITY = 0
+AI_INFO_ORDER_OBJECT = 1
+AI_INFO_ORDER_PATH = 2
