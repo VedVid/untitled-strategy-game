@@ -26,9 +26,9 @@ player_2 = construct_beings(Player, 3, 3)
 player_2.attack = attack_2
 
 
-#def test_amount_of_attack_effects_separate():
-#    assert len(attack_1.effects) == 1
-#    assert len(attack_2.effects) == 2
+def test_amount_of_attack_effects_separate():
+    assert len(attack_1.effects) == 4
+    assert len(attack_2.effects) == 4
 
 
 #def test_tiles_targeted_separate():
