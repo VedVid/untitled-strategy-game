@@ -190,6 +190,7 @@ class Game(arcade.Window):
                     elif not self.active_player.attacked:
                         # Perform attack if possible.
                         try:
+                            print(x, y)
                             self.active_player.attack.perform(
                                 self.beings, self.grid.map_objects, x, y
                             )

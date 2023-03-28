@@ -28,6 +28,7 @@ class Attack:
             cursor_position = Position(x, y).return_px_to_cell()
             if not cursor:
                 cursor_position = Position(x, y)
+            print(cursor_position.x, cursor_position.y)
             valid_target_positions = []
             for target in effect.target_positions:
                 valid_target_position = (
@@ -35,9 +36,13 @@ class Attack:
                     self.owner.cell_position.y + target[1],
                 )
                 valid_target_positions.append(valid_target_position)
+            print(valid_target_positions)
             if (cursor_position.x, cursor_position.y) in valid_target_positions:
+                print("is valid")
                 effect.perform(beings, map_objects, x, y)
                 performed = True
+            else:
+                print("is invalid")
         if performed:
             self.owner.attacked = True
             self.owner.moved = True
