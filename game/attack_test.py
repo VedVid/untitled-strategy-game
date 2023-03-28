@@ -101,34 +101,34 @@ def test_tiles_targeted_bound_to_being():
     assert targeted_tiles_3 == [(2, 3)]
 
 
-#def test_attack_patterns_bound_to_being():
-#    pattern_1 = []
-#    for coords1 in player_1.attack.effects[0].target_positions:
-#        for coords2 in player_1.attack.effects[0].attack_pattern:
-#            pattern_1.append(
-#                (
-#                    player_1.cell_position.x + coords1[0] + coords2[0],
-#                    player_1.cell_position.y + coords1[1] + coords2[1],
-#                )
-#            )
-#    assert all(x in [(4, 5), (6, 5), (5, 4), (5, 6)] for x in pattern_1)
-#    pattern_2 = []
-#    for coords1 in player_2.attack.effects[0].target_positions:
-#        for coords2 in player_2.attack.effects[0].attack_pattern:
-#            pattern_2.append(
-#                (
-#                    player_2.cell_position.x + coords1[0] + coords2[0],
-#                    player_2.cell_position.y + coords1[1] + coords2[1],
-#                )
-#            )
-#    assert all(x in [(2, 2), (3, 2), (4, 2), (2, 4), (3, 4), (4, 4)] for x in pattern_2)
-#    pattern_3 = []
-#    for coords1 in player_2.attack.effects[1].target_positions:
-#        for coords2 in player_2.attack.effects[1].attack_pattern:
-#            pattern_3.append(
-#                (
-#                    player_2.cell_position.x + coords1[0] + coords2[0],
-#                    player_2.cell_position.y + coords1[1] + coords2[1],
-#                )
-#            )
-#    assert all(x in [(2, 4), (2, 2), (4, 4), (4, 2)] for x in pattern_3)
+def test_attack_patterns_bound_to_being():
+    pattern_1 = []
+    for coords1 in player_1.attack.effects[0].target_positions:
+        for coords2 in player_1.attack.effects[0].attack_pattern:
+            pattern_1.append(
+                (
+                    player_1.cell_position.x + coords1[0] + coords2[0],
+                    player_1.cell_position.y + coords1[1] + coords2[1],
+                )
+            )
+    assert pattern_1 == [(4, 5)]
+    pattern_2 = []
+    for coords1 in player_2.attack.effects[0].target_positions:
+        for coords2 in player_2.attack.effects[0].attack_pattern:
+            pattern_2.append(
+                (
+                    player_2.cell_position.x + coords1[0] + coords2[0],
+                    player_2.cell_position.y + coords1[1] + coords2[1],
+                )
+            )
+    assert all(x in [(2, 4), (3, 4), (4, 4)] for x in pattern_2)
+    pattern_3 = []
+    for coords1 in player_2.attack.effects[2].target_positions:
+        for coords2 in player_2.attack.effects[2].attack_pattern:
+            pattern_3.append(
+                (
+                    player_2.cell_position.x + coords1[0] + coords2[0],
+                    player_2.cell_position.y + coords1[1] + coords2[1],
+                )
+            )
+    assert all(x in [(2, 4), (2, 2)] for x in pattern_3)
