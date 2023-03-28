@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
+import random
+
 import arcade
 
 from game import constants
 from game.beings import Beings
 from game.game import Game
 from game.grid import Grid
+from game.seeding import make_seed
 
+
+game_seed = make_seed(4, 4)
+random.seed(game_seed)
+print(game_seed)
 
 grid = Grid()
 
