@@ -71,35 +71,34 @@ def test_type_of_effects_bound_to_being():
     assert type(player_2.attack.effects[3]) is ae.SidePunchRightAttackEffect
 
 
-#def test_tiles_targeted_bound_to_being():
-#    targeted_tiles_1 = []
-#    for coords in player_1.attack.effects[0].target_positions:
-#        targeted_tiles_1.append(
-#            (
-#                player_1.cell_position.x + coords[0],
-#                player_1.cell_position.y + coords[1],
-#            )
-#        )
-#    assert all(x in [(4, 5), (6, 5), (5, 4), (5, 6)] for x in targeted_tiles_1)
-#    targeted_tiles_2 = []
-#    for coords in player_2.attack.effects[0].target_positions:
-#        targeted_tiles_2.append(
-#            (
-#                player_2.cell_position.x + coords[0],
-#                player_2.cell_position.y + coords[1],
-#            )
-#        )
-#    assert all(x in [(3, 2), (3, 4)] for x in targeted_tiles_2)
-#    targeted_tiles_3 = []
-#    for coords in player_2.attack.effects[1].target_positions:
-#        targeted_tiles_3.append(
-#            (
-#                player_2.cell_position.x + coords[0],
-#                player_2.cell_position.y + coords[1],
-#            )
-#        )
-#    assert all(x in [(2, 3), (4, 3)] for x in targeted_tiles_3)
-#    assert not any(x in targeted_tiles_2 for x in targeted_tiles_3)
+def test_tiles_targeted_bound_to_being():
+    targeted_tiles_1 = []
+    for coords in player_1.attack.effects[0].target_positions:
+        targeted_tiles_1.append(
+            (
+                player_1.cell_position.x + coords[0],
+                player_1.cell_position.y + coords[1],
+            )
+        )
+    assert targeted_tiles_1 == [(4, 5)]
+    targeted_tiles_2 = []
+    for coords in player_2.attack.effects[0].target_positions:
+        targeted_tiles_2.append(
+            (
+                player_2.cell_position.x + coords[0],
+                player_2.cell_position.y + coords[1],
+            )
+        )
+    assert targeted_tiles_2 == [(3, 4)]
+    targeted_tiles_3 = []
+    for coords in player_2.attack.effects[2].target_positions:
+        targeted_tiles_3.append(
+            (
+                player_2.cell_position.x + coords[0],
+                player_2.cell_position.y + coords[1],
+            )
+        )
+    assert targeted_tiles_3 == [(2, 3)]
 
 
 #def test_attack_patterns_bound_to_being():
