@@ -162,7 +162,7 @@ class BaseAI:
             print("\n")
             index = in_range_sorted[0]["priorities"].index(max(in_range_sorted[0]["priorities"]))
             target_pos = in_range_sorted[0]["targetables"][index]
-            self.owner.attack.perform(beings, grid.map_objects, target_pos[0], target_pos[1])
+            self.owner.attack.perform(beings, grid.map_objects, target_pos[0], target_pos[1], cursor=False)
             return in_range_sorted[0]
         out_range_sorted = self._sort_priorities_out_range()
         # There are no targets in range, but owner is not blocked and can move towards the targets.

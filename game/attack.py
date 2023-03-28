@@ -11,18 +11,23 @@ class Attack:
     from the target, then we could achieve that by making an Attack with two effects: first, that decreases HP of
     targeted Being, and second, that pushes away Being instances from the targeted Tile
     Before performing an attack, it checks if cursor position is valid as effect target position.
+    If cursor argument is True (as is default, and remains True for player targeting), then x, y arguments
+    are transformed from px to cells. Otherwise (e.g. after ai decides to attack) perform method assumes that cell-based
+    coords has been passed.
     """
 
     def __init__(self, *args):
         self.effects = args
         self.owner = None
 
-    def perform(self, beings, map_objects, x, y):
+    def perform(self, beings, map_objects, x, y, cursor=True):
         if self.owner.attacked:
             return
         performed = False
         for effect in self.effects:
             cursor_position = Position(x, y).return_px_to_cell()
+            if not cursor:
+                cursor_position = Position(x, y)
             valid_target_positions = []
             for target in effect.target_positions:
                 valid_target_position = (
