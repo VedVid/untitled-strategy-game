@@ -60,10 +60,15 @@ def test_amount_of_attack_effects_bound_to_being():
     assert len(player_2.attack.effects) == 4
 
 
-#def test_type_of_effects_bound_to_being():
-#    assert type(player_1.attack.effects[0]) is ae.PunchAttackEffect
-#    assert type(player_2.attack.effects[0]) is ae.WallPunchVerAttackEffect
-#    assert type(player_2.attack.effects[1]) is ae.SidePunchHorAttackEffect
+def test_type_of_effects_bound_to_being():
+    assert type(player_1.attack.effects[0]) is ae.PunchLeftAttackEffect
+    assert type(player_1.attack.effects[1]) is ae.PunchRightAttackEffect
+    assert type(player_1.attack.effects[2]) is ae.PunchTopAttackEffect
+    assert type(player_1.attack.effects[3]) is ae.PunchBottomAttackEffect
+    assert type(player_2.attack.effects[0]) is ae.WallPunchTopAttackEffect
+    assert type(player_2.attack.effects[1]) is ae.WallPunchBottomAttackEffect
+    assert type(player_2.attack.effects[2]) is ae.SidePunchLeftAttackEffect
+    assert type(player_2.attack.effects[3]) is ae.SidePunchRightAttackEffect
 
 
 #def test_tiles_targeted_bound_to_being():
