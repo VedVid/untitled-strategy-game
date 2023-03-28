@@ -55,9 +55,9 @@ def test_attack_pattern_separate():
     assert all(x in [(0, -1), (0, 1)] for x in attack_2.effects[3].attack_pattern)
 
 
-#def test_amount_of_attack_effects_bound_to_being():
-#    assert len(player_1.attack.effects) == 1
-#    assert len(player_2.attack.effects) == 2
+def test_amount_of_attack_effects_bound_to_being():
+    assert len(player_1.attack.effects) == 4
+    assert len(player_2.attack.effects) == 4
 
 
 #def test_type_of_effects_bound_to_being():
