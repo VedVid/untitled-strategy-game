@@ -54,16 +54,15 @@ class BaseAI:
             }
             pathfinder.clean_up_path_grid()
             # Check availability of every tile.
-            path, _ = pathfinder.find_path(
-                    self.owner.cell_position,
-                    tile.cell_position
-            )
+            path, _ = pathfinder.find_path(self.owner.cell_position, tile.cell_position)
             if len(path) == 0:
                 continue  # tile occupied by object, or no valid path to tile
             if len(path) > self.owner.range:
                 data["in range"] = False
                 data["tile"] = path[self.owner.range]
-            b = beings.find_being_by_cell_position(tile.cell_position.x, tile.cell_position.y)
+            b = beings.find_being_by_cell_position(
+                tile.cell_position.x, tile.cell_position.y
+            )
             if b and b is not self.owner:
                 continue  # tile occupied by other being
             targetables = []
@@ -78,8 +77,12 @@ class BaseAI:
                     tile.cell_position.y + effect.target_positions[0][1],
                 )
                 # Add only targetable positions that are within map bounds.
-                if targetable_position[0] >= 0 and targetable_position[0] < constants.GRID_SIZE_W and \
-                    targetable_position[1] >= 0 and targetable_position[1] < constants.GRID_SIZE_H:
+                if (
+                    targetable_position[0] >= 0
+                    and targetable_position[0] < constants.GRID_SIZE_W
+                    and targetable_position[1] >= 0
+                    and targetable_position[1] < constants.GRID_SIZE_H
+                ):
                     targetables.append(targetable_position)
                     affected_positions = []
                     for element in effect.attack_pattern:
@@ -88,8 +91,12 @@ class BaseAI:
                             targetable_position[1] + element[1],
                         )
                         # Add only these tiles that will be affected by attack and are within map bounds.
-                        if affected_position[0] >= 0 and affected_position[0] < constants.GRID_SIZE_W and \
-                            affected_position[1] >= 0 and affected_position[1] < constants.GRID_SIZE_H:
+                        if (
+                            affected_position[0] >= 0
+                            and affected_position[0] < constants.GRID_SIZE_W
+                            and affected_position[1] >= 0
+                            and affected_position[1] < constants.GRID_SIZE_H
+                        ):
                             affected_positions.append(affected_position)
                     all_affected_positions.append(affected_positions)
             data["targetables"] = targetables
@@ -117,7 +124,9 @@ class BaseAI:
                             targets.append(being)
                             if being.hp <= 0:
                                 pass
-                            elif being.hp == 1:  # TODO: Change to comparison with attack power!
+                            elif (
+                                being.hp == 1
+                            ):  # TODO: Change to comparison with attack power!
                                 priority += constants.AI_KILL_PLAYER_PRIORITY
                             else:
                                 priority += constants.AI_ATTACK_PLAYER_PRIORITY
@@ -134,20 +143,28 @@ class BaseAI:
                 self.map_out_range.append(data)
 
     def _sort_priorities_in_range(self):
-        return sorted(self.map_in_range, key=lambda d: (max(d['priorities'])), reverse=True)
+        return sorted(
+            self.map_in_range, key=lambda d: (max(d["priorities"])), reverse=True
+        )
 
     def _sort_priorities_out_range(self):
-        return sorted(self.map_out_range, key=lambda d: (max(d['priorities'])), reverse=True)
+        return sorted(
+            self.map_out_range, key=lambda d: (max(d["priorities"])), reverse=True
+        )
 
     def decide(self):
         in_range_sorted = self._sort_priorities_in_range()
         # There are targets in range.
         if len(in_range_sorted) > 0:
-            self.owner.move_to(in_range_sorted[0]["tile"][0], in_range_sorted[0]["tile"][1])
+            self.owner.move_to(
+                in_range_sorted[0]["tile"][0], in_range_sorted[0]["tile"][1]
+            )
             return in_range_sorted[0]
         out_range_sorted = self._sort_priorities_out_range()
         # There are no targets in range, but owner is not blocked and can move towards the targets.
         if len(out_range_sorted) > 0:
-            self.owner.move_to(out_range_sorted[0]["tile"][0], out_range_sorted[0]["tile"][1])
+            self.owner.move_to(
+                out_range_sorted[0]["tile"][0], out_range_sorted[0]["tile"][1]
+            )
             return out_range_sorted[0]
         return "nothing"

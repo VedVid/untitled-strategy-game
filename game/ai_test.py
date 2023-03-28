@@ -115,7 +115,9 @@ class TestAI:
         assert data["tile"] == (7, 6)
         assert len(data["targetables"]) == 3
         assert len(data["affected"]) == 3
-        assert max(data["priorities"]) == 3  # 5 for attacking player, -2 for path length
+        assert (
+            max(data["priorities"]) == 3
+        )  # 5 for attacking player, -2 for path length
         assert data["in range"] is True
 
     def test_ai_3(self):
@@ -137,7 +139,9 @@ class TestAI:
         assert data["tile"] == (4, 0)
         assert len(data["targetables"]) == 3
         assert len(data["affected"]) == 3
-        assert max(data["priorities"]) == 6  # 8 for destroying building, -2 for path length
+        assert (
+            max(data["priorities"]) == 6
+        )  # 8 for destroying building, -2 for path length
         assert data["in range"] is True
 
     def test_ai_5(self):
