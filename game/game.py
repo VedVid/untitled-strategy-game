@@ -196,7 +196,7 @@ class Game(arcade.Window):
                         except TypeError:
                             pass  # Catch-all exception for attacks.
                         finally:
-                            # After attack, deselect the player since moving unit is not forbidden after attack.
+                            # After attack, deselect the player since moving unit is forbidden after attack.
                             globals.state = State.PLAY
                             self.active_player.active = False
                             self.active_player = None
