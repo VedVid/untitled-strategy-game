@@ -36,6 +36,10 @@ def test_tiles_targeted_separate():
     assert attack_1.effects[1].target_positions == [(1, 0)]
     assert attack_1.effects[2].target_positions == [(0, 1)]
     assert attack_1.effects[3].target_positions == [(0, -1)]
+    assert attack_2.effects[0].target_positions == [(0, 1)]
+    assert attack_2.effects[1].target_positions == [(0, -1)]
+    assert attack_2.effects[2].target_positions == [(-1, 0)]
+    assert attack_2.effects[3].target_positions == [(1, 0)]
 
 
 #def test_attack_pattern_separate():
