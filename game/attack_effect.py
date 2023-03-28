@@ -60,17 +60,17 @@ class PunchLeftAttackEffect(AttackEffect):
 
     def perform(self, beings, map_objects, x, y):
         for cell in self.attack_pattern:
-            px_x = x + (cell[0] * constants.TILE_SIZE_W)
-            px_y = y + (cell[1] * constants.TILE_SIZE_H)
+            nx = x + cell[0]
+            ny = y + cell[1]
             try:
-                beings.find_being_by_px_position(
-                    px_x,
-                    px_y,
+                beings.find_being_by_cell_position(
+                    nx,
+                    ny,
                 ).hp -= 1
             except AttributeError:
                 pass  # Do not act if being is not found.
             try:
-                predecessor = map_objects.find_map_object_by_px_position(px_x, px_y)
+                predecessor = map_objects.find_map_object_by_cell_position(nx, ny)
                 successor = predecessor.destroy()
                 if successor:
                     map_objects.replace_map_object(predecessor, successor)
