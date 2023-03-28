@@ -44,19 +44,10 @@ class AttackEffect:
         raise NotImplementedError
 
 
-class PunchAttackEffect(AttackEffect):
-    # TODO: Change "A" (Attacker) to "B" (Being).
+class PunchLeftAttackEffect(AttackEffect):
     def build_target_positions(self):
-        """
-         T
-        TAT
-         T
-        """
         self.target_positions = [
             (-1, 0),
-            (1, 0),
-            (0, -1),
-            (0, 1),
         ]
 
     def build_attack_pattern(self):
@@ -87,55 +78,61 @@ class PunchAttackEffect(AttackEffect):
                 pass
 
 
-class SidePunchHorAttackEffect(PunchAttackEffect):
+class PunchRightAttackEffect(PunchLeftAttackEffect):
     def build_target_positions(self):
-        """
-        TBT
-        """
         self.target_positions = [
-            (-1, 0),
             (1, 0),
         ]
 
+
+class PunchTopAttackEffect(PunchLeftAttackEffect):
+    def build_target_positions(self):
+        self.target_positions = [
+            (0, 1),
+        ]
+
+
+class PunchBottomAttackEffect(PunchLeftAttackEffect):
+    def build_target_positions(self):
+        self.target_positions = [
+            (0, -1),
+        ]
+
+
+class SidePunchLeftAttackEffect(PunchLeftAttackEffect):
     def build_attack_pattern(self):
-        """
-        A
-        T
-        A
-        """
         self.attack_pattern = [
             (0, -1),
             (0, 1),
         ]
 
 
-class SidePunchVerAttackEffect(PunchAttackEffect):
-    def build_target_positions(self):
-        """
-        TBT
-        """
-        self.target_positions = [
+class SidePunchRightAttackEffect(PunchRightAttackEffect):
+    def build_attack_pattern(self):
+        self.attack_pattern = [
             (0, -1),
             (0, 1),
         ]
 
+
+class SidePunchTopAttackEffect(PunchTopAttackEffect):
     def build_attack_pattern(self):
-        """
-        ATA
-        """
         self.attack_pattern = [
             (-1, 0),
             (1, 0),
         ]
 
 
-class WallPunchHorAttackEffect(SidePunchHorAttackEffect):
+class SidePunchBottomAttackEffect(PunchBottomAttackEffect):
     def build_attack_pattern(self):
-        """
-        A
-        A
-        A
-        """
+        self.attack_pattern = [
+            (-1, 0),
+            (1, 0),
+        ]
+
+
+class WallPunchLeftAttackEffect(SidePunchLeftAttackEffect):
+    def build_attack_pattern(self):
         self.attack_pattern = [
             (0, -1),
             (0, 0),
@@ -143,11 +140,26 @@ class WallPunchHorAttackEffect(SidePunchHorAttackEffect):
         ]
 
 
-class WallPunchVerAttackEffect(SidePunchVerAttackEffect):
+class WallPunchRightAttackEffect(SidePunchRightAttackEffect):
     def build_attack_pattern(self):
-        """
-        AAA
-        """
+        self.attack_pattern = [
+            (0, -1),
+            (0, 0),
+            (0, 1),
+        ]
+
+
+class WallPunchTopAttackEffect(SidePunchTopAttackEffect):
+    def build_attack_pattern(self):
+        self.attack_pattern = [
+            (-1, 0),
+            (0, 0),
+            (1, 0),
+        ]
+
+
+class WallPunchBottomAttackEffect(SidePunchBottomAttackEffect):
+    def build_attack_pattern(self):
         self.attack_pattern = [
             (-1, 0),
             (0, 0),

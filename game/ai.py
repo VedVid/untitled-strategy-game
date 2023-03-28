@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# AI for enemy beings is being developed using TDD process.
+# First version of AI has been developed using TDD.
 
 
 from . import constants
@@ -34,114 +34,120 @@ class BaseAI:
 
     def __init__(self, owner):
         self.owner = owner
-        self.info = []
+        self.map_in_range = []
+        self.map_out_range = []
 
     def gather_map_info(self, grid, beings):
         # Zero self.info.
-        self.info = []
-        attackable = self.owner.attack.return_attackable_positions(True)
-        # Set up pathfinder.
+        self.map_in_range = []
+        self.map_out_range = []
         pathfinder = Pathfinder(grid)
         pathfinder.set_up_path_grid(beings)
-        paths_backup = []
-        # Iterate over all MapObject instances on game map.
-        for map_object in grid.map_objects.objects:
-            if not map_object.target:
-                # Skip MapObject instances that are not marked as a targets.
-                continue
-            # Find all positions that owner can attack.
-            neighbours = []
-            for coords in attackable:
-                x = map_object.cell_position.x + coords[0]
-                y = map_object.cell_position.y + coords[1]
-                if 0 <= x <= 7 and 0 <= y <= 7:
-                    # Add only Positions that are in map bounds.
-                    neighbours.append(Position(x, y))
-            paths = []
-            # Find paths to neighbour tiles, then add only paths in range of owner.
-            # (+1 because Pathfider takes into account tile under Being, too).
-            for pos in neighbours:
-                pathfinder.clean_up_path_grid()
-                pathfinder.find_path(
+        for tile in grid.tiles:
+            data = {
+                "tile": (tile.cell_position.x, tile.cell_position.y),
+                "targets": None,
+                "targetables": None,
+                "affected": None,
+                "priorities": None,
+                "in range": True,
+            }
+            pathfinder.clean_up_path_grid()
+            # Check availability of every tile.
+            path, _ = pathfinder.find_path(
                     self.owner.cell_position,
-                    pos,
-                )
-                if pathfinder.last_path:
-                    if len(pathfinder.last_path) <= self.owner.range + 1:
-                        paths.append(pathfinder.last_path)
-                    else:
-                        paths_backup.append(pathfinder.last_path)
-            # Find shortest path from all paths in range, then calculate priority, and add to self.info.
-            if paths:
-                path = min(paths, key=len)
-                priority = constants.AI_BUILDING_PRIORITY - (
-                    constants.AI_RANGE_FALLOFF * len(path)
-                )
-                self.info.append([priority, map_object, path])
-        # Iterate over all player Being instances on game map.
-        for player in beings.player_beings:
-            neighbours = []
-            # Find all positions that owner Being can attack.
-            for coords in attackable:
-                x = player.cell_position.x + coords[0]
-                y = player.cell_position.y + coords[1]
-                if 0 <= x <= 7 and 0 <= y <= 7:
-                    neighbours.append(Position(x, y))
-            paths = []
-            # Find paths to neighbour tiles, then add only paths in range of owner.
-            # (+1 because Pathfider takes into account tile under Being, too).
-            for pos in neighbours:
-                pathfinder.clean_up_path_grid()
-                pathfinder.find_path(
-                    self.owner.cell_position,
-                    pos,
-                )
-                if pathfinder.last_path:
-                    if len(pathfinder.last_path) <= self.owner.range + 1:
-                        paths.append(pathfinder.last_path)
-                    else:
-                        paths_backup.append(pathfinder.last_path)
-            # Find shortest path from all paths in range, then calculate priority, and add to self.info.
-            if paths:
-                path = min(paths, key=len)
-                if player.hp == 1:
-                    priority = constants.AI_KILL_PLAYER_PRIORITY - (
-                        constants.AI_RANGE_FALLOFF * len(path)
-                    )
-                    self.info.append([priority, player, path])
-                elif player.hp > 1:
-                    priority = constants.AI_ATTACK_PLAYER_PRIORITY - (
-                        constants.AI_RANGE_FALLOFF * len(path)
-                    )
-                    self.info.append([priority, player, path])
-        if not self.info and paths_backup:
-            path = min(paths_backup, key=len)
-            if path:
-                # Path too long, slice to the owner.range.
-                self.info.append(
-                    [constants.AI_WALK_PRIORITY, 0, path[: self.owner.range + 1]]
-                )
-
-    def _sort_priorities(self):
-        self.info.sort(key=lambda x: -x[0])
-
-    def decide(self, grid):
-        if not self.info:
-            return "nothing"
-        self._sort_priorities()
-        target = self.info[0]
-        target_type = type(target[constants.AI_INFO_ORDER_OBJECT])
-        coords = target[constants.AI_INFO_ORDER_PATH][-1]
-        self.owner.move_to(coords[0], coords[1])
-        if target_type is int:
-            return "walk"
-        elif target_type is MapObject:
-            new_tile = target[constants.AI_INFO_ORDER_OBJECT].destroy()
-            grid.map_objects.replace_map_object(
-                target[constants.AI_INFO_ORDER_OBJECT],
-                new_tile,
+                    tile.cell_position
             )
-            return "attack_building"
-        target[constants.AI_INFO_ORDER_OBJECT].hp -= 1
-        print(target[constants.AI_INFO_ORDER_OBJECT].hp)
-        return "attack_player"
+            if len(path) == 0:
+                continue  # tile occupied by object, or no valid path to tile
+            if len(path) > self.owner.range:
+                data["in range"] = False
+                data["tile"] = path[self.owner.range]
+            b = beings.find_being_by_cell_position(tile.cell_position.x, tile.cell_position.y)
+            if b and b is not self.owner:
+                continue  # tile occupied by other being
+            targetables = []
+            all_affected_positions = []
+            # Iterating over all attack effects of owner's attack,
+            # in order to find all tiles that owner can target (so, "click on it") (stored in targetables)
+            # and tiles that will be affected by attack.
+            # Index of one element of all_affected_positions match index of element of targetables.
+            for effect in self.owner.attack.effects:
+                targetable_position = (
+                    tile.cell_position.x + effect.target_positions[0][0],
+                    tile.cell_position.y + effect.target_positions[0][1],
+                )
+                # Add only targetable positions that are within map bounds.
+                if targetable_position[0] >= 0 and targetable_position[0] < constants.GRID_SIZE_W and \
+                    targetable_position[1] >= 0 and targetable_position[1] < constants.GRID_SIZE_H:
+                    targetables.append(targetable_position)
+                    affected_positions = []
+                    for element in effect.attack_pattern:
+                        affected_position = (
+                            targetable_position[0] + element[0],
+                            targetable_position[1] + element[1],
+                        )
+                        # Add only these tiles that will be affected by attack and are within map bounds.
+                        if affected_position[0] >= 0 and affected_position[0] < constants.GRID_SIZE_W and \
+                            affected_position[1] >= 0 and affected_position[1] < constants.GRID_SIZE_H:
+                            affected_positions.append(affected_position)
+                    all_affected_positions.append(affected_positions)
+            data["targetables"] = targetables
+            data["affected"] = all_affected_positions
+            # Calculate priority penalty for tile.
+            range_priority_penalty = len(path) * constants.AI_RANGE_FALLOFF
+            # Calculating priorities for every targetable tile.
+            priorities = []
+            targets = []
+            for affected_tiles in all_affected_positions:
+                priority = -range_priority_penalty
+                for affected_tile in affected_tiles:
+                    being = beings.find_being_by_cell_position(
+                        affected_tile[0],
+                        affected_tile[1],
+                    )
+                    map_object = grid.map_objects.find_map_object_by_cell_position(
+                        affected_tile[0],
+                        affected_tile[1],
+                    )
+                    if being:
+                        if being in beings.enemy_beings:
+                            priority -= constants.AI_ATTACK_OWN_PRIORITY
+                        else:
+                            targets.append(being)
+                            if being.hp <= 0:
+                                pass
+                            elif being.hp == 1:  # TODO: Change to comparison with attack power!
+                                priority += constants.AI_KILL_PLAYER_PRIORITY
+                            else:
+                                priority += constants.AI_ATTACK_PLAYER_PRIORITY
+                    if map_object:
+                        if map_object.target:
+                            targets.append(map_object)
+                            priority += constants.AI_BUILDING_PRIORITY
+                priorities.append(priority)
+            data["priorities"] = priorities
+            data["targets"] = targets
+            if data["in range"] and data["targets"]:
+                self.map_in_range.append(data)
+            else:
+                self.map_out_range.append(data)
+
+    def _sort_priorities_in_range(self):
+        return sorted(self.map_in_range, key=lambda d: (max(d['priorities'])), reverse=True)
+
+    def _sort_priorities_out_range(self):
+        return sorted(self.map_out_range, key=lambda d: (max(d['priorities'])), reverse=True)
+
+    def decide(self):
+        in_range_sorted = self._sort_priorities_in_range()
+        # There are targets in range.
+        if len(in_range_sorted) > 0:
+            self.owner.move_to(in_range_sorted[0]["tile"][0], in_range_sorted[0]["tile"][1])
+            return in_range_sorted[0]
+        out_range_sorted = self._sort_priorities_out_range()
+        # There are no targets in range, but owner is not blocked and can move towards the targets.
+        if len(out_range_sorted) > 0:
+            self.owner.move_to(out_range_sorted[0]["tile"][0], out_range_sorted[0]["tile"][1])
+            return out_range_sorted[0]
+        return "nothing"

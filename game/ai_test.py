@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# AI for enemy beings is being developed using TDD process.
+# First version of AI has been developed using TDD.
 
 
 import copy
@@ -98,57 +98,58 @@ class TestAI:
 
     def test_ai_1(self):
         self.e1.ai.gather_map_info(self.grid, self.beings)
-        assert self.e1.ai.decide(self.grid) == "attack_player"
+        assert self.e1.cell_position.x == 0 and self.e1.cell_position.y == 5
+        data = self.e1.ai.decide()
         assert self.e1.cell_position.x == 1 and self.e1.cell_position.y == 6
-        assert len(self.e1.ai.info) == 1
-        assert self.e1.ai.info[0][constants.AI_INFO_ORDER_PRIORITY] == 4
-        assert type(self.e1.ai.info[0][constants.AI_INFO_ORDER_OBJECT]) is Player
-        assert len(self.e1.ai.info[0][constants.AI_INFO_ORDER_PATH]) == 3
+        assert data["tile"] == (1, 6)
+        assert len(data["targetables"]) == 4
+        assert len(data["affected"]) == 4
+        assert max(data["priorities"]) == 4  # 7 for killing player, -3 for path length
+        assert data["in range"] is True
 
     def test_ai_2(self):
         self.e2.ai.gather_map_info(self.grid, self.beings)
-        assert self.e2.ai.decide(self.grid) == "attack_player"
+        assert self.e2.cell_position.x == 7 and self.e2.cell_position.y == 5
+        data = self.e2.ai.decide()
         assert self.e2.cell_position.x == 7 and self.e2.cell_position.y == 6
-        assert len(self.e2.ai.info) == 1
-        assert self.e2.ai.info[0][constants.AI_INFO_ORDER_PRIORITY] == 3
-        assert type(self.e2.ai.info[0][constants.AI_INFO_ORDER_OBJECT]) is Player
-        assert len(self.e2.ai.info[0][constants.AI_INFO_ORDER_PATH]) == 2
+        assert data["tile"] == (7, 6)
+        assert len(data["targetables"]) == 3
+        assert len(data["affected"]) == 3
+        assert max(data["priorities"]) == 3  # 5 for attacking player, -2 for path length
+        assert data["in range"] is True
 
     def test_ai_3(self):
         self.e3.ai.gather_map_info(self.grid, self.beings)
-        assert self.e3.ai.decide(self.grid) == "attack_player"
+        assert self.e3.cell_position.x == 3 and self.e3.cell_position.y == 6
+        data = self.e3.ai.decide()
         assert self.e3.cell_position.x == 1 and self.e3.cell_position.y == 6
-        assert len(self.e3.ai.info) == 3
-        assert self.e3.ai.info[0][constants.AI_INFO_ORDER_PRIORITY] == 4
-        assert self.e3.ai.info[1][constants.AI_INFO_ORDER_PRIORITY] == 2
-        assert self.e3.ai.info[2][constants.AI_INFO_ORDER_PRIORITY] == 1
-        assert type(self.e3.ai.info[0][constants.AI_INFO_ORDER_OBJECT]) is Player
-        assert type(self.e3.ai.info[1][constants.AI_INFO_ORDER_OBJECT]) is MapObject
-        assert type(self.e3.ai.info[2][constants.AI_INFO_ORDER_OBJECT]) is Player
-        assert len(self.e3.ai.info[0][constants.AI_INFO_ORDER_PATH]) == 3
-        assert len(self.e3.ai.info[1][constants.AI_INFO_ORDER_PATH]) == 6
-        assert len(self.e3.ai.info[2][constants.AI_INFO_ORDER_PATH]) == 4
+        assert data["tile"] == (1, 6)
+        assert len(data["targetables"]) == 4
+        assert len(data["affected"]) == 4
+        assert max(data["priorities"]) == 4  # 7 for killing player, -3 for path length
+        assert data["in range"] is True
 
     def test_ai_4(self):
         self.e4.ai.gather_map_info(self.grid, self.beings)
-        assert self.e4.ai.decide(self.grid) == "attack_building"
+        assert self.e4.cell_position.x == 5 and self.e4.cell_position.y == 0
+        data = self.e4.ai.decide()
         assert self.e4.cell_position.x == 4 and self.e4.cell_position.y == 0
-        assert len(self.e4.ai.info) == 1
-        assert self.e4.ai.info[0][constants.AI_INFO_ORDER_PRIORITY] == 6
-        assert type(self.e4.ai.info[0][constants.AI_INFO_ORDER_OBJECT]) is MapObject
-        assert len(self.e4.ai.info[0][constants.AI_INFO_ORDER_PATH]) == 2
+        assert data["tile"] == (4, 0)
+        assert len(data["targetables"]) == 3
+        assert len(data["affected"]) == 3
+        assert max(data["priorities"]) == 6  # 8 for destroying building, -2 for path length
+        assert data["in range"] is True
 
     def test_ai_5(self):
         self.e5.ai.gather_map_info(self.grid, self.beings)
-        assert self.e5.ai.decide(self.grid) == "walk"
+        assert self.e5.cell_position.x == 3 and self.e5.cell_position.y == 3
+        data = self.e5.ai.decide()
         assert self.e5.cell_position.x == 3 and self.e5.cell_position.y == 2
-        assert len(self.e5.ai.info) == 1
-        assert self.e5.ai.info[0][constants.AI_INFO_ORDER_PRIORITY] == 1
-        assert type(self.e5.ai.info[0][constants.AI_INFO_ORDER_OBJECT]) is int
-        assert len(self.e5.ai.info[0][constants.AI_INFO_ORDER_PATH]) == 2
+        assert data["tile"] == (3, 2)
+        assert data["in range"] is False
 
     def test_ai_6(self):
         self.e6.ai.gather_map_info(self.grid, self.beings)
-        assert self.e6.ai.decide(self.grid) == "nothing"
-        assert self.e6.cell_position.x == 0 and self.e6.cell_position.y == 0
-        assert len(self.e6.ai.info) == 0
+        data = self.e6.ai.decide()
+        assert data["tile"] == (0, 0)
+        assert len(data["targets"]) == 0

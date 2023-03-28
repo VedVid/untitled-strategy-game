@@ -263,7 +263,7 @@ class Game(arcade.Window):
                         f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} acts..."
                     )
                     enemy.ai.gather_map_info(self.grid, self.beings)
-                    enemy.ai.decide(self.grid)
+                    enemy.ai.decide()
                     # TODO: Act, using enemy.ai.info data as weighted average.
                 globals.state = State.PLAY
                 for player in self.beings.player_beings:

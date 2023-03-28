@@ -37,7 +37,7 @@ class Attack:
             self.owner.attacked = True
             self.owner.moved = True
 
-    def return_attackable_positions(self, owner_position_agnostic=False):
+    def return_attackable_positions(self, owner_position_agnostic=False, x=None, y=None):
         # TODO: I think it could be used in SpriteTracker, too!
         positions = []
         for effect in self.effects:
@@ -48,6 +48,9 @@ class Attack:
                     if owner_position_agnostic:
                         pos_x = 0
                         pos_y = 0
+                    if x and y:
+                        pos_x = x
+                        pos_y = y
                     target_position = (
                         pos_x + target[0] + pattern[0],
                         pos_y + target[1] + pattern[1],
