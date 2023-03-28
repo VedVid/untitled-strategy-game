@@ -110,7 +110,7 @@ class Player(Being):
         self.range = 5
 
     def build_attack(self):
-        self.attack = copy.copy(attacks.attack_punch)
+        self.attack = copy.copy(attacks.attack_wall_punch)
         self.attack.owner = self
 
     def build_ai(self):

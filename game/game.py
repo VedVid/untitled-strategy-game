@@ -190,13 +190,14 @@ class Game(arcade.Window):
                     elif not self.active_player.attacked:
                         # Perform attack if possible.
                         try:
+                            print(x, y)
                             self.active_player.attack.perform(
                                 self.beings, self.grid.map_objects, x, y
                             )
                         except TypeError:
                             pass  # Catch-all exception for attacks.
                         finally:
-                            # After attack, deselect the player since moving unit is not forbidden after attack.
+                            # After attack, deselect the player since moving unit is forbidden after attack.
                             globals.state = State.PLAY
                             self.active_player.active = False
                             self.active_player = None
@@ -263,7 +264,7 @@ class Game(arcade.Window):
                         f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} acts..."
                     )
                     enemy.ai.gather_map_info(self.grid, self.beings)
-                    enemy.ai.decide()
+                    enemy.ai.decide(self.beings, self.grid)
                     # TODO: Act, using enemy.ai.info data as weighted average.
                 globals.state = State.PLAY
                 for player in self.beings.player_beings:
