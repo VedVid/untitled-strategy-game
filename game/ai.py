@@ -5,8 +5,6 @@
 
 
 from . import constants
-from .components.position import Position
-from .map_object import MapObject
 from .pathfinding import Pathfinder
 
 
