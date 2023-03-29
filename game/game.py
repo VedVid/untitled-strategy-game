@@ -146,11 +146,7 @@ class Game(arcade.Window):
                     elif not player_under_cursor:
                         if not self.active_player.moved:
                             if self.pathfinder.last_path:
-                                # Move active player that not moved yet to desired cell.
-                                # Use the pathfinder coords at the position equal to player range.
-                                # If not possible (because path is shorter), use the last coords in path.
-                                # Last coords in path are equal to mouse position in cell_position, if hovered
-                                # over the available tile.
+                                # Move the player towards the path, and clean up pathfinder.last path after the move.
                                 self.active_player.move_towards(self.pathfinder)
                                 self.pathfinder.last_path = ()
                                 # TODO: Currently it makes sense to set player into TARGET mode after every move,
