@@ -24,6 +24,7 @@ class Game(arcade.Window):
         beings,
     ):
         super().__init__(width, height, title)
+        self.set_update_rate(constants.FPS_RATE_DEFAULT)
         self.x = 0
         self.y = 0
         self.background_color = arcade.color.DARK_BLUE_GRAY
@@ -153,6 +154,7 @@ class Game(arcade.Window):
                                     pass
                                 # Set game state for on_update method.
                                 globals.state = State.PLAYER_MOVE_ANIMATION
+                                self.set_update_rate(constants.FPS_RATE_ANIMATION)
                         elif self.active_player.moved:
                             # Do not allow to move player that already moved during this turn.
                             pass
@@ -248,6 +250,7 @@ class Game(arcade.Window):
                 except IndexError:
                     self.active_player.moved = True
                     globals.state = State.TARGET
+                    self.set_update_rate(constants.FPS_RATE_DEFAULT)
             if globals.state == State.ENEMY_TURN:
                 for enemy in self.beings.enemy_beings:
                     print("=====\n=====")
