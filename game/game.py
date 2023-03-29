@@ -146,13 +146,13 @@ class Game(arcade.Window):
                     elif not player_under_cursor:
                         if not self.active_player.moved:
                             if self.pathfinder.last_path:
-                                # Move the player towards the path, and clean up pathfinder.last path after the move.
-                                self.active_player.move_towards(self.pathfinder)
-                                self.pathfinder.last_path = ()
-                                # TODO: Currently it makes sense to set player into TARGET mode after every move,
-                                #       but in future I want to equip every player being in multiple attacks.
-                                #       Will this fit?
-                                globals.state = State.TARGET
+                                # Prepare pathfinder for player movement: trim path to player range if path is too long.
+                                try:
+                                    self.pathfinder.last_path = self.pathfinder.last_path[:self.active_player.range + 1]
+                                except IndexError:
+                                    pass
+                                # Set game state for on_update method.
+                                globals.state = State.PLAYER_MOVE_ANIMATION
                         elif self.active_player.moved:
                             # Do not allow to move player that already moved during this turn.
                             pass
@@ -239,6 +239,15 @@ class Game(arcade.Window):
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)
+            if globals.state == State.PLAYER_MOVE_ANIMATION:
+                # Show player movements
+                try:
+                    # noinspection PyUnresolvedReferences
+                    coords = self.pathfinder.last_path.pop(0)
+                    self.active_player.move_to(coords[0], coords[1])
+                except IndexError:
+                    self.active_player.moved = True
+                    globals.state = State.TARGET
             if globals.state == State.ENEMY_TURN:
                 for enemy in self.beings.enemy_beings:
                     print("=====\n=====")

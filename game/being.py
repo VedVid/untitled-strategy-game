@@ -131,21 +131,6 @@ class Player(Being):
         self.sprite_selected.update_position(self.px_position)
         self.sprite_targeted.update_position(self.px_position)
 
-    def move_towards(self, pathfinder):
-        i = self.range
-        print(self.cell_position.x, self.cell_position.y)
-        path = copy.copy(pathfinder.last_path)[1:]
-        print(path)
-        while i > 0:
-            try:
-                coords = path.pop(0)
-                self.move_to(coords[0], coords[1])
-            except IndexError:
-                break
-            else:
-                i -= 1
-        self.moved = True
-
 
 # Concrete
 class Enemy(Being):
