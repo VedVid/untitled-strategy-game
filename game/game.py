@@ -189,6 +189,9 @@ class Game(arcade.Window):
                     raise InvalidGameState(
                         "If game is in TARGET mode, a player being must be active."
                     )
+            elif globals.state == State.PLAYER_MOVE_ANIMATION:
+                # Fast-forward animation.
+                self.set_update_rate(constants.FPS_RATE_DEFAULT)
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.PLAY:
                 pass
