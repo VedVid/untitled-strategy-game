@@ -32,6 +32,7 @@ class Game(arcade.Window):
         self.beings = beings
         self.pathfinder = Pathfinder(self.grid)
         self.active_player = None
+        self.active_enemy = None
         self.sprite_tracker = SpriteTracker(self.beings, self.grid)
         # first_frame and initialized are hacks to allow removing from the spritelists.
         # Will be removed when stuff like main menu will be implemented - that way, window will be spawned and
@@ -61,6 +62,7 @@ class Game(arcade.Window):
                 globals.state = State.MOVE
         elif key == arcade.key.SPACE and globals.state == State.PLAY:
             globals.state = State.ENEMY_TURN
+            self.set_update_rate(constants.FPS_RATE_ANIMATION)
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
@@ -258,7 +260,6 @@ class Game(arcade.Window):
                     globals.state = State.TARGET
                     self.set_update_rate(constants.FPS_RATE_DEFAULT)
             if globals.state == State.ENEMY_TURN:
-                self.set_update_rate(constants.FPS_RATE_ANIMATION)
                 for enemy in self.beings.enemy_beings:
                     print("=====\n=====")
                     print(
@@ -269,8 +270,11 @@ class Game(arcade.Window):
                     index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
                     target_pos = enemy_data["targetables"][index]
                     path = enemy_data["path"]
+                    print(path)
+                    self.set_update_rate(constants.FPS_RATE_ANIMATION)
                     while path:
                         tile = path.pop(0)
+                        print(tile)
                         enemy.move_to(tile[0], tile[1])
                     if target_pos:
                         enemy.attack.perform(
