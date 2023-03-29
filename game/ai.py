@@ -50,11 +50,13 @@ class BaseAI:
                 "targetables": None,
                 "affected": None,
                 "priorities": None,
+                "path": tuple(),
                 "in range": True,
             }
             pathfinder.clean_up_path_grid()
             # Check availability of every tile.
             path, _ = pathfinder.find_path(self.owner.cell_position, tile.cell_position)
+            data["path"] = path[1:]
             if len(path) == 0:
                 continue  # tile occupied by object, or no valid path to tile
             if len(path) > self.owner.range:
