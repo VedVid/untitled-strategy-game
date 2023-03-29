@@ -151,26 +151,12 @@ class Game(arcade.Window):
                                 # If not possible (because path is shorter), use the last coords in path.
                                 # Last coords in path are equal to mouse position in cell_position, if hovered
                                 # over the available tile.
-                                try:
-                                    self.active_player.move_to(
-                                        self.pathfinder.last_path[
-                                            self.active_player.range
-                                        ][0],
-                                        self.pathfinder.last_path[
-                                            self.active_player.range
-                                        ][1],
-                                    )
-                                except IndexError:
-                                    self.active_player.move_to(
-                                        self.pathfinder.last_path[-1][0],
-                                        self.pathfinder.last_path[-1][1],
-                                    )
-                                finally:
-                                    self.pathfinder.last_path = ()
-                                    # TODO: Currently it makes sense to set player into TARGET mode after every move,
-                                    #       but in future I want to equip every player being in multiple attacks.
-                                    #       Will this fit?
-                                    globals.state = State.TARGET
+                                self.active_player.move_towards(self.pathfinder)
+                                self.pathfinder.last_path = ()
+                                # TODO: Currently it makes sense to set player into TARGET mode after every move,
+                                #       but in future I want to equip every player being in multiple attacks.
+                                #       Will this fit?
+                                globals.state = State.TARGET
                         elif self.active_player.moved:
                             # Do not allow to move player that already moved during this turn.
                             pass
