@@ -190,7 +190,10 @@ class Game(arcade.Window):
                         "If game is in TARGET mode, a player being must be active."
                     )
             elif globals.state == State.PLAYER_MOVE_ANIMATION:
-                # Fast-forward animation.
+                # Fast-forward animations.
+                self.set_update_rate(constants.FPS_RATE_DEFAULT)
+            elif globals.state == State.ENEMY_TURN:
+                # Fast forward animations.
                 self.set_update_rate(constants.FPS_RATE_DEFAULT)
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.PLAY:
@@ -255,6 +258,7 @@ class Game(arcade.Window):
                     globals.state = State.TARGET
                     self.set_update_rate(constants.FPS_RATE_DEFAULT)
             if globals.state == State.ENEMY_TURN:
+                self.set_update_rate(constants.FPS_RATE_ANIMATION)
                 for enemy in self.beings.enemy_beings:
                     print("=====\n=====")
                     print(
@@ -263,6 +267,7 @@ class Game(arcade.Window):
                     enemy.ai.gather_map_info(self.grid, self.beings)
                     enemy.ai.decide(self.beings, self.grid)
                     # TODO: Act, using enemy.ai.info data as weighted average.
+                self.set_update_rate(constants.FPS_RATE_DEFAULT)
                 globals.state = State.PLAY
                 for player in self.beings.player_beings:
                     player.moved = False
