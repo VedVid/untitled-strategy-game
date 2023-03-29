@@ -265,7 +265,21 @@ class Game(arcade.Window):
                         f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} acts..."
                     )
                     enemy.ai.gather_map_info(self.grid, self.beings)
-                    enemy.ai.decide(self.beings, self.grid)
+                    enemy_data = enemy.ai.decide(self.beings, self.grid)
+                    index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
+                    target_pos = enemy_data["targetables"][index]
+                    path = enemy_data["path"]
+                    while path:
+                        tile = path.pop(0)
+                        enemy.move_to(tile[0], tile[1])
+                    if target_pos:
+                        enemy.attack.perform(
+                            self.beings,
+                            self.grid.map_objects,
+                            target_pos[0],
+                            target_pos[1],
+                            cursor=False
+                        )
                     # TODO: Act, using enemy.ai.info data as weighted average.
                 self.set_update_rate(constants.FPS_RATE_DEFAULT)
                 globals.state = State.PLAY

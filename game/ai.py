@@ -4,8 +4,6 @@
 # First version of AI has been developed using TDD.
 
 
-import operator
-
 from . import constants
 from .pathfinding import Pathfinder
 
@@ -158,19 +156,9 @@ class BaseAI:
         in_range_sorted = self._sort_priorities_in_range()
         # There are targets in range.
         if len(in_range_sorted) > 0:
-            self.owner.move_to(
-                in_range_sorted[0]["tile"][0], in_range_sorted[0]["tile"][1]
-            )
-            print("\n")
-            index = in_range_sorted[0]["priorities"].index(max(in_range_sorted[0]["priorities"]))
-            target_pos = in_range_sorted[0]["targetables"][index]
-            self.owner.attack.perform(beings, grid.map_objects, target_pos[0], target_pos[1], cursor=False)
             return in_range_sorted[0]
         out_range_sorted = self._sort_priorities_out_range()
         # There are no targets in range, but owner is not blocked and can move towards the targets.
         if len(out_range_sorted) > 0:
-            self.owner.move_to(
-                out_range_sorted[0]["tile"][0], out_range_sorted[0]["tile"][1]
-            )
             return out_range_sorted[0]
         return "nothing"
