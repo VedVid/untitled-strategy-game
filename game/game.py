@@ -64,7 +64,7 @@ class Game(arcade.Window):
             elif globals.state == State.TARGET:
                 globals.state = State.MOVE
         elif key == arcade.key.SPACE and globals.state == State.PLAY:
-            globals.state = State.ENEMY_TURN
+            globals.state = State.ENEMY_ATTACK
             self.set_update_rate(constants.FPS_RATE_ANIMATION)
 
     def on_mouse_motion(self, x, y, dx, dy):
@@ -279,8 +279,6 @@ class Game(arcade.Window):
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
                     # TODO: That's a bit redudant, decide method should not be called every on_update call.
                     enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
-                    index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
-                    target_pos = enemy_data["targetables"][index]
                     path = enemy_data["path"]
                     print(path)
                     if path:
@@ -301,3 +299,37 @@ class Game(arcade.Window):
                     globals.state = State.PLAY
                     self.set_update_rate(constants.FPS_RATE_DEFAULT)
                     print("player's turn")
+            if globals.state == State.ENEMY_ATTACK:
+                # Search for the enemy that did not move this turn yet, and make him active.
+                if not self.active_enemy:
+                    for enemy in self.beings.enemy_beings:
+                        if not enemy.attacked:
+                            self.active_enemy = enemy
+                # If there is a valid enemy, then find the best path and move towards this path.
+                if self.active_enemy:
+                    print("=====\n=====")
+                    print(
+                        f"enemy at {self.active_enemy.cell_position.x}, {self.active_enemy.cell_position.y} acts..."
+                    )
+                    # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
+                    if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
+                        self.active_enemy.ai.gather_map_info(self.grid, self.beings)
+                    # TODO: That's a bit redudant, decide method should not be called every on_update call.
+                    enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
+                    index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
+                    target_pos = enemy_data["targetables"][index]
+                    if target_pos:
+                        self.active_enemy.attack.perform(
+                            self.beings,
+                            self.grid.map_objects,
+                            target_pos[0],
+                            target_pos[1],
+                            cursor=False
+                        )
+                        self.active_enemy.attacked = True
+                        self.active_enemy = None
+                # If no valid candidate for active_enemy found, end the enemy turn.
+                else:
+                    for enemy in self.beings.enemy_beings:
+                        enemy.attacked = False
+                    globals.state = State.ENEMY_ATTACK
