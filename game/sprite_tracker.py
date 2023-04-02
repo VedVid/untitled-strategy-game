@@ -13,6 +13,7 @@ import arcade
 from . import globals
 from .being import Player, Enemy
 from .components.position import Position
+from .components.sprite import Sprite
 from .map_object import MapObject
 from .pathfinding import Pathfinder
 from .states import State
@@ -81,10 +82,11 @@ class SpriteTracker:
         self._tiles_sprites_selected = arcade.SpriteList()
         self._map_objects_sprites_selected = arcade.SpriteList()
         self._beings_sprites_selected = arcade.SpriteList()
+        self._attack_overlay = arcade.SpriteList()
         self.mouse_position = None
         self.player = None
 
-    def _add_to_sprite_list(self, entity, targeted=False):
+    def _add_to_sprite_list(self, entity, targeted=False, overlay=False):
         """
         Adds entity sprite to corresponding sprite_list.
         Defaults to sprite_selected, but may add sprite_targeted too.
@@ -98,6 +100,13 @@ class SpriteTracker:
             self._map_objects_sprites_selected.append(sprite)
         elif isinstance(entity, Tile):
             self._tiles_sprites_selected.append(sprite)
+        if overlay:
+            sprite = Sprite(
+                "target.png",
+                entity.px_position,
+                0.125,
+            )
+            self._attack_overlay.append(sprite)
 
     def _find(self, what):
         """
