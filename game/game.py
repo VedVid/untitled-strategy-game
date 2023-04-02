@@ -24,6 +24,7 @@ class Game(arcade.Window):
         beings,
     ):
         super().__init__(width, height, title)
+        self.set_update_rate(constants.FPS_RATE_DEFAULT)
         self.x = 0
         self.y = 0
         self.background_color = arcade.color.DARK_BLUE_GRAY
@@ -31,6 +32,7 @@ class Game(arcade.Window):
         self.beings = beings
         self.pathfinder = Pathfinder(self.grid)
         self.active_player = None
+        self.active_enemy = None
         self.sprite_tracker = SpriteTracker(self.beings, self.grid)
         # first_frame and initialized are hacks to allow removing from the spritelists.
         # Will be removed when stuff like main menu will be implemented - that way, window will be spawned and
@@ -60,6 +62,7 @@ class Game(arcade.Window):
                 globals.state = State.MOVE
         elif key == arcade.key.SPACE and globals.state == State.PLAY:
             globals.state = State.ENEMY_TURN
+            self.set_update_rate(constants.FPS_RATE_ANIMATION)
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.x = x
@@ -146,31 +149,14 @@ class Game(arcade.Window):
                     elif not player_under_cursor:
                         if not self.active_player.moved:
                             if self.pathfinder.last_path:
-                                # Move active player that not moved yet to desired cell.
-                                # Use the pathfinder coords at the position equal to player range.
-                                # If not possible (because path is shorter), use the last coords in path.
-                                # Last coords in path are equal to mouse position in cell_position, if hovered
-                                # over the available tile.
+                                # Prepare pathfinder for player movement: trim path to player range if path is too long.
                                 try:
-                                    self.active_player.move_to(
-                                        self.pathfinder.last_path[
-                                            self.active_player.range
-                                        ][0],
-                                        self.pathfinder.last_path[
-                                            self.active_player.range
-                                        ][1],
-                                    )
+                                    self.pathfinder.last_path = self.pathfinder.last_path[:self.active_player.range + 1]
                                 except IndexError:
-                                    self.active_player.move_to(
-                                        self.pathfinder.last_path[-1][0],
-                                        self.pathfinder.last_path[-1][1],
-                                    )
-                                finally:
-                                    self.pathfinder.last_path = ()
-                                    # TODO: Currently it makes sense to set player into TARGET mode after every move,
-                                    #       but in future I want to equip every player being in multiple attacks.
-                                    #       Will this fit?
-                                    globals.state = State.TARGET
+                                    pass
+                                # Set game state for on_update method.
+                                globals.state = State.PLAYER_MOVE_ANIMATION
+                                self.set_update_rate(constants.FPS_RATE_ANIMATION)
                         elif self.active_player.moved:
                             # Do not allow to move player that already moved during this turn.
                             pass
@@ -205,6 +191,12 @@ class Game(arcade.Window):
                     raise InvalidGameState(
                         "If game is in TARGET mode, a player being must be active."
                     )
+            elif globals.state == State.PLAYER_MOVE_ANIMATION:
+                # Fast-forward animations.
+                self.set_update_rate(constants.FPS_RATE_DEFAULT)
+            elif globals.state == State.ENEMY_TURN:
+                # Fast forward animations.
+                self.set_update_rate(constants.FPS_RATE_DEFAULT)
         elif button == arcade.MOUSE_BUTTON_RIGHT:
             if globals.state == State.PLAY:
                 pass
@@ -257,17 +249,61 @@ class Game(arcade.Window):
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)
+            if globals.state == State.PLAYER_MOVE_ANIMATION:
+                # Show player movements
+                try:
+                    # noinspection PyUnresolvedReferences
+                    coords = self.pathfinder.last_path.pop(0)
+                    self.active_player.move_to(coords[0], coords[1])
+                except IndexError:
+                    self.active_player.moved = True
+                    globals.state = State.TARGET
+                    self.set_update_rate(constants.FPS_RATE_DEFAULT)
             if globals.state == State.ENEMY_TURN:
-                for enemy in self.beings.enemy_beings:
+                # Search for the enemy that did not move this turn yet, and make him active.
+                if not self.active_enemy:
+                    for enemy in self.beings.enemy_beings:
+                        if not enemy.moved:
+                            self.active_enemy = enemy
+                # If no valid candidate for active_enemy found, end the enemy turn.
+                if self.active_enemy:
                     print("=====\n=====")
                     print(
-                        f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} acts..."
+                        f"enemy at {self.active_enemy.cell_position.x}, {self.active_enemy.cell_position.y} acts..."
                     )
-                    enemy.ai.gather_map_info(self.grid, self.beings)
-                    enemy.ai.decide(self.beings, self.grid)
-                    # TODO: Act, using enemy.ai.info data as weighted average.
-                globals.state = State.PLAY
-                for player in self.beings.player_beings:
-                    player.moved = False
-                    player.attacked = False
-                print("player's turn")
+                    # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
+                    if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
+                        self.active_enemy.ai.gather_map_info(self.grid, self.beings)
+                    # TODO: That's a bit redudant, decide method should not be called every on_update call.
+                    enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
+                    index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
+                    target_pos = enemy_data["targetables"][index]
+                    path = enemy_data["path"]
+                    print(path)
+                    if path:
+                        tile = path.pop(0)
+                        print(tile)
+                        self.active_enemy.move_to(tile[0], tile[1])
+                    else:
+                        # If path is empty, then two things may happen:
+                        # 1) perform attack, if there is a valid position to attack, or
+                        if target_pos:
+                            self.active_enemy.attack.perform(
+                                self.beings,
+                                self.grid.map_objects,
+                                target_pos[0],
+                                target_pos[1],
+                                cursor=False
+                            )
+                        # 2) simpley end the enemy turn.
+                        self.active_enemy.moved = True
+                        self.active_enemy = None
+                else:
+                    for enemy in self.beings.enemy_beings:
+                        enemy.moved = False
+                    for player in self.beings.player_beings:
+                        player.moved = False
+                        player.attacked = False
+                    globals.state = State.PLAY
+                    self.set_update_rate(constants.FPS_RATE_DEFAULT)
+                    print("player's turn")

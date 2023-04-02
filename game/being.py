@@ -72,6 +72,9 @@ class Being:
     def move_to(self, x, y):
         raise NotImplementedError
 
+    def move_towards(self, path):
+        raise NotImplementedError
+
 
 # Concrete
 class Player(Being):
@@ -127,7 +130,6 @@ class Player(Being):
         self.sprite_active.update_position(self.px_position)
         self.sprite_selected.update_position(self.px_position)
         self.sprite_targeted.update_position(self.px_position)
-        self.moved = True
 
 
 # Concrete
