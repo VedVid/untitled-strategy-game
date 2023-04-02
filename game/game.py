@@ -60,7 +60,7 @@ class Game(arcade.Window):
         if key == arcade.key.ENTER:
             if globals.state == State.MOVE:
                 globals.state = State.TARGET
-            else:
+            elif globals.state == State.TARGET:
                 globals.state = State.MOVE
         elif key == arcade.key.SPACE and globals.state == State.PLAY:
             globals.state = State.ENEMY_TURN
