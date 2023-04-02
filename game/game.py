@@ -53,15 +53,19 @@ class Game(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         # TODO: TESTING ONLY, remove later!
+        if globals.state == State.PRESS_ANY_KEY:
+            globals.state = State.ENEMY_TURN
+            self.set_update_rate(constants.FPS_RATE_ANIMATION)
         if globals.state == State.ENEMY_TURN:
             return
         if key == arcade.key.ENTER:
             if globals.state == State.MOVE:
                 globals.state = State.TARGET
-            else:
+            elif globals.state == State.TARGET:
                 globals.state = State.MOVE
         elif key == arcade.key.SPACE and globals.state == State.PLAY:
-            globals.state = State.ENEMY_TURN
+            globals.state = State.ENEMY_ATTACK
+            print("enemy attacks")
             self.set_update_rate(constants.FPS_RATE_ANIMATION)
 
     def on_mouse_motion(self, x, y, dx, dy):
@@ -229,7 +233,7 @@ class Game(arcade.Window):
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
             self.grid.generate_map()
-            globals.state = State.PLAY
+            globals.state = State.PRESS_ANY_KEY
             for i in range(constants.PLAYER_BEINGS_NO):
                 self.beings.spawn_player_being()
             for i in range(constants.ENEMY_BEINGS_INITIAL_NO):
@@ -238,7 +242,7 @@ class Game(arcade.Window):
             self.active_player = self.beings.find_active_player()
             if self.active_player is None:
                 self.pathfinder.last_path = ()
-                if globals.state != State.ENEMY_TURN:
+                if globals.state not in [State.ENEMY_TURN, State.ENEMY_ATTACK, State.PRESS_ANY_KEY]:
                     globals.state = State.PLAY
             mouse_position = Position(self.x, self.y).return_px_to_cell()
             self.sprite_tracker.mouse_position = mouse_position
@@ -265,39 +269,23 @@ class Game(arcade.Window):
                     for enemy in self.beings.enemy_beings:
                         if not enemy.moved:
                             self.active_enemy = enemy
-                # If no valid candidate for active_enemy found, end the enemy turn.
+                # If there is a valid enemy, then find the best path and move towards this path.
                 if self.active_enemy:
-                    print("=====\n=====")
-                    print(
-                        f"enemy at {self.active_enemy.cell_position.x}, {self.active_enemy.cell_position.y} acts..."
-                    )
                     # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
                     if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
                     # TODO: That's a bit redudant, decide method should not be called every on_update call.
                     enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
-                    index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
-                    target_pos = enemy_data["targetables"][index]
                     path = enemy_data["path"]
-                    print(path)
                     if path:
                         tile = path.pop(0)
                         print(tile)
                         self.active_enemy.move_to(tile[0], tile[1])
                     else:
-                        # If path is empty, then two things may happen:
-                        # 1) perform attack, if there is a valid position to attack, or
-                        if target_pos:
-                            self.active_enemy.attack.perform(
-                                self.beings,
-                                self.grid.map_objects,
-                                target_pos[0],
-                                target_pos[1],
-                                cursor=False
-                            )
-                        # 2) simpley end the enemy turn.
+                        # If path is empty, then end the movement phase for this enemy.
                         self.active_enemy.moved = True
                         self.active_enemy = None
+                # If no valid candidate for active_enemy found, end the enemy turn.
                 else:
                     for enemy in self.beings.enemy_beings:
                         enemy.moved = False
@@ -305,5 +293,44 @@ class Game(arcade.Window):
                         player.moved = False
                         player.attacked = False
                     globals.state = State.PLAY
-                    self.set_update_rate(constants.FPS_RATE_DEFAULT)
                     print("player's turn")
+                    self.set_update_rate(constants.FPS_RATE_DEFAULT)
+            if globals.state == State.ENEMY_ATTACK:
+                print("...")
+                # Search for the enemy that did not move this turn yet, and make him active.
+                if not self.active_enemy:
+                    print("no self.active_enemy yet, starting iterations...")
+                    for enemy in self.beings.enemy_beings:
+                        print(f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y}:")
+                        if not enemy.attacked:
+                            print("has not attacked yet, so")
+                            self.active_enemy = enemy
+                            print("it becomes new active_enemy")
+                        else:
+                            print("attacked already.")
+                # If there is a valid enemy, then find the best path and move towards this path.
+                print(f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} is active")
+                if self.active_enemy:
+                    # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
+                    if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
+                        self.active_enemy.ai.gather_map_info(self.grid, self.beings)
+                    # TODO: That's a bit redudant, decide method should not be called every on_update call.
+                    enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
+                    index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
+                    target_pos = enemy_data["targetables"][index]
+                    if target_pos:
+                        self.active_enemy.attack.perform(
+                            self.beings,
+                            self.grid.map_objects,
+                            target_pos[0],
+                            target_pos[1],
+                            cursor=False
+                        )
+                        self.active_enemy.attacked = True
+                        self.active_enemy = None
+                # If no valid candidate for active_enemy found, end the enemy turn.
+                else:
+                    for enemy in self.beings.enemy_beings:
+                        enemy.attacked = False
+                    print("enemy move")
+                    globals.state = State.ENEMY_TURN
