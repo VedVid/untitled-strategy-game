@@ -18,7 +18,9 @@ The goal is to learn something new. I will try to use design patterns, tinker wi
 For the prototyping, I use graphics from game-icons.net (appropiate license notices are included in this repository). At some point, I would like to overhaul the graphics and use a custom-made pixel sprites. 
 
 ![player-movement](https://github.com/VedVid/untitled-strategy-game/blob/development/images/1.png)
+
 ![player-attack](https://github.com/VedVid/untitled-strategy-game/blob/development/images/2.png)
+
 ![gif](https://github.com/VedVid/untitled-strategy-game/blob/development/images/3.gif)
 
 
