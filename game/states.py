@@ -12,3 +12,4 @@ class State(enum.Enum):
     PLAYER_MOVE_ANIMATION = enum.auto()
     TARGET = enum.auto()
     ENEMY_TURN = enum.auto()
+    ENEMY_ATTACK = enum.auto()

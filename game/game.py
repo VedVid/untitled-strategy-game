@@ -55,6 +55,7 @@ class Game(arcade.Window):
         # TODO: TESTING ONLY, remove later!
         if globals.state == State.PRESS_ANY_KEY:
             globals.state = State.ENEMY_TURN
+            self.set_update_rate(constants.FPS_RATE_ANIMATION)
         if globals.state == State.ENEMY_TURN:
             return
         if key == arcade.key.ENTER:
