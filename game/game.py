@@ -268,7 +268,7 @@ class Game(arcade.Window):
                     for enemy in self.beings.enemy_beings:
                         if not enemy.moved:
                             self.active_enemy = enemy
-                # If no valid candidate for active_enemy found, end the enemy turn.
+                # If there is a valid enemy, then find the best path and move towards this path.
                 if self.active_enemy:
                     print("=====\n=====")
                     print(
@@ -288,19 +288,10 @@ class Game(arcade.Window):
                         print(tile)
                         self.active_enemy.move_to(tile[0], tile[1])
                     else:
-                        # If path is empty, then two things may happen:
-                        # 1) perform attack, if there is a valid position to attack, or
-                        if target_pos:
-                            self.active_enemy.attack.perform(
-                                self.beings,
-                                self.grid.map_objects,
-                                target_pos[0],
-                                target_pos[1],
-                                cursor=False
-                            )
-                        # 2) simpley end the enemy turn.
+                        # If path is empty, then end the movement phase for this enemy.
                         self.active_enemy.moved = True
                         self.active_enemy = None
+                # If no valid candidate for active_enemy found, end the enemy turn.
                 else:
                     for enemy in self.beings.enemy_beings:
                         enemy.moved = False
