@@ -260,34 +260,57 @@ class Game(arcade.Window):
                     globals.state = State.TARGET
                     self.set_update_rate(constants.FPS_RATE_DEFAULT)
             if globals.state == State.ENEMY_TURN:
-                for enemy in self.beings.enemy_beings:
+                # Search for the enemy that did not move this turn yet, and make him active.
+                if not self.active_enemy:
+                    for enemy in self.beings.enemy_beings:
+                        if not enemy.moved:
+                            self.active_enemy = enemy
+                # If no valid candidate for active_enemy found, end the enemy turn.
+                if self.active_enemy:
                     print("=====\n=====")
                     print(
-                        f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} acts..."
+                        f"enemy at {self.active_enemy.cell_position.x}, {self.active_enemy.cell_position.y} acts..."
                     )
-                    enemy.ai.gather_map_info(self.grid, self.beings)
-                    enemy_data = enemy.ai.decide(self.beings, self.grid)
+                    # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
+                    if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
+                        self.active_enemy.ai.gather_map_info(self.grid, self.beings)
+                    # TODO: That's a bit redudant, decide method should not be called every on_update call.
+                    enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
                     index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
                     target_pos = enemy_data["targetables"][index]
                     path = enemy_data["path"]
                     print(path)
-                    self.set_update_rate(constants.FPS_RATE_ANIMATION)
-                    while path:
+                    if path:
                         tile = path.pop(0)
                         print(tile)
-                        enemy.move_to(tile[0], tile[1])
-                    if target_pos:
-                        enemy.attack.perform(
-                            self.beings,
-                            self.grid.map_objects,
-                            target_pos[0],
-                            target_pos[1],
-                            cursor=False
-                        )
-                    # TODO: Act, using enemy.ai.info data as weighted average.
-                self.set_update_rate(constants.FPS_RATE_DEFAULT)
-                globals.state = State.PLAY
-                for player in self.beings.player_beings:
-                    player.moved = False
-                    player.attacked = False
-                print("player's turn")
+                        self.active_enemy.move_to(tile[0], tile[1])
+                    else:
+                        # If path is empty, then end the turn of this specific enemy.
+                        self.active_enemy.moved = True
+                        self.active_enemy = None
+                else:
+                    for enemy in self.beings.enemy_beings:
+                        enemy.moved = False
+                    for player in self.beings.player_beings:
+                        player.moved = False
+                        player.attacked = False
+                    globals.state = State.PLAY
+                    self.set_update_rate(constants.FPS_RATE_DEFAULT)
+                    print("player's turn")
+
+
+
+#                for enemy in self.beings.enemy_beings:
+#                    while path:
+#                        tile = path.pop(0)
+#                        print(tile)
+#                        enemy.move_to(tile[0], tile[1])
+#                    if target_pos:
+#                        enemy.attack.perform(
+#                            self.beings,
+#                            self.grid.map_objects,
+#                            target_pos[0],
+#                            target_pos[1],
+#                            cursor=False
+#                        )
+#                    # TODO: Act, using enemy.ai.info data as weighted average.
