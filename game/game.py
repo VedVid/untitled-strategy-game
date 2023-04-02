@@ -53,6 +53,8 @@ class Game(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         # TODO: TESTING ONLY, remove later!
+        if globals.state == State.PRESS_ANY_KEY:
+            globals.state = State.ENEMY_TURN
         if globals.state == State.ENEMY_TURN:
             return
         if key == arcade.key.ENTER:
@@ -229,7 +231,7 @@ class Game(arcade.Window):
     def on_update(self, delta_time):
         if globals.state == State.GENERATE_MAP and self.initialized:
             self.grid.generate_map()
-            globals.state = State.PLAY
+            globals.state = State.PRESS_ANY_KEY
             for i in range(constants.PLAYER_BEINGS_NO):
                 self.beings.spawn_player_being()
             for i in range(constants.ENEMY_BEINGS_INITIAL_NO):
@@ -238,7 +240,7 @@ class Game(arcade.Window):
             self.active_player = self.beings.find_active_player()
             if self.active_player is None:
                 self.pathfinder.last_path = ()
-                if globals.state != State.ENEMY_TURN:
+                if globals.state != State.ENEMY_TURN and globals.state != State.PRESS_ANY_KEY:
                     globals.state = State.PLAY
             mouse_position = Position(self.x, self.y).return_px_to_cell()
             self.sprite_tracker.mouse_position = mouse_position
