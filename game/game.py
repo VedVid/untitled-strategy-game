@@ -270,17 +270,12 @@ class Game(arcade.Window):
                             self.active_enemy = enemy
                 # If there is a valid enemy, then find the best path and move towards this path.
                 if self.active_enemy:
-                    print("=====\n=====")
-                    print(
-                        f"enemy at {self.active_enemy.cell_position.x}, {self.active_enemy.cell_position.y} acts..."
-                    )
                     # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
                     if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
                     # TODO: That's a bit redudant, decide method should not be called every on_update call.
                     enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
                     path = enemy_data["path"]
-                    print(path)
                     if path:
                         tile = path.pop(0)
                         print(tile)
@@ -298,7 +293,6 @@ class Game(arcade.Window):
                         player.attacked = False
                     globals.state = State.PLAY
                     self.set_update_rate(constants.FPS_RATE_DEFAULT)
-                    print("player's turn")
             if globals.state == State.ENEMY_ATTACK:
                 # Search for the enemy that did not move this turn yet, and make him active.
                 if not self.active_enemy:
@@ -307,10 +301,6 @@ class Game(arcade.Window):
                             self.active_enemy = enemy
                 # If there is a valid enemy, then find the best path and move towards this path.
                 if self.active_enemy:
-                    print("=====\n=====")
-                    print(
-                        f"enemy at {self.active_enemy.cell_position.x}, {self.active_enemy.cell_position.y} acts..."
-                    )
                     # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
                     if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
