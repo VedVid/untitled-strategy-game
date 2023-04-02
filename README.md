@@ -1,6 +1,6 @@
 #### What is this game?
 
-At the current state, there is nothing to play. The game is in the very early stage of the development.
+The game is in the very early stage of the development and there is not much to play with. That said, I am getting close to the first pre-alpha release – please see ROADMAP.md for more info.
 
 
 #### OK, so what will this game be like in the future?
@@ -15,14 +15,25 @@ The goal is to learn something new. I will try to use design patterns, tinker wi
 
 #### How does it look like?
 
-Right now, the game looks pretty basic, please see below.
+For the prototyping, I use graphics from game-icons.net (appropiate license notices are included in this repository). At some point, I would like to overhaul the graphics and use a custom-made pixel sprites. 
 
-![alt text](https://github.com/VedVid/untitled-strategy-game/blob/development/images/1.png)
+![player-movement](https://github.com/VedVid/untitled-strategy-game/blob/development/images/1.png)
+![player-attack](https://github.com/VedVid/untitled-strategy-game/blob/development/images/2.png)
+![gif](https://github.com/VedVid/untitled-strategy-game/blob/development/images/3.gif)
 
 
 #### How to play?
 
-You can download this repository, ensure that the requirements are met, and run `main.py`. When the game is mature enough, binary releases will be uploaded.
+You can download this repository, ensure that the requirements are met, and run `main.py`. When the game is mature enough, binary releases will be uploaded.  
+
+Game is mostly playable by mouse:
+* left mouse button on player character: select unit, switch from "move" command to "attack" command
+* left mouse button while in movement mode: move unit to the tile under the cursor
+* left mouse button while in attack mode: target tile under the cursor
+* left mouse button during animation: speed up the animation
+* right mouse button: "go back", so switch from "attack" command to "move" command, deselected unit
+* space key: end your turn.
+
 You can also run the tests by `python -m pytest`.
 
 
