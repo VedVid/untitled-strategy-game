@@ -21,7 +21,7 @@ For the prototyping, I use graphics from game-icons.net (appropiate license noti
 
 ![player-attack](https://github.com/VedVid/untitled-strategy-game/blob/readme-update/images/2.png)
 
-![gif](https://github.com/VedVid/untitled-strategy-game/blob/readme-update/images/3.gif)
+![gamepaly gif](https://github.com/VedVid/untitled-strategy-game/blob/readme-update/images/3.gif)
 
 
 #### How to play?
