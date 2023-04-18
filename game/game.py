@@ -46,8 +46,8 @@ class Game(arcade.Window):
         self.grid.map_objects.sprite_list.draw()
         self.beings.player_sprite_list.draw()
         self.beings.enemy_sprite_list.draw()
-        self.grid.overlayed.draw()
         self.sprite_tracker.draw()
+        self.grid.overlayed.draw()
         if self.first_frame:
             self.first_frame = False
             self.initialized = True
