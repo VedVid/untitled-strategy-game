@@ -46,6 +46,7 @@ class Game(arcade.Window):
         self.grid.map_objects.sprite_list.draw()
         self.beings.player_sprite_list.draw()
         self.beings.enemy_sprite_list.draw()
+        self.grid.overlayed.draw()
         self.sprite_tracker.draw()
         if self.first_frame:
             self.first_frame = False
@@ -284,6 +285,12 @@ class Game(arcade.Window):
                     else:
                         # If path is empty, then end the movement phase for this enemy.
                         self.active_enemy.moved = True
+                        # If there are valid target positions, then show the overlay over them.
+                        index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
+                        affected_pos = enemy_data["affected"][index]
+                        if affected_pos:
+                            for pos in affected_pos:
+                                self.grid.add_overlayed_mask(pos)
                         self.active_enemy = None
                 # If no valid candidate for active_enemy found, end the enemy turn.
                 else:

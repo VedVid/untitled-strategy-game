@@ -64,7 +64,7 @@ class Grid:
             self.map_objects = MapObjects()
             self.map_objects.owner = self
             self.map_objects.fill_map()
-        self.overlayed = []
+        self.overlayed = arcade.SpriteList()
 
     def _init_empty_grid(self):
         """Initializes empty map, using the most basic terrain tile."""
@@ -232,4 +232,4 @@ class Grid:
             ),
             0.125,
         )
-        self.overlayed.append(sprite)
+        self.overlayed.append(sprite.arcade_sprite)
