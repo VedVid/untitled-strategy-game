@@ -7,6 +7,7 @@ import arcade
 
 from . import constants
 from .components.position import Position
+from .components.sprite import Sprite
 from .drunkards_walk import DrunkardsWalk
 from .pathfinding import Pathfinder
 from .tile import Tile
@@ -63,6 +64,7 @@ class Grid:
             self.map_objects = MapObjects()
             self.map_objects.owner = self
             self.map_objects.fill_map()
+        self.overlayed = []
 
     def _init_empty_grid(self):
         """Initializes empty map, using the most basic terrain tile."""
@@ -217,3 +219,17 @@ class Grid:
         if longest_path > constants.LONGEST_VALID_PATH:
             return False
         return True  # Valid map
+
+    def clear_overlayed_masks(self):
+        self.overlayed.clear()
+
+    def add_overlayed_mask(self, coords):
+        sprite = Sprite(
+            "target.png",
+            Position(
+                (coords[0] * constants.TILE_SIZE_W) + constants.TILE_CENTER_OFFSET_X,
+                (coords[1] * constants.TILE_SIZE_H) + constants.TILE_CENTER_OFFSET_Y,
+            ),
+            0.125,
+        )
+        self.overlayed.append(sprite)
