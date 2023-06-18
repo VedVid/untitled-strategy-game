@@ -60,6 +60,7 @@ class Tile:
         if sprite_in_range is None:
             sprite_in_range = sprite
         self.sprite_in_range = Sprite(sprite_in_range, self.px_position, 0.125)
+        self.sprite_overlayed = Sprite("target.png", self.px_position, 0.125)
         self.overlayed = overlayed
 
     def add_overlay(self, amount=1):

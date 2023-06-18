@@ -80,6 +80,7 @@ class SpriteTracker:
         self._pathfinder = Pathfinder(grid)
         self._tiles_sprites_in_range = arcade.SpriteList()
         self._tiles_sprites_selected = arcade.SpriteList()
+        self._tiles_sprites_overlayed = arcade.SpriteList()
         self._map_objects_sprites_selected = arcade.SpriteList()
         self._beings_sprites_selected = arcade.SpriteList()
         self._attack_overlay = arcade.SpriteList()
@@ -175,6 +176,7 @@ class SpriteTracker:
             self._find("map_objects")
 
     def _find_tiles(self):
+        # TODO: Find all tiles that are overlayed.
         if globals.state == State.MOVE and not self.player.moved:
             # Draw all tiles that are in player range.
             for tile in self._grid.tiles:

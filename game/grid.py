@@ -217,4 +217,3 @@ class Grid:
         if longest_path > constants.LONGEST_VALID_PATH:
             return False
         return True  # Valid map
-
