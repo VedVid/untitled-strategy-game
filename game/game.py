@@ -65,7 +65,6 @@ class Game(arcade.Window):
                 globals.state = State.MOVE
         elif key == arcade.key.SPACE and globals.state == State.PLAY:
             globals.state = State.ENEMY_ATTACK
-            print("enemy attacks")
             self.set_update_rate(constants.FPS_RATE_ANIMATION)
 
     def on_mouse_motion(self, x, y, dx, dy):
@@ -184,7 +183,6 @@ class Game(arcade.Window):
                     elif not self.active_player.attacked:
                         # Perform attack if possible.
                         try:
-                            print(x, y)
                             self.active_player.attack.perform(
                                 self.beings, self.grid.map_objects, x, y
                             )
@@ -300,7 +298,6 @@ class Game(arcade.Window):
                     path = enemy_data["path"]
                     if path:
                         tile = path.pop(0)
-                        print(tile)
                         self.active_enemy.move_to(tile[0], tile[1])
                     else:
                         # If path is empty, then end the movement phase for this enemy.
@@ -325,27 +322,14 @@ class Game(arcade.Window):
                         player.moved = False
                         player.attacked = False
                     globals.state = State.PLAY
-                    print("player's turn")
                     self.set_update_rate(constants.FPS_RATE_DEFAULT)
             if globals.state == State.ENEMY_ATTACK:
-                print("...")
                 # Search for the enemy that did not move this turn yet, and make him active.
                 if not self.active_enemy:
-                    print("no self.active_enemy yet, starting iterations...")
                     for enemy in self.beings.enemy_beings:
-                        print(
-                            f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y}:"
-                        )
                         if not enemy.attacked:
-                            print("has not attacked yet, so")
                             self.active_enemy = enemy
-                            print("it becomes new active_enemy")
-                        else:
-                            print("attacked already.")
                 # If there is a valid enemy, then find the best path and move towards this path.
-                print(
-                    f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} is active"
-                )
                 if self.active_enemy:
                     # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
                     if (
@@ -373,5 +357,4 @@ class Game(arcade.Window):
                 else:
                     for enemy in self.beings.enemy_beings:
                         enemy.attacked = False
-                    print("enemy move")
                     globals.state = State.ENEMY_TURN
