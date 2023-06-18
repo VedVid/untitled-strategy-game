@@ -313,6 +313,11 @@ class Game(arcade.Window):
                     else:
                         # If path is empty, then end the movement phase for this enemy.
                         self.active_enemy.moved = True
+                        for tile in self.grid.tiles:
+                            try:
+                                tile.remove_overlay(self.active_enemy)
+                            except ValueError:  # enemy not in list
+                                pass
                         # If there are valid target positions, then show the overlay over them.
                         index = enemy_data["priorities"].index(
                             max(enemy_data["priorities"])
