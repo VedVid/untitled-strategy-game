@@ -37,6 +37,7 @@ class Tile:
         sprite_targeted=None,
         sprite_path=None,
         sprite_in_range=None,
+        overlayed=0,
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
@@ -59,3 +60,12 @@ class Tile:
         if sprite_in_range is None:
             sprite_in_range = sprite
         self.sprite_in_range = Sprite(sprite_in_range, self.px_position, 0.125)
+        self.overlayed = overlayed
+
+    def add_overlay(self, amount=1):
+        self.overlayed += amount
+
+    def remove_overlay(self, amount=1):
+        self.overlayed -= amount
+        if self.overlayed > 0:
+            self.overlayed = 0
