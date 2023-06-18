@@ -253,6 +253,11 @@ class Game(arcade.Window):
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)
+                    for tile in self.grid.tiles:
+                        try:
+                            tile.remove_overlay(enemy)
+                        except ValueError:  # enemy not in list
+                            pass
             if globals.state == State.PLAYER_MOVE_ANIMATION:
                 # Show player movements
                 try:
