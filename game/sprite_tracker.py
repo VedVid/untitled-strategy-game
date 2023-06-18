@@ -176,7 +176,15 @@ class SpriteTracker:
             self._find("map_objects")
 
     def _find_tiles(self):
-        # TODO: Find all tiles that are overlayed.
+        # Find all tiles that are overlayed.
+        for tile in self._grid.tiles:
+            if tile.overlayed > 0:
+                try:
+                    self._tiles_sprites_overlayed.append(
+                        tile.sprite_overlayed.arcade_sprite
+                    )
+                except ValueError as e:  # Sprite already in SpriteList. Ignore.
+                    pass
         if globals.state == State.MOVE and not self.player.moved:
             # Draw all tiles that are in player range.
             for tile in self._grid.tiles:
@@ -223,6 +231,7 @@ class SpriteTracker:
         self._map_objects_sprites_selected.clear()
         self._tiles_sprites_in_range.clear()
         self._tiles_sprites_selected.clear()
+        self._tiles_sprites_overlayed.clear()
 
     def track(self):
         """Clears all arcade.SpriteList instances in SpriteTracker and fills them again with updated data."""
@@ -237,3 +246,4 @@ class SpriteTracker:
         self._tiles_sprites_selected.draw()
         self._map_objects_sprites_selected.draw()
         self._beings_sprites_selected.draw()
+        self._tiles_sprites_overlayed.draw()
