@@ -36,7 +36,9 @@ class Attack:
                 )
                 valid_target_positions.append(valid_target_position)
             if (cursor_position.x, cursor_position.y) in valid_target_positions:
-                effect.perform(beings, map_objects, cursor_position.x, cursor_position.y)
+                effect.perform(
+                    beings, map_objects, cursor_position.x, cursor_position.y
+                )
                 performed = True
         if performed:
             self.owner.attacked = True
