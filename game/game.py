@@ -262,6 +262,7 @@ class Game(arcade.Window):
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)
+                    # TODO: it should be done after every move performed by Being, too!
                     for tile in self.grid.tiles:
                         try:
                             tile.remove_overlay(enemy)
