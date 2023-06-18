@@ -47,7 +47,6 @@ class Game(arcade.Window):
         self.beings.player_sprite_list.draw()
         self.beings.enemy_sprite_list.draw()
         self.sprite_tracker.draw()
-        self.grid.overlayed.draw()
         if self.first_frame:
             self.first_frame = False
             self.initialized = True
@@ -290,7 +289,10 @@ class Game(arcade.Window):
                         affected_pos = enemy_data["affected"][index]
                         if affected_pos:
                             for pos in affected_pos:
-                                self.grid.add_overlayed_mask(pos)
+                                tile = self.grid.find_tile_by_position(
+                                    Position(pos[0], pos[1])
+                                )
+                                tile.add_overlay()
                         self.active_enemy = None
                 # If no valid candidate for active_enemy found, end the enemy turn.
                 else:
