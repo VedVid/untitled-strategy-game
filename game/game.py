@@ -155,7 +155,11 @@ class Game(arcade.Window):
                             if self.pathfinder.last_path:
                                 # Prepare pathfinder for player movement: trim path to player range if path is too long.
                                 try:
-                                    self.pathfinder.last_path = self.pathfinder.last_path[:self.active_player.range + 1]
+                                    self.pathfinder.last_path = (
+                                        self.pathfinder.last_path[
+                                            : self.active_player.range + 1
+                                        ]
+                                    )
                                 except IndexError:
                                     pass
                                 # Set game state for on_update method.
@@ -242,7 +246,11 @@ class Game(arcade.Window):
             self.active_player = self.beings.find_active_player()
             if self.active_player is None:
                 self.pathfinder.last_path = ()
-                if globals.state not in [State.ENEMY_TURN, State.ENEMY_ATTACK, State.PRESS_ANY_KEY]:
+                if globals.state not in [
+                    State.ENEMY_TURN,
+                    State.ENEMY_ATTACK,
+                    State.PRESS_ANY_KEY,
+                ]:
                     globals.state = State.PLAY
             mouse_position = Position(self.x, self.y).return_px_to_cell()
             self.sprite_tracker.mouse_position = mouse_position
@@ -250,9 +258,16 @@ class Game(arcade.Window):
             self.sprite_tracker.track()
             # Remove dead enemies on_update before checking for enemy turn
             # allows to apply environmental effect before the enemy can act.
+            # It also removes dead enemies from tile overlays.
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)
+                    # TODO: it should be done after every move performed by Being, too!
+                    for tile in self.grid.tiles:
+                        try:
+                            tile.remove_overlay(enemy)
+                        except ValueError:  # enemy not in list
+                            pass
             if globals.state == State.PLAYER_MOVE_ANIMATION:
                 # Show player movements
                 try:
@@ -272,7 +287,10 @@ class Game(arcade.Window):
                 # If there is a valid enemy, then find the best path and move towards this path.
                 if self.active_enemy:
                     # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
-                    if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
+                    if (
+                        not self.active_enemy.ai.map_in_range
+                        and not self.active_enemy.ai.map_out_range
+                    ):
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
                     # TODO: That's a bit redudant, decide method should not be called every on_update call.
                     enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
@@ -284,6 +302,17 @@ class Game(arcade.Window):
                     else:
                         # If path is empty, then end the movement phase for this enemy.
                         self.active_enemy.moved = True
+                        # If there are valid target positions, then show the overlay over them.
+                        index = enemy_data["priorities"].index(
+                            max(enemy_data["priorities"])
+                        )
+                        affected_pos = enemy_data["affected"][index]
+                        if affected_pos:
+                            for pos in affected_pos:
+                                tile = self.grid.find_tile_by_position(
+                                    Position(pos[0], pos[1])
+                                )
+                                tile.add_overlay(self.active_enemy)
                         self.active_enemy = None
                 # If no valid candidate for active_enemy found, end the enemy turn.
                 else:
@@ -301,7 +330,9 @@ class Game(arcade.Window):
                 if not self.active_enemy:
                     print("no self.active_enemy yet, starting iterations...")
                     for enemy in self.beings.enemy_beings:
-                        print(f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y}:")
+                        print(
+                            f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y}:"
+                        )
                         if not enemy.attacked:
                             print("has not attacked yet, so")
                             self.active_enemy = enemy
@@ -309,14 +340,21 @@ class Game(arcade.Window):
                         else:
                             print("attacked already.")
                 # If there is a valid enemy, then find the best path and move towards this path.
-                print(f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} is active")
+                print(
+                    f"enemy at {enemy.cell_position.x}, {enemy.cell_position.y} is active"
+                )
                 if self.active_enemy:
                     # Gather map info if enemy did not do this yes (ie, if it's his first move this turn).
-                    if not self.active_enemy.ai.map_in_range and not self.active_enemy.ai.map_out_range:
+                    if (
+                        not self.active_enemy.ai.map_in_range
+                        and not self.active_enemy.ai.map_out_range
+                    ):
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
                     # TODO: That's a bit redudant, decide method should not be called every on_update call.
                     enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
-                    index = enemy_data["priorities"].index(max(enemy_data["priorities"]))
+                    index = enemy_data["priorities"].index(
+                        max(enemy_data["priorities"])
+                    )
                     target_pos = enemy_data["targetables"][index]
                     if target_pos:
                         self.active_enemy.attack.perform(
@@ -324,7 +362,7 @@ class Game(arcade.Window):
                             self.grid.map_objects,
                             target_pos[0],
                             target_pos[1],
-                            cursor=False
+                            cursor=False,
                         )
                         self.active_enemy.attacked = True
                         self.active_enemy = None
