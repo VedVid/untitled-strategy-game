@@ -101,13 +101,11 @@ class BaseAI:
                     all_affected_positions.append(affected_positions)
             data["targetables"] = targetables
             data["affected"] = all_affected_positions
-            # Calculate priority penalty for tile.
-            range_priority_penalty = len(path) * constants.AI_RANGE_FALLOFF
             # Calculating priorities for every targetable tile.
             priorities = []
             targets = []
             for affected_tiles in all_affected_positions:
-                priority = -range_priority_penalty
+                priority = 0
                 for affected_tile in affected_tiles:
                     being = beings.find_being_by_cell_position(
                         affected_tile[0],
