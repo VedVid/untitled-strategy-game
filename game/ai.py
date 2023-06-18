@@ -153,18 +153,12 @@ class BaseAI:
         )
 
     def decide(self, beings, grid):
-        print("<decide>")
         in_range_sorted = self._sort_priorities_in_range()
         # There are targets in range.
         if len(in_range_sorted) > 0:
-            print(in_range_sorted[0])
-            print("</decide>")
             return in_range_sorted[0]
         out_range_sorted = self._sort_priorities_out_range()
         # There are no targets in range, but owner is not blocked and can move towards the targets.
         if len(out_range_sorted) > 0:
-            print(out_range_sorted[0])
-            print("</decide>")
             return out_range_sorted[0]
-        print("</decide>")
         return "nothing"

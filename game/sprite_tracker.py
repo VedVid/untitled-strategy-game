@@ -40,6 +40,7 @@ class SpriteTracker:
     _tiles_sprites_selected: arcade.SpriteList()
     _map_objects_sprites_selected: arcade.SpriteList()
     _beings_sprites_selected: arcade.SpriteList()
+    _tiles_sprites_overlayed: arcade.SpriteList()
         Every _..._sprites_selected are SpriteLists that aggregate highlighted sprites: sprite_in_range, sprite_active,
         sprite_selected, sprite_targeted.
     mouse_position: Position
@@ -80,6 +81,7 @@ class SpriteTracker:
         self._pathfinder = Pathfinder(grid)
         self._tiles_sprites_in_range = arcade.SpriteList()
         self._tiles_sprites_selected = arcade.SpriteList()
+        self._tiles_sprites_overlayed = arcade.SpriteList()
         self._map_objects_sprites_selected = arcade.SpriteList()
         self._beings_sprites_selected = arcade.SpriteList()
         self._attack_overlay = arcade.SpriteList()
@@ -175,6 +177,15 @@ class SpriteTracker:
             self._find("map_objects")
 
     def _find_tiles(self):
+        # Find all tiles that are overlayed.
+        for tile in self._grid.tiles:
+            if tile.overlayed_by:
+                try:
+                    self._tiles_sprites_overlayed.append(
+                        tile.sprite_overlayed.arcade_sprite
+                    )
+                except ValueError as e:  # Sprite already in SpriteList. Ignore.
+                    pass
         if globals.state == State.MOVE and not self.player.moved:
             # Draw all tiles that are in player range.
             for tile in self._grid.tiles:
@@ -221,6 +232,7 @@ class SpriteTracker:
         self._map_objects_sprites_selected.clear()
         self._tiles_sprites_in_range.clear()
         self._tiles_sprites_selected.clear()
+        self._tiles_sprites_overlayed.clear()
 
     def track(self):
         """Clears all arcade.SpriteList instances in SpriteTracker and fills them again with updated data."""
@@ -235,3 +247,4 @@ class SpriteTracker:
         self._tiles_sprites_selected.draw()
         self._map_objects_sprites_selected.draw()
         self._beings_sprites_selected.draw()
+        self._tiles_sprites_overlayed.draw()

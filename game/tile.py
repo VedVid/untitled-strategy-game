@@ -24,8 +24,18 @@ class Tile:
         Name of the graphics that will be drawn from player to cursor to show path.
     sprite_in_range: string
         Name of the graphics that will be used to show what tiles are in range of active player.
+    overlayed_by: list of Beings
+        List of beings that are targeting this tile. If list is empty, then no overlay is drawn.
     width, height: int
         Size of the tile, converted to the instance of Size class.
+
+    Methods:
+    --------
+    add_overlay (Being)
+        Adds new reference to Being that targets this tile.
+    remove_overlay (Being)
+        Removes reference to Being that used to target this tile, but it does not do this anymore, because it died
+        or moved.
     """
 
     def __init__(
@@ -37,6 +47,7 @@ class Tile:
         sprite_targeted=None,
         sprite_path=None,
         sprite_in_range=None,
+        overlayed_by=None,
         width=constants.TILE_SIZE_W,
         height=constants.TILE_SIZE_H,
     ):
@@ -59,3 +70,13 @@ class Tile:
         if sprite_in_range is None:
             sprite_in_range = sprite
         self.sprite_in_range = Sprite(sprite_in_range, self.px_position, 0.125)
+        self.sprite_overlayed = Sprite("target.png", self.px_position, 0.125)
+        self.overlayed_by = overlayed_by
+        if self.overlayed_by is None:
+            self.overlayed_by = []
+
+    def add_overlay(self, being):
+        self.overlayed_by.append(being)
+
+    def remove_overlay(self, being):
+        self.overlayed_by.remove(being)
