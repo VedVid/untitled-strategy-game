@@ -292,7 +292,7 @@ class Game(arcade.Window):
                                 tile = self.grid.find_tile_by_position(
                                     Position(pos[0], pos[1])
                                 )
-                                tile.add_overlay()
+                                tile.add_overlay(self.active_enemy)
                         self.active_enemy = None
                 # If no valid candidate for active_enemy found, end the enemy turn.
                 else:

@@ -178,7 +178,7 @@ class SpriteTracker:
     def _find_tiles(self):
         # Find all tiles that are overlayed.
         for tile in self._grid.tiles:
-            if tile.overlayed > 0:
+            if tile.overlayed_by:
                 try:
                     self._tiles_sprites_overlayed.append(
                         tile.sprite_overlayed.arcade_sprite
