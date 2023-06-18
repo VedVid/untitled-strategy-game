@@ -153,12 +153,24 @@ class BaseAI:
         )
 
     def decide(self):
+        #from pprint import pprint
+        #print("\n\n\n")
         in_range_sorted = self._sort_priorities_in_range()
+        #print("in_range_sorted:")
+        #pprint(in_range_sorted)
+        #print("\n")
         # There are targets in range.
         if len(in_range_sorted) > 0:
             return in_range_sorted[0]
         out_range_sorted = self._sort_priorities_out_range()
+        #pprint(out_range_sorted)
+        #pprint("\n")
         # There are no targets in range, but owner is not blocked and can move towards the targets.
         if len(out_range_sorted) > 0:
             return out_range_sorted[0]
+        #print("nothing")
         return "nothing"
+
+    def clear_data(self):
+        self.map_in_range.clear()
+        self.map_out_range.clear()

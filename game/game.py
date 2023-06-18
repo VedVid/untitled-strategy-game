@@ -233,6 +233,17 @@ class Game(arcade.Window):
                     )
 
     def on_update(self, delta_time):
+        targeted = 0
+        no_targeted = 0
+        for mo in self.grid.map_objects.objects:
+            if mo.target:
+                targeted += 1
+            else:
+                no_targeted += 1
+        print(targeted)
+        print(no_targeted)
+        print("\n\n")
+        #print(globals.state)
         if globals.state == State.GENERATE_MAP and self.initialized:
             self.grid.generate_map()
             globals.state = State.PRESS_ANY_KEY
@@ -313,6 +324,7 @@ class Game(arcade.Window):
                                     Position(pos[0], pos[1])
                                 )
                                 tile.add_overlay(self.active_enemy)
+                        self.active_enemy.ai.clear_data()
                         self.active_enemy = None
                 # If no valid candidate for active_enemy found, end the enemy turn.
                 else:
