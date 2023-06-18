@@ -250,6 +250,7 @@ class Game(arcade.Window):
             self.sprite_tracker.track()
             # Remove dead enemies on_update before checking for enemy turn
             # allows to apply environmental effect before the enemy can act.
+            # It also removes dead enemies from tile overlays.
             for enemy in self.beings.enemy_beings:
                 if enemy.hp <= 0:
                     self.beings.remove_enemy_being(enemy)

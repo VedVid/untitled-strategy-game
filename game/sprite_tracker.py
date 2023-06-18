@@ -40,6 +40,7 @@ class SpriteTracker:
     _tiles_sprites_selected: arcade.SpriteList()
     _map_objects_sprites_selected: arcade.SpriteList()
     _beings_sprites_selected: arcade.SpriteList()
+    _tiles_sprites_overlayed: arcade.SpriteList()
         Every _..._sprites_selected are SpriteLists that aggregate highlighted sprites: sprite_in_range, sprite_active,
         sprite_selected, sprite_targeted.
     mouse_position: Position
