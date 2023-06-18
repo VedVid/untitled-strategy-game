@@ -152,7 +152,7 @@ class BaseAI:
             self.map_out_range, key=lambda d: (max(d["priorities"])), reverse=True
         )
 
-    def decide(self, beings, grid):
+    def decide(self):
         in_range_sorted = self._sort_priorities_in_range()
         # There are targets in range.
         if len(in_range_sorted) > 0:

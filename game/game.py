@@ -294,7 +294,7 @@ class Game(arcade.Window):
                     ):
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
                     # TODO: That's a bit redudant, decide method should not be called every on_update call.
-                    enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
+                    enemy_data = self.active_enemy.ai.decide()
                     path = enemy_data["path"]
                     if path:
                         tile = path.pop(0)
@@ -338,7 +338,7 @@ class Game(arcade.Window):
                     ):
                         self.active_enemy.ai.gather_map_info(self.grid, self.beings)
                     # TODO: That's a bit redudant, decide method should not be called every on_update call.
-                    enemy_data = self.active_enemy.ai.decide(self.beings, self.grid)
+                    enemy_data = self.active_enemy.ai.decide()
                     index = enemy_data["priorities"].index(
                         max(enemy_data["priorities"])
                     )
